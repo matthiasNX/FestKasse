@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:FestKasse.ViewModels"
+             xmlns:models="clr-namespace:FestKasse.Models"
+             xmlns:controls="clr-namespace:FestKasse.Controls"
+             x:Class="FestKasse.Controls.ArticleTileGridControl"
+             x:Name="self">
+
+    <ScrollView Padding="2">
+        <VerticalStackLayout BindableLayout.ItemsSource="{Binding CategoryGroups, Source={x:Reference self}}" Spacing="2">
+            <BindableLayout.ItemTemplate>
+                <DataTemplate x:DataType="models:ArticleCategoryGroup">
+                    <VerticalStackLayout>
+                        <Border BackgroundColor="{StaticResource Primary}" StrokeThickness="0" StrokeShape="RoundRectangle 6"
+                                Padding="10,4" Margin="2,4,2,2"
+                                IsVisible="{Binding ShowGroupHeaders, Source={x:Reference self}}">
+                            <Label Text="{Binding CategoryName}" TextColor="White" FontSize="13" FontAttributes="Bold"/>
+                        </Border>
+                        <FlexLayout BindableLayout.ItemsSource="{Binding .}" Wrap="Wrap" JustifyContent="Start" AlignItems="Start" AlignContent="Start">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="viewmodels:ArticleTileViewModel">
+                                    <controls:TileControl
+                                        Margin="2"
+                                        TileColor="{Binding Article.DisplayColor}"
+                                        TileWidthRequest="{Binding TileWidth, Source={x:Reference self}}"
+                                        TileHeightRequest="{Binding TileHeight, Source={x:Reference self}}"
+                                        Icon="{Binding Article.Icon}"
+                                        Title="{Binding Article.Description}"
+                                        TitleFontSize="{Binding TileFontSizeDescription, Source={x:Reference self}}"
+                                        SubTitle="{Binding Article.PriceDisplay}"
+                                        SubTitleVisible="True"
+                                        SubTitleFontSize="{Binding TileFontSizeSmall, Source={x:Reference self}}"
+                                        Count="{Binding Quantity, StringFormat='{0}'}"
+                                        PlusCommand="{Binding PlusCommand, Source={x:Reference self}}"
+                                        PlusCommandParameter="{Binding Article}"
+                                        MinusCommand="{Binding MinusCommand, Source={x:Reference self}}"
+                                        MinusCommandParameter="{Binding Article}"/>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </FlexLayout>
+                    </VerticalStackLayout>
+                </DataTemplate>
+            </BindableLayout.ItemTemplate>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentView>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:FestKasse.ViewModels"
+             xmlns:models="clr-namespace:FestKasse.Models"
+             x:Class="FestKasse.Views.CategoryManagementPage"
+             x:Name="ThisPage"
+             x:DataType="viewmodels:CategoryManagementViewModel"
+             Title="Kategorien"
+             BackgroundColor="{StaticResource Gray100}">
+
+    <Grid RowDefinitions="*,Auto">
+
+        <Grid Grid.Row="0">
+
+            <!-- Category List -->
+            <CollectionView ItemsSource="{Binding Categories}" SelectionMode="None" Margin="10">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:Category">
+                        <Border Margin="0,5" Padding="10" BackgroundColor="White" StrokeShape="RoundRectangle 8" StrokeThickness="0">
+                            <Grid ColumnDefinitions="*,Auto,Auto,Auto,Auto">
+                                <VerticalStackLayout Grid.Column="0" VerticalOptions="Center">
+                                    <Label Text="{Binding Name}" FontSize="16" FontAttributes="Bold"/>
+                                    <Label Text="{Binding SortOrder, StringFormat='Reihenfolge: {0}'}" FontSize="12" TextColor="Gray"/>
+                                </VerticalStackLayout>
+                                <Button Grid.Column="1" Text="&#x25B2;" WidthRequest="40" HeightRequest="40" FontSize="12" Padding="0"
+                                        BackgroundColor="{StaticResource Gray300}" TextColor="{StaticResource Gray900}"
+                                        Command="{Binding Source={x:Reference ThisPage}, Path=BindingContext.MoveUpCommand}" CommandParameter="{Binding .}"/>
+                                <Button Grid.Column="2" Text="&#x25BC;" WidthRequest="40" HeightRequest="40" FontSize="12" Padding="0" Margin="5,0,0,0"
+                                        BackgroundColor="{StaticResource Gray300}" TextColor="{StaticResource Gray900}"
+                                        Command="{Binding Source={x:Reference ThisPage}, Path=BindingContext.MoveDownCommand}" CommandParameter="{Binding .}"/>
+                                <Button Grid.Column="3" Text="&#x270E;" WidthRequest="40" HeightRequest="40" FontSize="16" Padding="0" Margin="10,0,0,0"
+                                        BackgroundColor="{StaticResource Primary}" TextColor="White"
+                                        Command="{Binding Source={x:Reference ThisPage}, Path=BindingContext.EditCategoryCommand}" CommandParameter="{Binding .}"/>
+                                <Button Grid.Column="4" Text="&#x1F5D1;" WidthRequest="40" HeightRequest="40" FontSize="16" Padding="0" Margin="5,0,0,0"
+                                        BackgroundColor="Red" TextColor="White"
+                                        Command="{Binding Source={x:Reference ThisPage}, Path=BindingContext.DeleteCategoryCommand}" CommandParameter="{Binding .}"/>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+                <CollectionView.EmptyView>
+                    <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Padding="40">
+                        <Label Text="Keine Kategorien vorhanden" FontSize="18" TextColor="Gray" HorizontalTextAlignment="Center"/>
+                        <Label Text="Tippe auf '+ Neue Kategorie' um eine anzulegen" FontSize="14" TextColor="Gray" HorizontalTextAlignment="Center" Margin="0,10,0,0"/>
+                    </VerticalStackLayout>
+                </CollectionView.EmptyView>
+            </CollectionView>
+
+            <!-- Edit Overlay -->
+            <Border BackgroundColor="White" StrokeThickness="0" IsVisible="{Binding IsEditing}">
+                <ScrollView>
+                    <VerticalStackLayout Spacing="15" Padding="16">
+
+                        <Label Text="{Binding IsNewCategory, Converter={StaticResource NewEditTitleConverter}}"
+                               FontSize="20" FontAttributes="Bold"/>
+
+                        <VerticalStackLayout>
+                            <Label Text="Name *" FontSize="14" FontAttributes="Bold"/>
+                            <Entry Text="{Binding EditName}" Placeholder="Kategoriename eingeben" BackgroundColor="{StaticResource Gray100}"/>
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout>
+                            <Label Text="Reihenfolge" FontSize="14" FontAttributes="Bold"/>
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="6">
+                                <Button Grid.Column="0" Text="&#x2212;" Command="{Binding DecreaseSortOrderCommand}"
+                                        WidthRequest="44" HeightRequest="44" CornerRadius="8" Padding="0"
+                                        FontSize="18" FontAttributes="Bold" BackgroundColor="{StaticResource Gray400}" TextColor="White"/>
+                                <Entry Grid.Column="1" Text="{Binding EditSortOrder}" Keyboard="Numeric" HorizontalTextAlignment="Center" BackgroundColor="{StaticResource Gray100}"/>
+                                <Button Grid.Column="2" Text="+" Command="{Binding IncreaseSortOrderCommand}"
+                                        WidthRequest="44" HeightRequest="44" CornerRadius="8" Padding="0"
+                                        FontSize="18" FontAttributes="Bold" BackgroundColor="{StaticResource Primary}" TextColor="White"/>
+                            </Grid>
+                            <Label Text="Niedrigere Zahl = weiter oben / links" FontSize="11" TextColor="Gray"/>
+                        </VerticalStackLayout>
+
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                            <Button Grid.Column="0" Text="Abbrechen" Command="{Binding CancelEditCommand}" BackgroundColor="{StaticResource Gray400}" TextColor="White"/>
+                            <Button Grid.Column="1" Text="Speichern" Command="{Binding SaveCategoryCommand}" BackgroundColor="{StaticResource Primary}" TextColor="White"/>
+                        </Grid>
+
+                    </VerticalStackLayout>
+                </ScrollView>
+            </Border>
+
+        </Grid>
+
+        <!-- Add Button -->
+        <Button Grid.Row="1" Text="+ Neue Kategorie anlegen" Command="{Binding NewCategoryCommand}"
+                BackgroundColor="{StaticResource Primary}" TextColor="White" FontSize="16" Margin="10" HeightRequest="50"/>
+    </Grid>
+
+    <ContentPage.Resources>
+        <converters:NewEditTitleConverter xmlns:converters="clr-namespace:FestKasse.Converters" x:Key="NewEditTitleConverter"/>
+    </ContentPage.Resources>
+
+</ContentPage>

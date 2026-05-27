@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FestKasse.Controls.TileControl"
+             x:Name="self">
+
+    <Border BackgroundColor="{Binding TileColor, Source={x:Reference self}}"
+            WidthRequest="{Binding TileWidthRequest, Source={x:Reference self}}"
+            HeightRequest="{Binding TileHeightRequest, Source={x:Reference self}}"
+            StrokeShape="RoundRectangle 10" StrokeThickness="0" Padding="0">
+
+        <Border.GestureRecognizers>
+            <TapGestureRecognizer
+                Command="{Binding PlusCommand, Source={x:Reference self}}"
+                CommandParameter="{Binding PlusCommandParameter, Source={x:Reference self}}"/>
+        </Border.GestureRecognizers>
+
+        <Grid RowDefinitions="*,Auto" ColumnDefinitions="Auto,*" Padding="3">
+
+            <!-- Icon on the left (small, spans all rows) -->
+            <Label Grid.Row="0" Grid.Column="0" Grid.RowSpan="2"
+                   Text="{Binding Icon, Source={x:Reference self}}"
+                   IsVisible="{Binding IconVisible, Source={x:Reference self}}"
+                   TextColor="White"
+                   FontSize="18"
+                   VerticalTextAlignment="Start"
+                   HorizontalTextAlignment="Center"
+                   WidthRequest="24"
+                   InputTransparent="True"/>
+
+            <!-- Title / Description -->
+            <Label Grid.Row="0" Grid.Column="1"
+                   Text="{Binding Title, Source={x:Reference self}}"
+                   TextColor="White"
+                   FontSize="{Binding TitleFontSize, Source={x:Reference self}}"
+                   FontAttributes="Bold"
+                   HorizontalTextAlignment="Start"
+                   VerticalTextAlignment="Start"
+                   LineBreakMode="WordWrap"
+                   MaxLines="3"
+                   InputTransparent="True"/>
+
+            <!-- Bottom row: − / count on the left, price on the right -->
+            <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                  ColumnDefinitions="Auto,Auto,*"
+                  Padding="0,2,0,0"
+                  ColumnSpacing="3">
+
+                <Button Grid.Column="0"
+                        Text="&#x2212;"
+                        FontSize="{Binding SubTitleFontSize, Source={x:Reference self}}"
+                        FontAttributes="Bold"
+                        WidthRequest="28" HeightRequest="28" CornerRadius="14" Padding="0"
+                        BackgroundColor="#CC000000" TextColor="White"
+                        HorizontalOptions="Start" VerticalOptions="Center"
+                        Command="{Binding MinusCommand, Source={x:Reference self}}"
+                        CommandParameter="{Binding MinusCommandParameter, Source={x:Reference self}}"/>
+
+                <Border Grid.Column="1"
+                        BackgroundColor="#CC000000"
+                        StrokeShape="RoundRectangle 14"
+                        StrokeThickness="0"
+                        WidthRequest="28" HeightRequest="28"
+                        HorizontalOptions="Start" VerticalOptions="Center"
+                        InputTransparent="True">
+                    <Label Text="{Binding Count, Source={x:Reference self}}"
+                           TextColor="White"
+                           FontSize="{Binding SubTitleFontSize, Source={x:Reference self}}"
+                           FontAttributes="Bold"
+                           HorizontalTextAlignment="Center"
+                           VerticalTextAlignment="Center"/>
+                </Border>
+
+                <!-- Price (bottom-right, where + button was) -->
+                <Label Grid.Column="2"
+                       Text="{Binding SubTitle, Source={x:Reference self}}"
+                       IsVisible="{Binding SubTitleVisible, Source={x:Reference self}}"
+                       TextColor="White"
+                       FontSize="{Binding SubTitleFontSize, Source={x:Reference self}}"
+                       FontAttributes="Bold"
+                       HorizontalTextAlignment="End"
+                       VerticalTextAlignment="Center"
+                       InputTransparent="True"/>
+            </Grid>
+
+        </Grid>
+    </Border>
+</ContentView>

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:FestKasse.Models"
+             xmlns:controls="clr-namespace:FestKasse.Controls"
+             xmlns:converters="clr-namespace:FestKasse.Converters"
+             x:Class="FestKasse.Controls.CartPanelControl"
+             x:Name="self">
+
+    <ContentView.Resources>
+        <converters:DecimalInputConverter x:Key="DecimalInputConverter"/>
+    </ContentView.Resources>
+
+    <Border BackgroundColor="White" StrokeThickness="1" Stroke="{StaticResource Gray300}" StrokeShape="RoundRectangle 0">
+        <Grid RowDefinitions="Auto,*,Auto,Auto,Auto">
+            <!-- Header -->
+            <Grid Grid.Row="0" ColumnDefinitions="*,Auto" BackgroundColor="{StaticResource Primary}" Padding="12,6">
+                <Label Grid.Column="0" Text="Bestellung" TextColor="White" FontSize="16" FontAttributes="Bold" VerticalOptions="Center"/>
+                <Button Grid.Column="2" Text="&#x1F5D1; Leeren"
+                        Command="{Binding ClearCartCommand, Source={x:Reference self}}"
+                        BackgroundColor="Transparent" TextColor="White" FontSize="13" Padding="8,0"/>
+            </Grid>
+
+            <!-- Cart items list -->
+            <ScrollView Grid.Row="1" IsVisible="{Binding HasCartItems, Source={x:Reference self}}"
+                        MaximumHeightRequest="{Binding CartListMaxHeight, Source={x:Reference self}}">
+                <VerticalStackLayout BindableLayout.ItemsSource="{Binding CartItems, Source={x:Reference self}}" Padding="0">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="models:CartItem">
+                            <Grid ColumnDefinitions="Auto,*,Auto" Padding="12,5">
+                                <Label Grid.Column="0" Text="{Binding Quantity, StringFormat=&apos;{0}x&apos;}" FontAttributes="Bold" FontSize="14" WidthRequest="36" VerticalOptions="Center" TextColor="{StaticResource Gray900}"/>
+                                <Label Grid.Column="1" Text="{Binding Article.Description}" FontSize="14" VerticalOptions="Center" LineBreakMode="TailTruncation" TextColor="{StaticResource Gray900}"/>
+                                <Label Grid.Column="2" Text="{Binding TotalDisplay}" FontSize="14" FontAttributes="Bold" HorizontalOptions="End" VerticalOptions="Center" TextColor="{Binding Total, Converter={StaticResource ChangeColorConverter}}"/>
+                            </Grid>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+            </ScrollView>
+            <Label Grid.Row="1" Text="Noch keine Artikel gew&#xE4;hlt &#x2013; Kachel antippen"
+                   TextColor="{StaticResource Gray400}" FontSize="12" HorizontalTextAlignment="Center" Padding="12,10"
+                   IsVisible="{Binding HasNoCartItems, Source={x:Reference self}}"/>
+
+            <!-- Divider -->
+            <BoxView Grid.Row="2" HeightRequest="1" BackgroundColor="{StaticResource Gray300}" Margin="10,0"/>
+
+            <!-- Totals -->
+            <Grid Grid.Row="3" ColumnDefinitions="Auto,*,Auto,Auto" RowDefinitions="Auto,Auto" Padding="12,8" RowSpacing="4" ColumnSpacing="8">
+                <Label Grid.Row="0" Grid.Column="0" Text="&#x1F4B3;" FontSize="24" VerticalOptions="Center"/>
+                <Label Grid.Row="0" Grid.Column="1"
+                       Text="{Binding Total, Source={x:Reference self}, StringFormat=&apos;{0:F2} &#x20AC;&apos;}"
+                       FontSize="36" FontAttributes="Bold" TextColor="{StaticResource Primary}" VerticalOptions="Center"/>
+                <Label Grid.Row="0" Grid.Column="2" Text="&#x1F4B4;" FontSize="18" VerticalOptions="Center" HorizontalOptions="End"/>
+                <Grid Grid.Row="0" Grid.Column="3" ColumnDefinitions="*,Auto" ColumnSpacing="4">
+                    <Entry Grid.Column="0"
+                           Text="{Binding GivenAmount, Source={x:Reference self}, Converter={StaticResource DecimalInputConverter}, Mode=TwoWay}"
+                           Keyboard="Numeric" Placeholder="0,00" HorizontalTextAlignment="End" FontSize="15"
+                           VerticalOptions="Center" MinimumWidthRequest="70"/>
+                    <Button Grid.Column="1" Text="&#x1F4B6;"
+                            Command="{Binding TogglePaymentPanelCommand, Source={x:Reference self}}"
+                            BackgroundColor="{StaticResource Primary}" TextColor="White"
+                            FontSize="16" WidthRequest="40" HeightRequest="38" Padding="0"/>
+                </Grid>
+                <Label Grid.Row="1" Grid.Column="2" Text="&#x1F501;" FontSize="18" VerticalOptions="Center" HorizontalOptions="End"/>
+                <Label Grid.Row="1" Grid.Column="3"
+                       Text="{Binding Change, Source={x:Reference self}, StringFormat=&apos;{0:F2} &#x20AC;&apos;}"
+                       FontSize="22" FontAttributes="Bold"
+                       TextColor="{Binding Change, Source={x:Reference self}, Converter={StaticResource ChangeColorConverter}}" VerticalOptions="Center" HorizontalOptions="End"/>
+                
+                <Button Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Text="&#x2713; Abschlie&#xDF;en"
+                        Command="{Binding CompleteOrderCommand, Source={x:Reference self}}"
+                        BackgroundColor="#388E3C" TextColor="White" FontSize="22" Padding="8,0" FontAttributes="Bold"
+                        IsVisible="{Binding HasCartItems, Source={x:Reference self}}"/>
+
+
+            </Grid>
+
+            <!-- Payment panel -->
+            <Border Grid.Row="4" IsVisible="{Binding IsPaymentPanelVisible, Source={x:Reference self}}"
+                    BackgroundColor="{StaticResource Gray100}" StrokeThickness="0" Padding="8,6">
+                <VerticalStackLayout Spacing="6">
+                    <Label Text="Scheine" FontSize="11" TextColor="{StaticResource Gray400}" Margin="2,0,0,0"/>
+                    <ScrollView Orientation="Horizontal" HorizontalScrollBarVisibility="Never">
+                        <HorizontalStackLayout BindableLayout.ItemsSource="{Binding NoteTiles, Source={x:Reference self}}" Spacing="5">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="models:DenominationTile">
+                                    <controls:TileControl TileColor="#2E7D32" TileWidthRequest="70" TileHeightRequest="65"
+                                        Title="{Binding Label}" TitleFontSize="13" SubTitleVisible="False" SubTitleFontSize="12"
+                                        Count="{Binding CountDisplay}"
+                                        PlusCommand="{Binding AddDenominationCommand, Source={x:Reference self}}"
+                                        PlusCommandParameter="{Binding .}"
+                                        MinusCommand="{Binding RemoveDenominationCommand, Source={x:Reference self}}"
+                                        MinusCommandParameter="{Binding .}"/>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </HorizontalStackLayout>
+                    </ScrollView>
+                    <Label Text="Münzen" FontSize="11" TextColor="{StaticResource Gray400}" Margin="2,0,0,0"/>
+                    <ScrollView Orientation="Horizontal" HorizontalScrollBarVisibility="Never">
+                        <HorizontalStackLayout BindableLayout.ItemsSource="{Binding CoinTiles, Source={x:Reference self}}" Spacing="5">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="models:DenominationTile">
+                                    <controls:TileControl TileColor="#B8860B" TileWidthRequest="70" TileHeightRequest="65"
+                                        Title="{Binding Label}" TitleFontSize="12" SubTitleVisible="False" SubTitleFontSize="11"
+                                        Count="{Binding CountDisplay}"
+                                        PlusCommand="{Binding AddDenominationCommand, Source={x:Reference self}}"
+                                        PlusCommandParameter="{Binding .}"
+                                        MinusCommand="{Binding RemoveDenominationCommand, Source={x:Reference self}}"
+                                        MinusCommandParameter="{Binding .}"/>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </HorizontalStackLayout>
+                    </ScrollView>
+                    <Button Text="&#x21BA; Zurücksetzen"
+                            Command="{Binding ResetPaymentCommand, Source={x:Reference self}}"
+                            BackgroundColor="Transparent" TextColor="{StaticResource Gray400}"
+                            FontSize="12" Padding="0" HorizontalOptions="End"/>
+                </VerticalStackLayout>
+            </Border>
+        </Grid>
+    </Border>
+</ContentView>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FestKasse.Views.AboutPage"
+             Title="Über FestKasse"
+             BackgroundColor="{StaticResource Gray100}">
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="20" Padding="20" VerticalOptions="Center">
+
+            <Label Text="💰 FestKasse" FontSize="32" FontAttributes="Bold" HorizontalTextAlignment="Center"
+                   TextColor="{StaticResource Primary}"/>
+
+            <Border BackgroundColor="White" StrokeThickness="0" StrokeShape="RoundRectangle 12" Padding="20">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="FestKasse ist eine mobile Kassen-App für Feste und Veranstaltungen. Sie ermöglicht das schnelle Erfassen von Bestellungen, die Verwaltung mehrerer Stände und den Export von Daten."
+                           FontSize="15" LineHeight="1.4"/>
+
+                    <Label Text="Funktionen:" FontSize="16" FontAttributes="Bold" Margin="0,8,0,0"/>
+                    <Label Text="• Schnelles Kassieren per Kachel-Oberfläche&#x0a;• Mehrere Stände mit eigenen Artikeln&#x0a;• Kategorien und farbige Kacheln&#x0a;• Import/Export via JSON&#x0a;• Synchronisation über URL oder QR-Code&#x0a;• Bestellübermittlung an Server&#x0a;• Rückgeldberechnung mit Schein-/Münzerfassung"
+                           FontSize="14" LineHeight="1.5"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <Border BackgroundColor="White" StrokeThickness="0" StrokeShape="RoundRectangle 12" Padding="20">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Diese App wurde für das Pfingstweinfest in Donnersdorf entwickelt, und ist hoffentlich auch für andere Feste hilfreich."
+                           FontSize="15" FontAttributes="Italic" LineHeight="1.4"/>
+
+                    <Label TextColor="{StaticResource Primary}" FontSize="15" TextDecorations="Underline">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnWebsiteTapped"/>
+                        </Label.GestureRecognizers>
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="🌐 www.weinfest-donnersdorf.de"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                </VerticalStackLayout>
+            </Border>
+
+            <Label Text="Made with ❤️ in Donnersdorf" FontSize="12" TextColor="Gray" HorizontalTextAlignment="Center"/>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

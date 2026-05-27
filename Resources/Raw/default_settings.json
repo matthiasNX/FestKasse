@@ -1,0 +1,24 @@
+{
+  "displayTimeoutMinutes": 10,
+  "logoBase64": null,
+  "syncUrl": null,
+  "tileSize": 120,
+  "orderEnabled": false,
+  "orderUrl": null,
+  "orderSendMode": 0,
+  "orderIgnoreSslErrors": false,
+  "availableColors": [
+    "#4CAF50",
+    "#2196F3",
+    "#F44336",
+    "#FF9800",
+    "#9C27B0",
+    "#00BCD4",
+    "#795548",
+    "#607D8B",
+    "#E91E63",
+    "#FFEB3B",
+    "#3F51B5",
+    "#009688"
+  ]
+}

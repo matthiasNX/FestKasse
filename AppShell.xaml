@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="FestKasse.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:views="clr-namespace:FestKasse.Views"
+    FlyoutBehavior="Flyout"    
+    >
+
+    <!-- Flyout header -->
+    <Shell.FlyoutHeader>
+        <Grid BackgroundColor="{StaticResource Primary}" Padding="10">
+            <Label Text="&#x1F4B0; FestKasse" FontSize="22" FontAttributes="Bold" TextColor="White"/>
+        </Grid>
+    </Shell.FlyoutHeader>
+
+    <Shell.MenuItemTemplate>
+        <DataTemplate>
+            <Grid HeightRequest="44">
+                <Label Text="{Binding Text}"
+                       VerticalOptions="Center"
+                       HorizontalOptions="Start"
+                       Margin="16,0,0,0"/>
+            </Grid>
+        </DataTemplate>
+    </Shell.MenuItemTemplate>
+
+    <Shell.FlyoutFooter>
+        <Grid BackgroundColor="{StaticResource Primary}" Padding="10">
+            <Label Text="FestKasse – Kassieren statt kassieren müssen." FontSize="15" FontAttributes="Bold" TextColor="White"/>
+        </Grid>
+    </Shell.FlyoutFooter>
+
+    <!-- Main page -->
+    <FlyoutItem Title="Kasse" Route="MainPage" Shell.FlyoutItemIsVisible="False">
+        <ShellContent ContentTemplate="{DataTemplate views:MainPage}" Route="MainPage"/>
+    </FlyoutItem>
+
+    <!-- Navigation menu items -->
+    <MenuItem Text="&#x1F4B0;  Kasse"              Clicked="OnKasseClicked"/>
+    <MenuItem Text="&#x1F3EA;  Standverwaltung"   Clicked="OnStandManagementClicked"/>
+    <MenuItem Text="&#x1F4CB;  Kategorieverwaltung" Clicked="OnCategoryManagementClicked"/>
+    <MenuItem Text="&#x1F4E6;  Artikelverwaltung"  Clicked="OnArticleManagementClicked"/>
+    <MenuItem Text="&#x2699;&#xFE0F;  Einstellungen"       Clicked="OnSettingsClicked"/>
+    <MenuItem Text="&#x1F4DC;  Bestellverlauf"      Clicked="OnOrderHistoryClicked"/>
+    <MenuItem Text="&#x2139;&#xFE0F;  &#xDC;ber"               Clicked="OnAboutClicked"/>
+
+</Shell>

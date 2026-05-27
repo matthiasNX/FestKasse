@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:FestKasse.ViewModels"
+             xmlns:models="clr-namespace:FestKasse.Models"
+             xmlns:converters="clr-namespace:FestKasse.Converters"
+             xmlns:controls="clr-namespace:FestKasse.Controls"
+             x:Class="FestKasse.Views.MainPage"
+             x:Name="ThisPage"
+             x:DataType="viewmodels:MainViewModel"
+             Title="{Binding ActiveStandName}"
+             BackgroundColor="{StaticResource Gray100}">
+    <ContentPage.Resources>
+        <converters:DecimalInputConverter x:Key="DecimalInputConverter"/>
+        <converters:StringEqualityConverter x:Key="StringEqualityConverter"/>
+    </ContentPage.Resources>
+
+    <Grid>
+
+    <!-- ═══════════════ PORTRAIT LAYOUT ═══════════════ -->
+    <Grid x:Name="PortraitLayout" RowDefinitions="Auto,*,Auto">
+        <controls:CategoryTabBarControl Grid.Row="0"
+            Categories="{Binding Categories}"
+            SelectedCategory="{Binding SelectedCategory}"
+            SelectCategoryCommand="{Binding SelectCategoryCommand}"
+            LogoSource="{Binding LogoSource}"
+            IsLogoVisible="{Binding IsLogoVisible}"/>
+
+        <controls:ArticleTileGridControl Grid.Row="1"
+            CategoryGroups="{Binding CategoryGroups}"
+            ShowGroupHeaders="{Binding ShowGroupHeaders}"
+            TileWidth="{Binding TileWidth}"
+            TileHeight="{Binding TileHeight}"
+            TileFontSizeDescription="{Binding TileFontSizeDescription}"
+            TileFontSizeSmall="{Binding TileFontSizeSmall}"
+            PlusCommand="{Binding AddToCartCommand}"
+            MinusCommand="{Binding RemoveFromCartCommand}"/>
+
+        <controls:CartPanelControl Grid.Row="2"
+            CartItems="{Binding CartItems}"
+            HasCartItems="{Binding HasCartItems}"
+            ShowCompleteButton="{Binding ShowCompleteButton}"
+            Total="{Binding Total}"
+            GivenAmount="{Binding GivenAmount, Mode=TwoWay}"
+            Change="{Binding Change}"
+            IsPaymentPanelVisible="{Binding IsPaymentPanelVisible}"
+            NoteTiles="{Binding NoteTiles}"
+            CoinTiles="{Binding CoinTiles}"
+            CartListMaxHeight="150"
+            CompleteOrderCommand="{Binding CompleteOrderCommand}"
+            ClearCartCommand="{Binding ClearCartCommand}"
+            TogglePaymentPanelCommand="{Binding TogglePaymentPanelCommand}"
+            AddDenominationCommand="{Binding AddDenominationCommand}"
+            RemoveDenominationCommand="{Binding RemoveDenominationCommand}"
+            ResetPaymentCommand="{Binding ResetPaymentCommand}"/>
+    </Grid>
+
+    <!-- ═══════════════ LANDSCAPE LAYOUT ═══════════════ -->
+    <Grid x:Name="LandscapeLayout" IsVisible="False"
+          RowDefinitions="Auto,*" ColumnDefinitions="*,400">
+
+        <controls:CategoryTabBarControl Grid.Row="0" Grid.Column="0"
+            Categories="{Binding Categories}"
+            SelectedCategory="{Binding SelectedCategory}"
+            SelectCategoryCommand="{Binding SelectCategoryCommand}"
+            LogoSource="{Binding LogoSource}"
+            IsLogoVisible="{Binding IsLogoVisible}"/>
+
+        <controls:ArticleTileGridControl Grid.Row="1" Grid.Column="0"
+            CategoryGroups="{Binding CategoryGroups}"
+            ShowGroupHeaders="{Binding ShowGroupHeaders}"
+            TileWidth="{Binding TileWidth}"
+            TileHeight="{Binding TileHeight}"
+            TileFontSizeDescription="{Binding TileFontSizeDescription}"
+            TileFontSizeSmall="{Binding TileFontSizeSmall}"
+            PlusCommand="{Binding AddToCartCommand}"
+            MinusCommand="{Binding RemoveFromCartCommand}"/>
+
+        <controls:CartPanelControl Grid.Row="0" Grid.Column="1" Grid.RowSpan="2"
+            CartItems="{Binding CartItems}"
+            HasCartItems="{Binding HasCartItems}"
+            ShowCompleteButton="{Binding ShowCompleteButton}"
+            Total="{Binding Total}"
+            GivenAmount="{Binding GivenAmount, Mode=TwoWay}"
+            Change="{Binding Change}"
+            IsPaymentPanelVisible="{Binding IsPaymentPanelVisible}"
+            NoteTiles="{Binding NoteTiles}"
+            CoinTiles="{Binding CoinTiles}"
+            CartListMaxHeight="9999"
+            CompleteOrderCommand="{Binding CompleteOrderCommand}"
+            ClearCartCommand="{Binding ClearCartCommand}"
+            TogglePaymentPanelCommand="{Binding TogglePaymentPanelCommand}"
+            AddDenominationCommand="{Binding AddDenominationCommand}"
+            RemoveDenominationCommand="{Binding RemoveDenominationCommand}"
+            ResetPaymentCommand="{Binding ResetPaymentCommand}"/>
+    </Grid>
+
+    </Grid>
+</ContentPage>

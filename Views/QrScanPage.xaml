@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:FestKasse.ViewModels"
+             xmlns:zxing="clr-namespace:ZXing.Net.Maui.Controls;assembly=ZXing.Net.Maui.Controls"
+             x:Class="FestKasse.Views.QrScanPage"
+             x:DataType="viewmodels:QrScanViewModel"
+             Title="QR-Code scannen"
+             BackgroundColor="Black">
+
+    <Grid>
+        <zxing:CameraBarcodeReaderView x:Name="BarcodeReader"
+                                       IsDetecting="{Binding IsScanning}"
+                                       BarcodesDetected="OnBarcodesDetected"
+                                       HorizontalOptions="Fill"
+                                       VerticalOptions="Fill"/>
+
+        <!-- Overlay -->
+        <Border BackgroundColor="#80000000"
+                HorizontalOptions="Fill"
+                VerticalOptions="End"
+                Padding="20">
+            <VerticalStackLayout Spacing="10">
+                <Label Text="QR-Code der Sync-URL vor die Kamera halten"
+                       TextColor="White"
+                       HorizontalTextAlignment="Center"
+                       FontSize="15"/>
+                <Button Text="Abbrechen"
+                        Command="{Binding CancelCommand}"
+                        BackgroundColor="{StaticResource Gray500}"
+                        TextColor="White"
+                        Margin="40,0"/>
+            </VerticalStackLayout>
+        </Border>
+    </Grid>
+</ContentPage>
