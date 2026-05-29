@@ -9,6 +9,7 @@ namespace FestKasse.ViewModels;
 public partial class StandManagementViewModel : ObservableObject
 {
     private readonly IDataService _dataService;
+    private readonly ILogService _log;
 
     [ObservableProperty]
     private ObservableCollection<Stand> _stands = new();
@@ -22,9 +23,10 @@ public partial class StandManagementViewModel : ObservableObject
     [ObservableProperty]
     private string _activeStandId = string.Empty;
 
-    public StandManagementViewModel(IDataService dataService)
+    public StandManagementViewModel(IDataService dataService, ILogService logService)
     {
         _dataService = dataService;
+        _log = logService;
     }
 
     public async Task InitializeAsync()
@@ -39,6 +41,7 @@ public partial class StandManagementViewModel : ObservableObject
         Stands.Clear();
         foreach (var stand in data.Stands)
             Stands.Add(stand);
+        _log.Debug($"Stand management: {Stands.Count} stand(s) loaded, active='{data.ActiveStandId}'.");
     }
 
     [RelayCommand]
@@ -47,13 +50,15 @@ public partial class StandManagementViewModel : ObservableObject
         var name = NewStandName.Trim();
         if (string.IsNullOrEmpty(name))
         {
-            await Shell.Current.DisplayAlert("Fehler", "Bitte einen Namen eingeben.", "OK");
+            var loc = LocalizationService.Instance;
+            await Shell.Current.DisplayAlert(loc["Common_Error"], loc["Alert_Stand_NoName"], loc["Common_OK"]);
             return;
         }
 
         var stand = new Stand { Name = name };
         Stands.Add(stand);
         await _dataService.SaveStandsAsync(Stands.ToList());
+        _log.Info($"Stand created: '{name}'.");
         NewStandName = string.Empty;
     }
 
@@ -62,17 +67,20 @@ public partial class StandManagementViewModel : ObservableObject
     {
         if (Stands.Count <= 1)
         {
-            await Shell.Current.DisplayAlert("Hinweis", "Mindestens ein Stand muss vorhanden sein.", "OK");
+            var loc = LocalizationService.Instance;
+            await Shell.Current.DisplayAlert(loc["Common_Info"], loc["Stand_MinOne_Msg"], loc["Common_OK"]);
             return;
         }
 
+        var loc2 = LocalizationService.Instance;
         var confirmed = await Shell.Current.DisplayAlert(
-            "Stand löschen",
-            $"Stand \"{stand.Name}\" wirklich löschen? Alle zugehörigen Artikel gehen verloren.",
-            "Ja, löschen", "Abbrechen");
+            loc2["Stand_Delete_Title"],
+            loc2.Format("Stand_Delete_Msg", stand.Name),
+            loc2["Stand_Delete_Yes"], loc2["Common_Cancel"]);
 
         if (!confirmed) return;
 
+        _log.Info($"Stand deleted: '{stand.Name}' (ID={stand.Id}).");
         Stands.Remove(stand);
 
         if (ActiveStandId == stand.Id)
@@ -87,18 +95,20 @@ public partial class StandManagementViewModel : ObservableObject
     [RelayCommand]
     private async Task RenameStandAsync(Stand stand)
     {
+        var loc3 = LocalizationService.Instance;
         var newName = await Shell.Current.DisplayPromptAsync(
-            "Stand umbenennen",
-            "Neuer Name:",
+            loc3["Stand_Rename_Title"],
+            loc3["Stand_Rename_Prompt"],
             initialValue: stand.Name,
             maxLength: 50,
             keyboard: Keyboard.Text);
 
         if (string.IsNullOrWhiteSpace(newName)) return;
 
+        var oldName = stand.Name;
         stand.Name = newName.Trim();
         await _dataService.SaveStandsAsync(Stands.ToList());
-        // Refresh list to reflect name change
+        _log.Info($"Stand renamed: '{oldName}' → '{stand.Name}'.");
         var index = Stands.IndexOf(stand);
         Stands[index] = stand;
     }
@@ -106,6 +116,7 @@ public partial class StandManagementViewModel : ObservableObject
     [RelayCommand]
     private async Task SelectStandAsync(Stand stand)
     {
+        _log.Info($"Active stand changed to '{stand.Name}' (ID={stand.Id}).");
         ActiveStandId = stand.Id;
         await _dataService.SetActiveStandAsync(stand.Id);
         await Shell.Current.GoToAsync("//MainPage/MainPage");

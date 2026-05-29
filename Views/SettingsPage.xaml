@@ -2,242 +2,282 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodels="clr-namespace:FestKasse.ViewModels"
+             xmlns:helpers="clr-namespace:FestKasse.Helpers"
              x:Class="FestKasse.Views.SettingsPage"
-             x:DataType="viewmodels:SettingsViewModel"
-             Title="Einstellungen"
-             BackgroundColor="{StaticResource Gray100}">
+             Title="{helpers:Tr Key=Settings_Title}"
+             BackgroundColor="{StaticResource Gray100}"
+             x:DataType="viewmodels:SettingsViewModel">
 
     <Grid RowDefinitions="Auto,*">
-        <!-- Tab Header -->
-        <Grid Grid.Row="0" ColumnDefinitions="*,*,*" BackgroundColor="{StaticResource Primary}" Padding="0">
-            <Button Text="&#x2699;&#xFE0F; Allgemein" 
-                    Command="{Binding SelectTabCommand}" CommandParameter="0"
-                    BackgroundColor="{Binding SelectedTab, Converter={StaticResource TabActiveConverter}, ConverterParameter=0}"
-                    TextColor="White" FontSize="13" FontAttributes="Bold" CornerRadius="0"/>
-            <Button Grid.Column="1" Text="&#x1F4E1; Bestellung"
-                    Command="{Binding SelectTabCommand}" CommandParameter="1"
-                    BackgroundColor="{Binding SelectedTab, Converter={StaticResource TabActiveConverter}, ConverterParameter=1}"
-                    TextColor="White" FontSize="13" FontAttributes="Bold" CornerRadius="0"/>
-            <Button Grid.Column="2" Text="&#x1F504; Sync/Import"
-                    Command="{Binding SelectTabCommand}" CommandParameter="2"
-                    BackgroundColor="{Binding SelectedTab, Converter={StaticResource TabActiveConverter}, ConverterParameter=2}"
-                    TextColor="White" FontSize="13" FontAttributes="Bold" CornerRadius="0"/>
-        </Grid>
 
-        <!-- Tab 0: General Settings -->
-        <ScrollView Grid.Row="1" IsVisible="{Binding IsTab0}">
-            <VerticalStackLayout Spacing="12" Padding="15">
-
-                <!-- Display Settings -->
-                <Border BackgroundColor="White" StrokeThickness="0" StrokeShape="RoundRectangle 10" Padding="15">
-                    <VerticalStackLayout Spacing="10">
-                        <Label Text="Display-Einstellungen" FontSize="18" FontAttributes="Bold"/>
-                        <Grid ColumnDefinitions="*,Auto">
-                            <Label Text="Bildschirm aktiv halten (Minuten)" VerticalOptions="Center"/>
-                            <Entry Grid.Column="1" Text="{Binding DisplayTimeoutMinutes}"
-                                   Keyboard="Numeric" WidthRequest="80" HorizontalTextAlignment="End"
-                                   BackgroundColor="{StaticResource Gray100}"/>
-                        </Grid>
-                        <Label Text="0 = Standard-Timeout verwenden" FontSize="11" TextColor="Gray"/>
-                    </VerticalStackLayout>
-                </Border>
-
-                <!-- Tile Size -->
-                <Border BackgroundColor="White" StrokeThickness="0" StrokeShape="RoundRectangle 10" Padding="15">
-                    <VerticalStackLayout Spacing="10">
-                        <Label Text="Kachelgröße" FontSize="18" FontAttributes="Bold"/>
-                        <Grid ColumnDefinitions="*,Auto">
-                            <Label Text="Größe der Kacheln (dp)" VerticalOptions="Center"/>
-                            <Label Grid.Column="1" Text="{Binding TileSize, StringFormat='{0} dp'}"
-                                   FontAttributes="Bold" VerticalOptions="Center" WidthRequest="60" HorizontalTextAlignment="End"/>
-                        </Grid>
-                        <Slider Minimum="80" Maximum="200" Value="{Binding TileSize}"
-                                MinimumTrackColor="{StaticResource Primary}" MaximumTrackColor="{StaticResource Gray300}"/>
-                    </VerticalStackLayout>
-                </Border>
-
-                <!-- Logo -->
-                <Border BackgroundColor="White" StrokeThickness="0" StrokeShape="RoundRectangle 10" Padding="15">
-                    <VerticalStackLayout Spacing="10">
-                        <Label Text="Logo" FontSize="18" FontAttributes="Bold"/>
-                        <Grid ColumnDefinitions="*,Auto" IsVisible="{Binding HasLogo}">
-                            <Image Source="{Binding LogoPreview}" HeightRequest="80" Aspect="AspectFit" HorizontalOptions="Start"/>
-                            <Button Grid.Column="1" Text="🗑 Entfernen" Command="{Binding RemoveLogoCommand}"
-                                    BackgroundColor="Red" TextColor="White" VerticalOptions="Center"/>
-                        </Grid>
-                        <Button Text="📷 Logo auswählen" Command="{Binding SelectLogoCommand}"
-                                BackgroundColor="{StaticResource Primary}" TextColor="White"/>
-                        <Label Text="Das Logo wird im Header rechts angezeigt" FontSize="11" TextColor="Gray"/>
-                    </VerticalStackLayout>
-                </Border>
-
-                <!-- Reset Stammdaten -->
-                <Border BackgroundColor="White" StrokeThickness="0" StrokeShape="RoundRectangle 10" Padding="15">
-                    <VerticalStackLayout Spacing="10">
-                        <Label Text="Stammdaten zurücksetzen" FontSize="18" FontAttributes="Bold"/>
-                        <Label Text="Setzt alle Stände und Artikel auf die Standard-Daten zurück." FontSize="13" TextColor="Gray"/>
-                        <Button Text="🔄 Stammdaten auf Standard zurücksetzen" Command="{Binding ResetArticlesToDefaultCommand}"
-                                BackgroundColor="#F44336" TextColor="White"/>
-                    </VerticalStackLayout>
-                </Border>
-
-                <!-- Einstellungen Import/Export -->
-                <Border BackgroundColor="White" StrokeThickness="0" StrokeShape="RoundRectangle 10" Padding="15">
-                    <VerticalStackLayout Spacing="10">
-                        <Label Text="Einstellungen Import / Export" FontSize="18" FontAttributes="Bold"/>
-                        <Label Text="Exportiert oder importiert die App-Einstellungen (Anzeige, Kacheln, Logo, Bestellkonfiguration) als JSON-Datei." FontSize="12" TextColor="Gray"/>
-                        <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
-                            <Button Grid.Column="0" Text="📤 Exportieren" Command="{Binding ExportSettingsCommand}"
-                                    BackgroundColor="{StaticResource Primary}" TextColor="White"/>
-                            <Button Grid.Column="1" Text="📥 Importieren" Command="{Binding ImportSettingsCommand}"
-                                    BackgroundColor="{StaticResource Secondary}" TextColor="White"/>
-                        </Grid>
-                        <Button Text="🔄 Einstellungen auf Standard zurücksetzen" Command="{Binding ResetSettingsToDefaultCommand}"
-                                BackgroundColor="#F44336" TextColor="White" Margin="0,4,0,0"/>
-                    </VerticalStackLayout>
-                </Border>
-
-                <Button Text="💾 Einstellungen speichern" Command="{Binding SaveSettingsCommand}"
-                        BackgroundColor="{StaticResource Primary}" TextColor="White" FontSize="18" HeightRequest="55" Margin="0,10"/>
-            </VerticalStackLayout>
+        <!-- ── Custom Tab Bar ─────────────────────────────────────────── -->
+        <ScrollView Orientation="Horizontal" HorizontalScrollBarVisibility="Never"
+                    Grid.Row="0" BackgroundColor="{StaticResource Primary}">
+            <HorizontalStackLayout Spacing="0">
+                <Button x:Name="TabBtn0" Text="{helpers:Tr Key=Settings_Tab_General}"
+                        Clicked="OnTabClicked" CommandParameter="0"
+                        BackgroundColor="Transparent" TextColor="White"
+                        FontSize="13" Padding="16,10" BorderWidth="0"
+                        FontAttributes="Bold"/>
+                <Button x:Name="TabBtn1" Text="{helpers:Tr Key=Settings_Tab_Order}"
+                        Clicked="OnTabClicked" CommandParameter="1"
+                        BackgroundColor="Transparent" TextColor="White"
+                        FontSize="13" Padding="16,10" BorderWidth="0"/>
+                <Button x:Name="TabBtn2" Text="{helpers:Tr Key=Settings_Tab_Sync}"
+                        Clicked="OnTabClicked" CommandParameter="2"
+                        BackgroundColor="Transparent" TextColor="White"
+                        FontSize="13" Padding="16,10" BorderWidth="0"/>
+                <Button x:Name="TabBtn3" Text="{helpers:Tr Key=Settings_Tab_Logging}"
+                        Clicked="OnTabClicked" CommandParameter="3"
+                        BackgroundColor="Transparent" TextColor="White"
+                        FontSize="13" Padding="16,10" BorderWidth="0"/>
+            </HorizontalStackLayout>
         </ScrollView>
 
-        <!-- Tab 1: Order Settings -->
-        <ScrollView Grid.Row="1" IsVisible="{Binding IsTab1}">
-            <VerticalStackLayout Spacing="12" Padding="15">
+        <!-- ── Tab Content ────────────────────────────────────────────── -->
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout>
 
-                <Border BackgroundColor="White" StrokeThickness="0" StrokeShape="RoundRectangle 10" Padding="15">
-                    <VerticalStackLayout Spacing="10">
-                        <Label Text="Bestellübermittlung" FontSize="18" FontAttributes="Bold"/>
-                        <Label Text="Wenn konfiguriert, sendet 'Abschließen' die Bestellung an den Server." FontSize="13" TextColor="Gray"/>
+                <!-- ── Tab 0: General ────────────────────────────────── -->
+                <VerticalStackLayout x:Name="Tab0" Spacing="12" Padding="15">
 
-                        <Grid ColumnDefinitions="*,Auto" Margin="0,4,0,0">
-                            <Label Text="Bestellübermittlung aktivieren" FontSize="15" VerticalOptions="Center"/>
-                            <Switch Grid.Column="1" IsToggled="{Binding OrderEnabled}" OnColor="{StaticResource Primary}" VerticalOptions="Center"/>
-                        </Grid>
-
-                        <Label Text="Bestell-URL" FontSize="14" Margin="0,8,0,0"/>
-                        <Entry Text="{Binding OrderUrl}" Placeholder="https://server.example/api/order"
-                               Keyboard="Url" BackgroundColor="{StaticResource Gray100}"/>
-
-                        <Label Text="Sendemodus" FontSize="14" Margin="0,8,0,0"/>
-                        <Picker ItemsSource="{Binding OrderSendModes}" SelectedIndex="{Binding OrderSendModeIndex}"/>
-
-                        <Label Text="JSON Body: POST mit {timestamp, total, items[]}" FontSize="11" TextColor="Gray"/>
-                        <Label Text="URL-Vorlage: GET mit Platzhaltern {total}, {timestamp}, {items}" FontSize="11" TextColor="Gray"/>
-
-                        <Border BackgroundColor="#FFF3CD" StrokeThickness="0" StrokeShape="RoundRectangle 6" Padding="10,8" Margin="0,8,0,0">
+                    <Border BackgroundColor="White" StrokeThickness="0" StrokeShape="RoundRectangle 10" Padding="15">
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="{helpers:Tr Key=Settings_Display_Section}" FontSize="18" FontAttributes="Bold"/>
                             <Grid ColumnDefinitions="*,Auto">
-                                <Label Text="⚠ SSL-Zertifikat ignorieren" FontAttributes="Bold" FontSize="14" TextColor="#856404" VerticalOptions="Center"/>
-                                <Switch Grid.Column="1" IsToggled="{Binding OrderIgnoreSslErrors}" OnColor="#F0AD4E" VerticalOptions="Center"/>
+                                <Label Text="{helpers:Tr Key=Settings_Display_KeepOn}" VerticalOptions="Center"/>
+                                <Entry Grid.Column="1" Text="{Binding DisplayTimeoutMinutes}"
+                                       Keyboard="Numeric" WidthRequest="80" HorizontalTextAlignment="End"
+                                       BackgroundColor="{StaticResource Gray100}"/>
                             </Grid>
-                        </Border>
-                    </VerticalStackLayout>
-                </Border>
+                            <Label Text="{helpers:Tr Key=Settings_Display_KeepOnHint}" FontSize="11" TextColor="Gray"/>
+                        </VerticalStackLayout>
+                    </Border>
 
-                <!-- Local order history -->
-                <Border BackgroundColor="White" StrokeThickness="0" StrokeShape="RoundRectangle 10" Padding="15">
-                    <VerticalStackLayout Spacing="10">
-                        <Label Text="Lokaler Bestellverlauf" FontSize="18" FontAttributes="Bold"/>
-                        <Label Text="Speichert jede abgeschlossene Bestellung in einer lokalen Datenbank auf dem Gerät." FontSize="12" TextColor="Gray"/>
-                        <Grid ColumnDefinitions="*,Auto" Margin="0,4,0,0">
-                            <Label Text="Bestellungen lokal speichern" FontSize="15" VerticalOptions="Center"/>
-                            <Switch Grid.Column="1" IsToggled="{Binding SaveOrdersLocally}" OnColor="{StaticResource Primary}" VerticalOptions="Center"/>
-                        </Grid>
-                        <Grid ColumnDefinitions="*,Auto" Margin="0,4,0,0">
-                            <Label FontSize="13" TextColor="{StaticResource Gray500}" VerticalOptions="Center">
-                                <Label.FormattedText>
-                                    <FormattedString>
-                                        <Span Text="Gespeicherte Einträge: "/>
-                                        <Span Text="{Binding OrderCount}" FontAttributes="Bold"/>
-                                    </FormattedString>
-                                </Label.FormattedText>
-                            </Label>
-                            <Button Grid.Column="1" Text="🗑 Löschen"
-                                    Command="{Binding ClearOrderHistoryCommand}"
-                                    IsEnabled="{Binding OrderCount, Converter={StaticResource GreaterThanZeroConverter}}"
-                                    BackgroundColor="#F44336" TextColor="White" FontSize="12" Padding="8,4"/>
-                        </Grid>
-                    </VerticalStackLayout>
-                </Border>
-
-                <Button Text="💾 Einstellungen speichern" Command="{Binding SaveSettingsCommand}"
-                        BackgroundColor="{StaticResource Primary}" TextColor="White" FontSize="18" HeightRequest="55" Margin="0,10"/>
-            </VerticalStackLayout>
-        </ScrollView>
-
-        <!-- Tab 2: Sync/Import (Stammdaten) -->
-        <ScrollView Grid.Row="1" IsVisible="{Binding IsTab2}">
-            <VerticalStackLayout Spacing="12" Padding="15">
-
-                <!-- Sync -->
-                <Border BackgroundColor="White" StrokeThickness="0" StrokeShape="RoundRectangle 10" Padding="15">
-                    <VerticalStackLayout Spacing="10">
-                        <Label Text="Synchronisation" FontSize="18" FontAttributes="Bold"/>
-                        <Label Text="Lädt Stände, Kategorien und Artikel von einer URL herunter und ersetzt die lokalen Daten. Einstellungen werden nicht verändert." FontSize="12" TextColor="Gray"/>
-                        <Label Text="Sync-URL (HTTP)" FontSize="14"/>
-                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
-                            <Entry Text="{Binding SyncUrl}" Placeholder="https://example.com/config.json"
-                                   Keyboard="Url" BackgroundColor="{StaticResource Gray100}" VerticalOptions="Center"/>
-                            <Button Grid.Column="1" Text="&#x1F4F7;" Command="{Binding ScanSyncUrlCommand}"
-                                    BackgroundColor="{StaticResource Primary}" TextColor="White" WidthRequest="50" VerticalOptions="Center"/>
-                        </Grid>
-                        <Border BackgroundColor="#FFF3CD" StrokeThickness="0" StrokeShape="RoundRectangle 6" Padding="10,8">
-                            <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
-                                <Label Text="⚠ SSL-Zertifikat ignorieren" FontAttributes="Bold" FontSize="14" TextColor="#856404" VerticalOptions="Center"/>
-                                <Switch Grid.Column="1" IsToggled="{Binding IgnoreSslErrors}" OnColor="#F0AD4E" VerticalOptions="Center"/>
-                                <Label Grid.Row="1" Grid.ColumnSpan="2" Text="Nur temporär für diesen Sync." FontSize="11" TextColor="#856404"/>
+                    <Border BackgroundColor="White" StrokeThickness="0" StrokeShape="RoundRectangle 10" Padding="15">
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="{helpers:Tr Key=Settings_TileSize_Section}" FontSize="18" FontAttributes="Bold"/>
+                            <Grid ColumnDefinitions="*,Auto">
+                                <Label Text="{helpers:Tr Key=Settings_TileSize_Label}" VerticalOptions="Center"/>
+                                <Label Grid.Column="1" Text="{Binding TileSize, StringFormat='{0} dp'}"
+                                       FontAttributes="Bold" VerticalOptions="Center" WidthRequest="60" HorizontalTextAlignment="End"/>
                             </Grid>
-                        </Border>
-                        <Button Text="{Binding IsSyncing, Converter={StaticResource SyncButtonTextConverter}}"
-                                Command="{Binding SyncFromUrlCommand}"
-                                IsEnabled="{Binding IsSyncing, Converter={StaticResource InverseBoolConverter}}"
-                                BackgroundColor="{StaticResource Secondary}" TextColor="White"/>
-                    </VerticalStackLayout>
-                </Border>
+                            <Slider Minimum="80" Maximum="200" Value="{Binding TileSize}"
+                                    MinimumTrackColor="{StaticResource Primary}" MaximumTrackColor="{StaticResource Gray300}"/>
+                        </VerticalStackLayout>
+                    </Border>
 
-                <!-- Import/Export -->
-                <Border BackgroundColor="White" StrokeThickness="0" StrokeShape="RoundRectangle 10" Padding="15">
-                    <VerticalStackLayout Spacing="10">
-                        <Label Text="Import / Export (Stammdaten)" FontSize="18" FontAttributes="Bold"
-                               IsVisible="{Binding IsExportSelectionVisible, Converter={StaticResource InverseBoolConverter}}"/>
-                        <Label Text="Exportiert oder importiert Stände mit ihren Kategorien und Artikeln als JSON-Datei. Einstellungen sind nicht enthalten." FontSize="12" TextColor="Gray"
-                               IsVisible="{Binding IsExportSelectionVisible, Converter={StaticResource InverseBoolConverter}}"/>
-                        <Border IsVisible="{Binding IsExportSelectionVisible}"
-                                BackgroundColor="{StaticResource Gray100}" StrokeShape="RoundRectangle 8" StrokeThickness="0" Padding="12">
-                            <VerticalStackLayout Spacing="8">
-                                <Label Text="Stände für Export auswählen:" FontSize="14" FontAttributes="Bold"/>
-                                <VerticalStackLayout BindableLayout.ItemsSource="{Binding StandExportItems}" Spacing="6">
-                                    <BindableLayout.ItemTemplate>
-                                        <DataTemplate x:DataType="viewmodels:StandExportItem">
-                                            <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
-                                                <CheckBox IsChecked="{Binding IsSelected}" VerticalOptions="Center"/>
-                                                <Label Text="{Binding Name}" FontSize="15" VerticalOptions="Center"/>
-                                            </HorizontalStackLayout>
-                                        </DataTemplate>
-                                    </BindableLayout.ItemTemplate>
-                                </VerticalStackLayout>
-                                <Grid ColumnDefinitions="*,*" ColumnSpacing="10" Margin="0,4,0,0">
-                                    <Button Grid.Column="0" Text="✕ Abbrechen" Command="{Binding CancelExportCommand}"
-                                            BackgroundColor="{StaticResource Gray400}" TextColor="White"/>
-                                    <Button Grid.Column="1" Text="📤 Exportieren" Command="{Binding ExportSelectedStandsCommand}"
-                                            BackgroundColor="{StaticResource Primary}" TextColor="White"/>
-                                </Grid>
-                            </VerticalStackLayout>
-                        </Border>
-                        <Grid ColumnDefinitions="*,*" ColumnSpacing="10"
-                              IsVisible="{Binding IsExportSelectionVisible, Converter={StaticResource InverseBoolConverter}}">
-                            <Button Grid.Column="0" Text="📤 Stände exportieren…" Command="{Binding ShowExportSelectionCommand}"
+                    <Border BackgroundColor="White" StrokeThickness="0" StrokeShape="RoundRectangle 10" Padding="15">
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="{helpers:Tr Key=Settings_Logo_Section}" FontSize="18" FontAttributes="Bold"/>
+                            <Grid ColumnDefinitions="*,Auto" IsVisible="{Binding HasLogo}">
+                                <Image Source="{Binding LogoPreview}" HeightRequest="80" Aspect="AspectFit" HorizontalOptions="Start"/>
+                                <Button Grid.Column="1" Text="{helpers:Tr Key=Settings_Logo_Remove}" Command="{Binding RemoveLogoCommand}"
+                                        BackgroundColor="Red" TextColor="White" VerticalOptions="Center"/>
+                            </Grid>
+                            <Button Text="{helpers:Tr Key=Settings_Logo_Select}" Command="{Binding SelectLogoCommand}"
                                     BackgroundColor="{StaticResource Primary}" TextColor="White"/>
-                            <Button Grid.Column="1" Text="📥 Aus Datei importieren" Command="{Binding ImportFromFileCommand}"
-                                    BackgroundColor="{StaticResource Secondary}" TextColor="White"/>
-                        </Grid>
-                    </VerticalStackLayout>
-                </Border>
+                            <Label Text="{helpers:Tr Key=Settings_Logo_Hint}" FontSize="11" TextColor="Gray"/>
+                        </VerticalStackLayout>
+                    </Border>
 
-                <Button Text="💾 Sync-URL speichern" Command="{Binding SaveSettingsCommand}"
-                        BackgroundColor="{StaticResource Primary}" TextColor="White" FontSize="18" HeightRequest="55" Margin="0,10"/>
+                    <Border BackgroundColor="White" StrokeThickness="0" StrokeShape="RoundRectangle 10" Padding="15">
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="{helpers:Tr Key=Settings_Language_Section}" FontSize="18" FontAttributes="Bold"/>
+                            <Label Text="{helpers:Tr Key=Settings_Language_Label}" FontSize="14"/>
+                            <Picker ItemsSource="{Binding LanguageDisplayNames}"
+                                    SelectedIndex="{Binding SelectedLanguageIndex}"/>
+                            <Label Text="{helpers:Tr Key=Settings_Language_RestartHint}" FontSize="11" TextColor="Gray"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border BackgroundColor="White" StrokeThickness="0" StrokeShape="RoundRectangle 10" Padding="15">
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="{helpers:Tr Key=Settings_ResetArticles_Section}" FontSize="18" FontAttributes="Bold"/>
+                            <Label Text="{helpers:Tr Key=Settings_ResetArticles_Desc}" FontSize="13" TextColor="Gray"/>
+                            <Button Text="{helpers:Tr Key=Settings_ResetArticles_Button}" Command="{Binding ResetArticlesToDefaultCommand}"
+                                    BackgroundColor="#F44336" TextColor="White"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border BackgroundColor="White" StrokeThickness="0" StrokeShape="RoundRectangle 10" Padding="15">
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="{helpers:Tr Key=Settings_ImportExport_Section}" FontSize="18" FontAttributes="Bold"/>
+                            <Label Text="{helpers:Tr Key=Settings_ImportExport_Desc}" FontSize="12" TextColor="Gray"/>
+                            <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                                <Button Grid.Column="0" Text="{helpers:Tr Key=Settings_Export_Button}" Command="{Binding ExportSettingsCommand}"
+                                        BackgroundColor="{StaticResource Primary}" TextColor="White"/>
+                                <Button Grid.Column="1" Text="{helpers:Tr Key=Settings_Import_Button}" Command="{Binding ImportSettingsCommand}"
+                                        BackgroundColor="{StaticResource Secondary}" TextColor="White"/>
+                            </Grid>
+                            <Button Text="{helpers:Tr Key=Settings_ResetSettings_Button}" Command="{Binding ResetSettingsToDefaultCommand}"
+                                    BackgroundColor="#F44336" TextColor="White" Margin="0,4,0,0"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Button Text="{helpers:Tr Key=Common_Save}" Command="{Binding SaveSettingsCommand}"
+                            BackgroundColor="{StaticResource Primary}" TextColor="White" FontSize="18" HeightRequest="55" Margin="0,10"/>
+                </VerticalStackLayout>
+
+                <!-- ── Tab 1: Order ───────────────────────────────────── -->
+                <VerticalStackLayout x:Name="Tab1" Spacing="12" Padding="15" IsVisible="False">
+
+                    <Border BackgroundColor="White" StrokeThickness="0" StrokeShape="RoundRectangle 10" Padding="15">
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="{helpers:Tr Key=Settings_Order_Section}" FontSize="18" FontAttributes="Bold"/>
+                            <Label Text="{helpers:Tr Key=Settings_Order_Desc}" FontSize="13" TextColor="Gray"/>
+                            <Grid ColumnDefinitions="*,Auto" Margin="0,4,0,0">
+                                <Label Text="{helpers:Tr Key=Settings_Order_Enable}" FontSize="15" VerticalOptions="Center"/>
+                                <Switch Grid.Column="1" IsToggled="{Binding OrderEnabled}" OnColor="{StaticResource Primary}" VerticalOptions="Center"/>
+                            </Grid>
+                            <Label Text="{helpers:Tr Key=Settings_Order_Url}" FontSize="14" Margin="0,8,0,0"/>
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                                <Entry Grid.Column="0" Text="{Binding OrderUrl}" Placeholder="https://server.example/api/order"
+                                       Keyboard="Url" BackgroundColor="{StaticResource Gray100}" VerticalOptions="Center"/>
+                                <Button Grid.Column="1" Text="&#x1F4F7;" Command="{Binding ScanOrderUrlCommand}"
+                                        BackgroundColor="{StaticResource Primary}" TextColor="White" WidthRequest="50" VerticalOptions="Center"/>
+                            </Grid>
+                            <Label Text="{helpers:Tr Key=Settings_Order_SendMode}" FontSize="14" Margin="0,8,0,0"/>
+                            <Picker ItemsSource="{Binding OrderSendModes}" SelectedIndex="{Binding OrderSendModeIndex}"/>
+                            <Label Text="{helpers:Tr Key=Settings_Order_JsonHint}" FontSize="11" TextColor="Gray"/>
+                            <Label Text="{helpers:Tr Key=Settings_Order_UrlHint}" FontSize="11" TextColor="Gray"/>
+                            <Border BackgroundColor="#FFF3CD" StrokeThickness="0" StrokeShape="RoundRectangle 6" Padding="10,8" Margin="0,8,0,0">
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <Label Text="{helpers:Tr Key=Settings_Order_SslWarning}" FontAttributes="Bold" FontSize="14" TextColor="#856404" VerticalOptions="Center"/>
+                                    <Switch Grid.Column="1" IsToggled="{Binding OrderIgnoreSslErrors}" OnColor="#F0AD4E" VerticalOptions="Center"/>
+                                </Grid>
+                            </Border>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border BackgroundColor="White" StrokeThickness="0" StrokeShape="RoundRectangle 10" Padding="15">
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="{helpers:Tr Key=Settings_OrderHistory_Section}" FontSize="18" FontAttributes="Bold"/>
+                            <Label Text="{helpers:Tr Key=Settings_OrderHistory_Desc}" FontSize="12" TextColor="Gray"/>
+                            <Grid ColumnDefinitions="*,Auto" Margin="0,4,0,0">
+                                <Label Text="{helpers:Tr Key=Settings_OrderHistory_Save}" FontSize="15" VerticalOptions="Center"/>
+                                <Switch Grid.Column="1" IsToggled="{Binding SaveOrdersLocally}" OnColor="{StaticResource Primary}" VerticalOptions="Center"/>
+                            </Grid>
+                            <Grid ColumnDefinitions="*,Auto" Margin="0,4,0,0">
+                                <Label FontSize="13" TextColor="{StaticResource Gray500}" VerticalOptions="Center">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="{helpers:Tr Key=Settings_OrderHistory_Count}"/>
+                                            <Span Text="{Binding OrderCount}" FontAttributes="Bold"/>
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+                                <Button Grid.Column="1" Text="{helpers:Tr Key=Settings_OrderHistory_Clear}"
+                                        Command="{Binding ClearOrderHistoryCommand}"
+                                        IsEnabled="{Binding OrderCount, Converter={StaticResource GreaterThanZeroConverter}}"
+                                        BackgroundColor="#F44336" TextColor="White" FontSize="12" Padding="8,4"/>
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Button Text="{helpers:Tr Key=Common_Save}" Command="{Binding SaveSettingsCommand}"
+                            BackgroundColor="{StaticResource Primary}" TextColor="White" FontSize="18" HeightRequest="55" Margin="0,10"/>
+                </VerticalStackLayout>
+
+                <!-- ── Tab 2: Sync / Import ───────────────────────────── -->
+                <VerticalStackLayout x:Name="Tab2" Spacing="12" Padding="15" IsVisible="False">
+
+                    <Border BackgroundColor="White" StrokeThickness="0" StrokeShape="RoundRectangle 10" Padding="15">
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="{helpers:Tr Key=Settings_Sync_Section}" FontSize="18" FontAttributes="Bold"/>
+                            <Label Text="{helpers:Tr Key=Settings_Sync_Desc}" FontSize="12" TextColor="Gray"/>
+                            <Label Text="{helpers:Tr Key=Settings_Sync_UrlLabel}" FontSize="14"/>
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                                <Entry Text="{Binding SyncUrl}" Placeholder="https://example.com/config.json"
+                                       Keyboard="Url" BackgroundColor="{StaticResource Gray100}" VerticalOptions="Center"/>
+                                <Button Grid.Column="1" Text="&#x1F4F7;" Command="{Binding ScanSyncUrlCommand}"
+                                        BackgroundColor="{StaticResource Primary}" TextColor="White" WidthRequest="50" VerticalOptions="Center"/>
+                            </Grid>
+                            <Border BackgroundColor="#FFF3CD" StrokeThickness="0" StrokeShape="RoundRectangle 6" Padding="10,8">
+                                <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
+                                    <Label Text="{helpers:Tr Key=Settings_Sync_SslWarning}" FontAttributes="Bold" FontSize="14" TextColor="#856404" VerticalOptions="Center"/>
+                                    <Switch Grid.Column="1" IsToggled="{Binding IgnoreSslErrors}" OnColor="#F0AD4E" VerticalOptions="Center"/>
+                                    <Label Grid.Row="1" Grid.ColumnSpan="2" Text="{helpers:Tr Key=Settings_Sync_SslHint}" FontSize="11" TextColor="#856404"/>
+                                </Grid>
+                            </Border>
+                            <Button Text="{Binding IsSyncing, Converter={StaticResource SyncButtonTextConverter}}"
+                                    Command="{Binding SyncFromUrlCommand}"
+                                    IsEnabled="{Binding IsSyncing, Converter={StaticResource InverseBoolConverter}}"
+                                    BackgroundColor="{StaticResource Secondary}" TextColor="White"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border BackgroundColor="White" StrokeThickness="0" StrokeShape="RoundRectangle 10" Padding="15">
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="{helpers:Tr Key=Settings_MasterData_Section}" FontSize="18" FontAttributes="Bold"
+                                   IsVisible="{Binding IsExportSelectionVisible, Converter={StaticResource InverseBoolConverter}}"/>
+                            <Label Text="{helpers:Tr Key=Settings_MasterData_Desc}" FontSize="12" TextColor="Gray"
+                                   IsVisible="{Binding IsExportSelectionVisible, Converter={StaticResource InverseBoolConverter}}"/>
+                            <Border IsVisible="{Binding IsExportSelectionVisible}"
+                                    BackgroundColor="{StaticResource Gray100}" StrokeShape="RoundRectangle 8" StrokeThickness="0" Padding="12">
+                                <VerticalStackLayout Spacing="8">
+                                    <Label Text="{helpers:Tr Key=Settings_MasterData_SelectStands}" FontSize="14" FontAttributes="Bold"/>
+                                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding StandExportItems}" Spacing="6">
+                                        <BindableLayout.ItemTemplate>
+                                            <DataTemplate x:DataType="viewmodels:StandExportItem">
+                                                <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
+                                                    <CheckBox IsChecked="{Binding IsSelected}" VerticalOptions="Center"/>
+                                                    <Label Text="{Binding Name}" FontSize="15" VerticalOptions="Center"/>
+                                                </HorizontalStackLayout>
+                                            </DataTemplate>
+                                        </BindableLayout.ItemTemplate>
+                                    </VerticalStackLayout>
+                                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10" Margin="0,4,0,0">
+                                        <Button Grid.Column="0" Text="{helpers:Tr Key=Settings_MasterData_CancelExport}" Command="{Binding CancelExportCommand}"
+                                                BackgroundColor="{StaticResource Gray400}" TextColor="White"/>
+                                        <Button Grid.Column="1" Text="{helpers:Tr Key=Settings_MasterData_DoExport}" Command="{Binding ExportSelectedStandsCommand}"
+                                                BackgroundColor="{StaticResource Primary}" TextColor="White"/>
+                                    </Grid>
+                                </VerticalStackLayout>
+                            </Border>
+                            <Grid ColumnDefinitions="*,*" ColumnSpacing="10"
+                                  IsVisible="{Binding IsExportSelectionVisible, Converter={StaticResource InverseBoolConverter}}">
+                                <Button Grid.Column="0" Text="{helpers:Tr Key=Settings_MasterData_ExportStands}" Command="{Binding ShowExportSelectionCommand}"
+                                        BackgroundColor="{StaticResource Primary}" TextColor="White"/>
+                                <Button Grid.Column="1" Text="{helpers:Tr Key=Settings_MasterData_ImportFile}" Command="{Binding ImportFromFileCommand}"
+                                        BackgroundColor="{StaticResource Secondary}" TextColor="White"/>
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Button Text="{helpers:Tr Key=Settings_Sync_SaveButton}" Command="{Binding SaveSettingsCommand}"
+                            BackgroundColor="{StaticResource Primary}" TextColor="White" FontSize="18" HeightRequest="55" Margin="0,10"/>
+                </VerticalStackLayout>
+
+                <!-- ── Tab 3: Logging ─────────────────────────────────── -->
+                <VerticalStackLayout x:Name="Tab3" Spacing="12" Padding="15" IsVisible="False">
+
+                    <Border BackgroundColor="White" StrokeThickness="0" StrokeShape="RoundRectangle 10" Padding="15">
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="{helpers:Tr Key=Settings_LogLevel_Section}" FontSize="18" FontAttributes="Bold"/>
+                            <Label Text="{helpers:Tr Key=Settings_LogLevel_Desc}" FontSize="12" TextColor="Gray"/>
+                            <Picker ItemsSource="{Binding LogLevels}" SelectedItem="{Binding SelectedLogLevel}"/>
+                            <Label Text="Verbose &lt; Debug &lt; Information &lt; Warning &lt; Error &lt; Fatal"
+                                   FontSize="11" TextColor="Gray"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border BackgroundColor="White" StrokeThickness="0" StrokeShape="RoundRectangle 10" Padding="15">
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="{helpers:Tr Key=Settings_LogViewer_Section}" FontSize="18" FontAttributes="Bold"/>
+                            <Label Text="{helpers:Tr Key=Settings_LogViewer_Desc}" FontSize="12" TextColor="Gray"/>
+                            <Button Text="{helpers:Tr Key=Settings_LogViewer_Button}"
+                                    Command="{Binding NavigateToLogViewerCommand}"
+                                    BackgroundColor="{StaticResource Primary}" TextColor="White"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Button Text="{helpers:Tr Key=Common_Save}" Command="{Binding SaveSettingsCommand}"
+                            BackgroundColor="{StaticResource Primary}" TextColor="White" FontSize="18" HeightRequest="55" Margin="0,10"/>
+                </VerticalStackLayout>
+
             </VerticalStackLayout>
         </ScrollView>
+
     </Grid>
 </ContentPage>

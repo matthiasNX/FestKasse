@@ -9,6 +9,7 @@ namespace FestKasse.ViewModels;
 public partial class CategoryManagementViewModel : ObservableObject
 {
     private readonly IDataService _dataService;
+    private readonly ILogService _log;
     private List<Article> _allArticles = new();
 
     [ObservableProperty]
@@ -29,9 +30,10 @@ public partial class CategoryManagementViewModel : ObservableObject
     [ObservableProperty]
     private int _editSortOrder;
 
-    public CategoryManagementViewModel(IDataService dataService)
+    public CategoryManagementViewModel(IDataService dataService, ILogService logService)
     {
         _dataService = dataService;
+        _log = logService;
     }
 
     public async Task InitializeAsync()
@@ -44,6 +46,7 @@ public partial class CategoryManagementViewModel : ObservableObject
         var stand = await _dataService.GetActiveStandAsync();
         _allArticles = stand?.Articles ?? new List<Article>();
         var categories = stand?.Categories.OrderBy(c => c.SortOrder).ToList() ?? new List<Category>();
+        _log.Debug($"Kategorieverwaltung: Stand='{stand?.Name}', {categories.Count} Kategorie(n), {_allArticles.Count} Artikel.");
 
         Categories.Clear();
         foreach (var cat in categories)
@@ -75,7 +78,8 @@ public partial class CategoryManagementViewModel : ObservableObject
     {
         if (string.IsNullOrWhiteSpace(EditName))
         {
-            await Shell.Current.DisplayAlert("Fehler", "Bitte einen Namen eingeben.", "OK");
+            var loc = LocalizationService.Instance;
+            await Shell.Current.DisplayAlert(loc["Common_Error"], loc["Alert_Category_NoName"], loc["Common_OK"]);
             return;
         }
 
@@ -88,14 +92,15 @@ public partial class CategoryManagementViewModel : ObservableObject
                 SortOrder = EditSortOrder
             };
             Categories.Add(newCat);
+            _log.Info($"Category created: '{EditName}', SortOrder={EditSortOrder}.");
         }
         else if (SelectedCategory != null)
         {
             var oldName = SelectedCategory.Name;
             SelectedCategory.Name = EditName;
             SelectedCategory.SortOrder = EditSortOrder;
+            _log.Info($"Category updated: '{oldName}' → '{EditName}'.");
 
-            // Keep Article.Category name in sync
             if (oldName != EditName)
             {
                 foreach (var article in _allArticles.Where(a => a.CategoryId == SelectedCategory.Id))
@@ -120,20 +125,23 @@ public partial class CategoryManagementViewModel : ObservableObject
     {
         if (_allArticles.Any(a => a.CategoryId == category.Id))
         {
+            var loc = LocalizationService.Instance;
             await Shell.Current.DisplayAlert(
-                "Nicht möglich",
-                $"Die Kategorie \"{category.Name}\" wird noch von Artikeln verwendet und kann nicht gelöscht werden.",
-                "OK");
+                loc["Category_Delete_InUse_Title"],
+                loc.Format("Category_Delete_InUse_Msg", category.Name),
+                loc["Common_OK"]);
             return;
         }
 
+        var loc2 = LocalizationService.Instance;
         var confirm = await Shell.Current.DisplayAlert(
-            "Löschen",
-            $"Kategorie \"{category.Name}\" wirklich löschen?",
-            "Ja", "Nein");
+            loc2["Category_Delete_Title"],
+            loc2.Format("Category_Delete_Msg", category.Name),
+            loc2["Common_Yes"], loc2["Common_No"]);
 
         if (confirm)
         {
+            _log.Info($"Category deleted: '{category.Name}'.");
             Categories.Remove(category);
             await SaveAllCategoriesAsync();
         }
@@ -171,7 +179,16 @@ public partial class CategoryManagementViewModel : ObservableObject
 
     private async Task SaveAllCategoriesAsync()
     {
-        await _dataService.SaveCategoriesAsync(Categories.ToList());
+        try
+        {
+            await _dataService.SaveCategoriesAsync(Categories.ToList());
+            _log.Debug($"Kategorieliste gespeichert: {Categories.Count} Kategorie(n).");
+        }
+        catch (Exception ex)
+        {
+            _log.Exception(ex, "Fehler beim Speichern der Kategorieliste.");
+            throw;
+        }
     }
 
     [RelayCommand]

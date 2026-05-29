@@ -19,7 +19,6 @@
             <converters:SyncButtonTextConverter x:Key="SyncButtonTextConverter"/>
             <converters:InverseBoolConverter x:Key="InverseBoolConverter"/>
             <converters:DecimalInputConverter x:Key="DecimalInputConverter"/>
-            <converters:TabActiveConverter x:Key="TabActiveConverter"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

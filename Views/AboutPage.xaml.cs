@@ -18,4 +18,16 @@ public partial class AboutPage : ContentPage
             // ignore if browser can't open
         }
     }
+
+    private async void OnGitHubTapped(object? sender, TappedEventArgs e)
+    {
+        try
+        {
+            await Browser.Default.OpenAsync("https://github.com/matthiasNX/FestKasse", BrowserLaunchMode.SystemPreferred);
+        }
+        catch
+        {
+            // ignore if browser can't open
+        }
+    }
 }

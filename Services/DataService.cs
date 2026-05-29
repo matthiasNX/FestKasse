@@ -1,3 +1,4 @@
+using FestKasse.Helpers;
 using FestKasse.Models;
 using System.Text.Json;
 
@@ -9,13 +10,15 @@ public class DataService : IDataService
     private readonly string _settingsFilePath;
     private readonly JsonSerializerOptions _jsonOptions;
     private readonly HttpClient _httpClient;
+    private readonly ILogService _log;
     private AppData? _cachedData;
     private AppSettings? _cachedSettings;
 
-    public DataService()
+    public DataService(ILogService logService)
     {
-        _dataFilePath = Path.Combine(FileSystem.AppDataDirectory, "festkasse_data.json");
-        _settingsFilePath = Path.Combine(FileSystem.AppDataDirectory, "festkasse_settings.json");
+        _log = logService;
+        _dataFilePath = AppConstants.DataFilePath;
+        _settingsFilePath = AppConstants.SettingsFilePath;
         _jsonOptions = new JsonSerializerOptions
         {
             WriteIndented = true,
@@ -25,12 +28,15 @@ public class DataService : IDataService
         {
             Timeout = TimeSpan.FromSeconds(30)
         };
+        _log.Debug($"DataService initialized. Data path: {_dataFilePath}");
     }
 
     public async Task<AppData> LoadDataAsync()
     {
         if (_cachedData != null)
             return _cachedData;
+
+        _log.Debug("Loading application data from file.");
 
         if (File.Exists(_dataFilePath))
         {
@@ -39,13 +45,16 @@ public class DataService : IDataService
                 var json = await File.ReadAllTextAsync(_dataFilePath);
                 var parsed = JsonSerializer.Deserialize<AppData>(json, _jsonOptions);
                 if (parsed != null && parsed.Stands.Count > 0)
+                {
                     _cachedData = parsed;
+                    _log.Info($"Data loaded: {parsed.Stands.Count} stand(s).");
+                }
                 else
-                    System.Diagnostics.Debug.WriteLine("Cachedatei leer oder ungültig – wird neu erstellt.");
+                    _log.Warning("Cache file empty or invalid – will be recreated.");
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Korrupte Cachedatei wird gelöscht: {ex.Message}");
+                _log.Exception(ex, "Corrupt cache file is being deleted.");
             }
 
             if (_cachedData == null)
@@ -56,6 +65,7 @@ public class DataService : IDataService
 
         if (_cachedData == null)
         {
+            _log.Info("No valid data found – loading default data.");
             _cachedData = await LoadDefaultDataAsync() ?? new AppData();
             if (_cachedData.Stands.Count > 0)
                 await SaveDataAsync(_cachedData);
@@ -68,6 +78,7 @@ public class DataService : IDataService
             _cachedData.ActiveStandId = _cachedData.Stands.Count > 0
                 ? _cachedData.Stands[0].Id
                 : string.Empty;
+            _log.Debug($"ActiveStandId set to '{_cachedData.ActiveStandId}'.");
         }
 
         return _cachedData;
@@ -80,10 +91,11 @@ public class DataService : IDataService
             _cachedData = data;
             var json = JsonSerializer.Serialize(data, _jsonOptions);
             await File.WriteAllTextAsync(_dataFilePath, json);
+            _log.Debug("Application data saved successfully.");
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"Fehler beim Speichern der Daten: {ex.Message}");
+            _log.Exception(ex, "Error saving application data.");
             throw;
         }
     }
@@ -92,14 +104,17 @@ public class DataService : IDataService
     {
         try
         {
+            _log.Debug("Loading default data from app package.");
             using var stream = await FileSystem.OpenAppPackageFileAsync("default_data.json");
             using var reader = new StreamReader(stream);
             var json = await reader.ReadToEndAsync();
-            return JsonSerializer.Deserialize<AppData>(json, _jsonOptions);
+            var result = JsonSerializer.Deserialize<AppData>(json, _jsonOptions);
+            _log.Info($"Default data loaded: {result?.Stands.Count ?? 0} stand(s).");
+            return result;
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"Standard-Daten konnten nicht geladen werden: {ex.Message}");
+            _log.Exception(ex, "Default data could not be loaded.");
             return null;
         }
     }
@@ -132,8 +147,12 @@ public class DataService : IDataService
         if (data.Stands.Any(s => s.Id == standId))
         {
             data.ActiveStandId = standId;
-            // Persist in background to avoid blocking the UI
+            _log.Info($"Active stand changed to ID '{standId}'.");
             _ = SaveDataAsync(data);
+        }
+        else
+        {
+            _log.Warning($"SetActiveStandAsync: Stand with ID '{standId}' not found.");
         }
     }
 
@@ -166,8 +185,12 @@ public class DataService : IDataService
             {
                 var json = await File.ReadAllTextAsync(_settingsFilePath);
                 _cachedSettings = JsonSerializer.Deserialize<AppSettings>(json, _jsonOptions);
+                _log.Debug("Settings loaded from file.");
             }
-            catch { }
+            catch (Exception ex)
+            {
+                _log.Exception(ex, "Settings file could not be read – using defaults.");
+            }
         }
 
         _cachedSettings ??= new AppSettings();
@@ -179,6 +202,7 @@ public class DataService : IDataService
         _cachedSettings = settings;
         var json = JsonSerializer.Serialize(settings, _jsonOptions);
         await File.WriteAllTextAsync(_settingsFilePath, json);
+        _log.Debug("Settings saved.");
     }
 
     public async Task<string> ExportSettingsToJsonAsync()
@@ -190,7 +214,8 @@ public class DataService : IDataService
     public async Task ImportSettingsFromJsonAsync(string json)
     {
         var settings = JsonSerializer.Deserialize<AppSettings>(json, _jsonOptions)
-            ?? throw new InvalidOperationException("Ungültiges JSON-Format für Einstellungen");
+            ?? throw new InvalidOperationException("Invalid JSON format for settings");
+        _log.Info("Settings imported from JSON.");
         await SaveSettingsAsync(settings);
     }
 
@@ -204,6 +229,7 @@ public class DataService : IDataService
     {
         try
         {
+            _log.Debug("Loading default settings from app package.");
             using var stream = await FileSystem.OpenAppPackageFileAsync("default_settings.json");
             using var reader = new StreamReader(stream);
             var json = await reader.ReadToEndAsync();
@@ -211,7 +237,7 @@ public class DataService : IDataService
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"Standard-Einstellungen konnten nicht geladen werden: {ex.Message}");
+            _log.Exception(ex, "Default settings could not be loaded.");
             return null;
         }
     }
@@ -252,40 +278,44 @@ public class DataService : IDataService
         try
         {
             var imported = JsonSerializer.Deserialize<AppData>(json, _jsonOptions)
-                ?? throw new InvalidOperationException("Ungültiges JSON-Format");
+                ?? throw new InvalidOperationException("Invalid JSON format");
 
             if (imported.Stands.Count == 0)
-                throw new InvalidOperationException("Die Datei enthält keine Stände.");
+                throw new InvalidOperationException("The file contains no stands.");
+
+            _log.Info($"Import: {imported.Stands.Count} stand(s) found.");
 
             var data = await LoadDataAsync();
             foreach (var stand in imported.Stands)
             {
-                // Renumber sort order
                 for (int i = 0; i < stand.Articles.Count; i++)
                     stand.Articles[i].SortOrder = i;
 
                 var existing = data.Stands.FirstOrDefault(s => s.Id == stand.Id);
                 if (existing != null)
                 {
+                    _log.Debug($"Import: Stand '{stand.Name}' updated.");
                     existing.Name = stand.Name;
                     existing.Articles = stand.Articles;
                     existing.Categories = stand.Categories;
                 }
                 else
                 {
+                    _log.Debug($"Import: New stand '{stand.Name}' added.");
                     data.Stands.Add(stand);
                 }
             }
 
-            // Keep active stand valid
             if (data.Stands.All(s => s.Id != data.ActiveStandId))
                 data.ActiveStandId = data.Stands[0].Id;
 
             await SaveDataAsync(data);
+            _log.Info("Import completed successfully.");
         }
         catch (JsonException ex)
         {
-            throw new InvalidOperationException($"JSON-Parsing-Fehler: {ex.Message}", ex);
+            _log.Exception(ex, "JSON parse error during import.");
+            throw new InvalidOperationException($"JSON parse error: {ex.Message}", ex);
         }
     }
 
@@ -295,6 +325,8 @@ public class DataService : IDataService
         {
             if (string.IsNullOrWhiteSpace(url))
                 return false;
+
+            _log.Info($"Starting sync from URL: {url} (ignore SSL: {ignoreSslErrors})");
 
             HttpClient client = _httpClient;
             HttpClient? tempClient = null;
@@ -319,12 +351,13 @@ public class DataService : IDataService
             }
             response.EnsureSuccessStatusCode();
 
-            // Vollständiges Reset mit heruntergeladenem JSON
             var json = await response.Content.ReadAsStringAsync();
             var imported = JsonSerializer.Deserialize<AppData>(json, _jsonOptions)
-                ?? throw new InvalidOperationException("Ungültiges JSON-Format");
+                ?? throw new InvalidOperationException("Invalid JSON format");
             if (imported.Stands.Count == 0)
-                throw new InvalidOperationException("Die Datei enthält keine Stände.");
+                throw new InvalidOperationException("The file contains no stands.");
+
+            _log.Info($"Sync successful: {imported.Stands.Count} stand(s) received.");
 
             _cachedData = null;
             try { if (File.Exists(_dataFilePath)) File.Delete(_dataFilePath); } catch { }
@@ -333,12 +366,13 @@ public class DataService : IDataService
         }
         catch (HttpRequestException ex)
         {
-            System.Diagnostics.Debug.WriteLine($"HTTP-Fehler beim Sync: {ex.Message}");
-            throw new InvalidOperationException($"Verbindungsfehler: {ex.Message}", ex);
+            _log.Exception(ex, $"HTTP error during sync from '{url}'.");
+            throw new InvalidOperationException($"Connection error: {ex.Message}", ex);
         }
-        catch (TaskCanceledException)
+        catch (TaskCanceledException ex)
         {
-            throw new InvalidOperationException("Zeitüberschreitung bei der Verbindung");
+            _log.Exception(ex, $"Timeout during sync from '{url}'.");
+            throw new InvalidOperationException("Connection timed out");
         }
     }
 
@@ -356,17 +390,14 @@ public class DataService : IDataService
 
     public async Task ResetToDefaultAsync()
     {
-        // Clear in-memory cache
+        _log.Warning("Resetting all data to defaults.");
         _cachedData = null;
-
-        // Delete persisted data file
         try { if (File.Exists(_dataFilePath)) File.Delete(_dataFilePath); } catch { }
-
-        // Reload from default_data.json and persist
         var defaultData = await LoadDefaultDataAsync() ?? new AppData();
         if (defaultData.Stands.Count > 0)
             await SaveDataAsync(defaultData);
         else
             _cachedData = defaultData;
+        _log.Info("Data reset to defaults successfully.");
     }
 }

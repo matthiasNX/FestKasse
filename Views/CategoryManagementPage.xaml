@@ -3,10 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodels="clr-namespace:FestKasse.ViewModels"
              xmlns:models="clr-namespace:FestKasse.Models"
+             xmlns:helpers="clr-namespace:FestKasse.Helpers"
              x:Class="FestKasse.Views.CategoryManagementPage"
              x:Name="ThisPage"
              x:DataType="viewmodels:CategoryManagementViewModel"
-             Title="Kategorien"
+             Title="{helpers:Tr Key=Category_Title}"
              BackgroundColor="{StaticResource Gray100}">
 
     <Grid RowDefinitions="*,Auto">
@@ -21,7 +22,10 @@
                             <Grid ColumnDefinitions="*,Auto,Auto,Auto,Auto">
                                 <VerticalStackLayout Grid.Column="0" VerticalOptions="Center">
                                     <Label Text="{Binding Name}" FontSize="16" FontAttributes="Bold"/>
-                                    <Label Text="{Binding SortOrder, StringFormat='Reihenfolge: {0}'}" FontSize="12" TextColor="Gray"/>
+                                    <HorizontalStackLayout Spacing="4">
+                                        <Label Text="{helpers:Tr Key=Category_SortOrder_Label}" FontSize="12" TextColor="Gray"/>
+                                        <Label Text="{Binding SortOrder}" FontSize="12" TextColor="Gray"/>
+                                    </HorizontalStackLayout>
                                 </VerticalStackLayout>
                                 <Button Grid.Column="1" Text="&#x25B2;" WidthRequest="40" HeightRequest="40" FontSize="12" Padding="0"
                                         BackgroundColor="{StaticResource Gray300}" TextColor="{StaticResource Gray900}"
@@ -41,8 +45,8 @@
                 </CollectionView.ItemTemplate>
                 <CollectionView.EmptyView>
                     <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Padding="40">
-                        <Label Text="Keine Kategorien vorhanden" FontSize="18" TextColor="Gray" HorizontalTextAlignment="Center"/>
-                        <Label Text="Tippe auf '+ Neue Kategorie' um eine anzulegen" FontSize="14" TextColor="Gray" HorizontalTextAlignment="Center" Margin="0,10,0,0"/>
+                        <Label Text="{helpers:Tr Key=Category_Empty}" FontSize="18" TextColor="Gray" HorizontalTextAlignment="Center"/>
+                        <Label Text="{helpers:Tr Key=Category_EmptyHint}" FontSize="14" TextColor="Gray" HorizontalTextAlignment="Center" Margin="0,10,0,0"/>
                     </VerticalStackLayout>
                 </CollectionView.EmptyView>
             </CollectionView>
@@ -52,16 +56,16 @@
                 <ScrollView>
                     <VerticalStackLayout Spacing="15" Padding="16">
 
-                        <Label Text="{Binding IsNewCategory, Converter={StaticResource NewEditTitleConverter}}"
+                        <Label Text="{Binding IsNewCategory, Converter={StaticResource NewEditTitleConverter}, ConverterParameter=category}"
                                FontSize="20" FontAttributes="Bold"/>
 
                         <VerticalStackLayout>
-                            <Label Text="Name *" FontSize="14" FontAttributes="Bold"/>
-                            <Entry Text="{Binding EditName}" Placeholder="Kategoriename eingeben" BackgroundColor="{StaticResource Gray100}"/>
+                            <Label Text="{helpers:Tr Key=Category_Field_Name}" FontSize="14" FontAttributes="Bold"/>
+                            <Entry Text="{Binding EditName}" Placeholder="{helpers:Tr Key=Category_Field_Name_Placeholder}" BackgroundColor="{StaticResource Gray100}"/>
                         </VerticalStackLayout>
 
                         <VerticalStackLayout>
-                            <Label Text="Reihenfolge" FontSize="14" FontAttributes="Bold"/>
+                            <Label Text="{helpers:Tr Key=Category_Field_SortOrder}" FontSize="14" FontAttributes="Bold"/>
                             <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="6">
                                 <Button Grid.Column="0" Text="&#x2212;" Command="{Binding DecreaseSortOrderCommand}"
                                         WidthRequest="44" HeightRequest="44" CornerRadius="8" Padding="0"
@@ -71,12 +75,12 @@
                                         WidthRequest="44" HeightRequest="44" CornerRadius="8" Padding="0"
                                         FontSize="18" FontAttributes="Bold" BackgroundColor="{StaticResource Primary}" TextColor="White"/>
                             </Grid>
-                            <Label Text="Niedrigere Zahl = weiter oben / links" FontSize="11" TextColor="Gray"/>
+                            <Label Text="{helpers:Tr Key=Category_Field_SortOrder_Hint}" FontSize="11" TextColor="Gray"/>
                         </VerticalStackLayout>
 
                         <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
-                            <Button Grid.Column="0" Text="Abbrechen" Command="{Binding CancelEditCommand}" BackgroundColor="{StaticResource Gray400}" TextColor="White"/>
-                            <Button Grid.Column="1" Text="Speichern" Command="{Binding SaveCategoryCommand}" BackgroundColor="{StaticResource Primary}" TextColor="White"/>
+                            <Button Grid.Column="0" Text="{helpers:Tr Key=Category_Cancel_Button}" Command="{Binding CancelEditCommand}" BackgroundColor="{StaticResource Gray400}" TextColor="White"/>
+                            <Button Grid.Column="1" Text="{helpers:Tr Key=Category_Save_Button}" Command="{Binding SaveCategoryCommand}" BackgroundColor="{StaticResource Primary}" TextColor="White"/>
                         </Grid>
 
                     </VerticalStackLayout>
@@ -86,7 +90,7 @@
         </Grid>
 
         <!-- Add Button -->
-        <Button Grid.Row="1" Text="+ Neue Kategorie anlegen" Command="{Binding NewCategoryCommand}"
+        <Button Grid.Row="1" Text="{helpers:Tr Key=Category_Add_Button}" Command="{Binding NewCategoryCommand}"
                 BackgroundColor="{StaticResource Primary}" TextColor="White" FontSize="16" Margin="10" HeightRequest="50"/>
     </Grid>
 

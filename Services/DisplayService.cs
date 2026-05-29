@@ -2,7 +2,13 @@ namespace FestKasse.Services;
 
 public class DisplayService : IDisplayService
 {
+    private readonly ILogService _log;
     private CancellationTokenSource? _cancellationTokenSource;
+
+    public DisplayService(ILogService logService)
+    {
+        _log = logService;
+    }
 
     public void KeepScreenOn(int minutes)
     {
@@ -18,6 +24,7 @@ public class DisplayService : IDisplayService
             if (activity != null)
             {
                 activity.Window?.AddFlags(Android.Views.WindowManagerFlags.KeepScreenOn);
+                _log.Info($"Display wake lock activated for {minutes} minute(s).");
 
                 _cancellationTokenSource = new CancellationTokenSource();
                 var token = _cancellationTokenSource.Token;
@@ -29,6 +36,7 @@ public class DisplayService : IDisplayService
                         await Task.Delay(TimeSpan.FromMinutes(minutes), token);
                         MainThread.BeginInvokeOnMainThread(() =>
                         {
+                            _log.Debug("Display-Wake-Lock-Timeout erreicht – deaktiviere.");
                             AllowScreenOff();
                         });
                     }
@@ -38,10 +46,14 @@ public class DisplayService : IDisplayService
                     }
                 }, token);
             }
+            else
+            {
+                _log.Warning("KeepScreenOn: Platform.CurrentActivity is null – wake lock not possible.");
+            }
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"Fehler beim Aktivieren des Wake-Lock: {ex.Message}");
+            _log.Exception(ex, "Error activating display wake lock.");
         }
 #endif
     }
@@ -56,11 +68,15 @@ public class DisplayService : IDisplayService
         try
         {
             var activity = Platform.CurrentActivity;
-            activity?.Window?.ClearFlags(Android.Views.WindowManagerFlags.KeepScreenOn);
+            if (activity?.Window != null)
+            {
+                activity.Window.ClearFlags(Android.Views.WindowManagerFlags.KeepScreenOn);
+                _log.Debug("Display-Wake-Lock deaktiviert.");
+            }
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"Fehler beim Deaktivieren des Wake-Lock: {ex.Message}");
+            _log.Exception(ex, "Error deactivating display wake lock.");
         }
 #endif
     }

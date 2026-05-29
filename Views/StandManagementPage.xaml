@@ -3,26 +3,27 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodels="clr-namespace:FestKasse.ViewModels"
              xmlns:models="clr-namespace:FestKasse.Models"
+             xmlns:helpers="clr-namespace:FestKasse.Helpers"
              x:Class="FestKasse.Views.StandManagementPage"
              x:Name="StandPage"
              x:DataType="viewmodels:StandManagementViewModel"
-             Title="Standverwaltung"
+             Title="{helpers:Tr Key=Stand_Title}"
              BackgroundColor="{StaticResource Gray100}">
 
     <ScrollView>
         <VerticalStackLayout Spacing="15" Padding="15">
 
-            <!-- Neuen Stand hinzufügen -->
+            <!-- New stand -->
             <Border BackgroundColor="White" StrokeThickness="0" StrokeShape="RoundRectangle 10" Padding="15">
                 <VerticalStackLayout Spacing="10">
-                    <Label Text="Neuen Stand anlegen" FontSize="18" FontAttributes="Bold"/>
+                    <Label Text="{helpers:Tr Key=Stand_New_Section}" FontSize="18" FontAttributes="Bold"/>
                     <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
                         <Entry Grid.Column="0"
                                Text="{Binding NewStandName}"
-                               Placeholder="Standname (z.B. Brotzeitstand)"
+                               Placeholder="{helpers:Tr Key=Stand_New_Placeholder}"
                                BackgroundColor="{StaticResource Gray100}"/>
                         <Button Grid.Column="1"
-                                Text="&#x2795; Hinzufügen"
+                                Text="{helpers:Tr Key=Stand_New_Button}"
                                 Command="{Binding AddStandCommand}"
                                 BackgroundColor="{StaticResource Primary}"
                                 TextColor="White"/>
@@ -30,10 +31,10 @@
                 </VerticalStackLayout>
             </Border>
 
-            <!-- Vorhandene Stände -->
+            <!-- Existing stands -->
             <Border BackgroundColor="White" StrokeThickness="0" StrokeShape="RoundRectangle 10" Padding="5">
                 <VerticalStackLayout Spacing="8">
-                    <Label Text="Vorhandene Stände" FontSize="18" FontAttributes="Bold"/>
+                    <Label Text="{helpers:Tr Key=Stand_Existing_Section}" FontSize="18" FontAttributes="Bold"/>
                     <VerticalStackLayout BindableLayout.ItemsSource="{Binding Stands}" Spacing="8">
                         <BindableLayout.ItemTemplate>
                             <DataTemplate x:DataType="models:Stand">
@@ -42,7 +43,7 @@
                                     <Grid ColumnDefinitions="*,Auto,Auto,Auto" ColumnSpacing="8">
                                         <Label Grid.Column="0" Text="{Binding Name}"
                                                FontSize="16" FontAttributes="Bold" VerticalOptions="Center"/>
-                                        <Button Grid.Column="1" Text="&#x2714; Aktiv setzen"
+                                        <Button Grid.Column="1" Text="{helpers:Tr Key=Stand_SetActive_Button}"
                                                 Command="{Binding Source={x:Reference StandPage}, Path=BindingContext.SelectStandCommand}"
                                                 CommandParameter="{Binding .}"
                                                 BackgroundColor="{StaticResource Primary}" TextColor="White"

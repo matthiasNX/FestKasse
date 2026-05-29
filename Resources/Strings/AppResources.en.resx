@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
+
+  <!-- ── Shell / Menu ─────────────────────────────── -->
+  <data name="Menu_POS" xml:space="preserve"><value>💰  POS</value></data>
+  <data name="Menu_StandManagement" xml:space="preserve"><value>🏪  Stand Management</value></data>
+  <data name="Menu_CategoryManagement" xml:space="preserve"><value>📋  Category Management</value></data>
+  <data name="Menu_ArticleManagement" xml:space="preserve"><value>📦  Article Management</value></data>
+  <data name="Menu_Settings" xml:space="preserve"><value>⚙️  Settings</value></data>
+  <data name="Menu_OrderHistory" xml:space="preserve"><value>📜  Order History</value></data>
+  <data name="Menu_LogViewer" xml:space="preserve"><value>📃  Log Viewer</value></data>
+  <data name="Menu_About" xml:space="preserve"><value>ℹ️  About</value></data>
+
+  <!-- ── Common ────────────────────────────────────── -->
+  <data name="Common_Save" xml:space="preserve"><value>💾 Save Settings</value></data>
+  <data name="Common_Cancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="Common_Delete" xml:space="preserve"><value>Delete</value></data>
+  <data name="Common_Edit" xml:space="preserve"><value>Edit</value></data>
+  <data name="Common_OK" xml:space="preserve"><value>OK</value></data>
+  <data name="Common_Yes" xml:space="preserve"><value>Yes</value></data>
+  <data name="Common_No" xml:space="preserve"><value>No</value></data>
+  <data name="Common_Error" xml:space="preserve"><value>Error</value></data>
+  <data name="Common_Success" xml:space="preserve"><value>Success</value></data>
+  <data name="Common_Warning" xml:space="preserve"><value>Warning</value></data>
+  <data name="Common_Info" xml:space="preserve"><value>Note</value></data>
+  <data name="Common_Done" xml:space="preserve"><value>Done</value></data>
+  <data name="Common_Saved" xml:space="preserve"><value>Saved</value></data>
+  <data name="Common_Updated" xml:space="preserve"><value>Updated</value></data>
+
+  <!-- ── Settings Page ─────────────────────────────── -->
+  <data name="Settings_Title" xml:space="preserve"><value>Settings</value></data>
+  <data name="Settings_Tab_General" xml:space="preserve"><value>⚙️ General</value></data>
+  <data name="Settings_Tab_Order" xml:space="preserve"><value>📡 Order</value></data>
+  <data name="Settings_Tab_Sync" xml:space="preserve"><value>🔄 Sync/Import</value></data>
+  <data name="Settings_Tab_Logging" xml:space="preserve"><value>📃 Logging</value></data>
+
+  <data name="Settings_Display_Section" xml:space="preserve"><value>Display Settings</value></data>
+  <data name="Settings_Display_KeepOn" xml:space="preserve"><value>Keep screen on (minutes)</value></data>
+  <data name="Settings_Display_KeepOnHint" xml:space="preserve"><value>0 = use default timeout</value></data>
+
+  <data name="Settings_TileSize_Section" xml:space="preserve"><value>Tile Size</value></data>
+  <data name="Settings_TileSize_Label" xml:space="preserve"><value>Tile size (dp)</value></data>
+
+  <data name="Settings_Logo_Section" xml:space="preserve"><value>Logo</value></data>
+  <data name="Settings_Logo_Remove" xml:space="preserve"><value>🗑 Remove</value></data>
+  <data name="Settings_Logo_Select" xml:space="preserve"><value>📷 Select logo</value></data>
+  <data name="Settings_Logo_Hint" xml:space="preserve"><value>The logo is shown in the header on the right</value></data>
+
+  <data name="Settings_Language_Section" xml:space="preserve"><value>Language / Sprache</value></data>
+  <data name="Settings_Language_Label" xml:space="preserve"><value>App language</value></data>
+  <data name="Settings_Language_System" xml:space="preserve"><value>System language</value></data>
+  <data name="Settings_Language_German" xml:space="preserve"><value>Deutsch</value></data>
+  <data name="Settings_Language_English" xml:space="preserve"><value>English</value></data>
+  <data name="Settings_Language_RestartHint" xml:space="preserve"><value>Language change is applied immediately after saving.</value></data>
+
+  <data name="Settings_ResetArticles_Section" xml:space="preserve"><value>Reset master data</value></data>
+  <data name="Settings_ResetArticles_Desc" xml:space="preserve"><value>Resets all stands and articles to the default data.</value></data>
+  <data name="Settings_ResetArticles_Button" xml:space="preserve"><value>🔄 Reset master data to defaults</value></data>
+  <data name="Settings_ResetArticles_Confirm_Title" xml:space="preserve"><value>Reset articles</value></data>
+  <data name="Settings_ResetArticles_Confirm_Msg" xml:space="preserve"><value>All articles will be reset to the default articles. Custom changes will be lost. Continue?</value></data>
+  <data name="Settings_ResetArticles_Confirm_Yes" xml:space="preserve"><value>Yes, reset</value></data>
+
+  <data name="Settings_ImportExport_Section" xml:space="preserve"><value>Settings Import / Export</value></data>
+  <data name="Settings_ImportExport_Desc" xml:space="preserve"><value>Exports or imports the app settings (display, tiles, logo, order configuration) as a JSON file.</value></data>
+  <data name="Settings_Export_Button" xml:space="preserve"><value>📤 Export</value></data>
+  <data name="Settings_Import_Button" xml:space="preserve"><value>📥 Import</value></data>
+  <data name="Settings_ResetSettings_Button" xml:space="preserve"><value>🔄 Reset settings to defaults</value></data>
+  <data name="Settings_ResetSettings_Confirm_Title" xml:space="preserve"><value>Reset settings</value></data>
+  <data name="Settings_ResetSettings_Confirm_Msg" xml:space="preserve"><value>All settings will be reset to their default values. Continue?</value></data>
+  <data name="Settings_ResetSettings_Confirm_Yes" xml:space="preserve"><value>Yes, reset</value></data>
+
+  <!-- ── Settings / Order Tab ──────────────────────── -->
+  <data name="Settings_Order_Section" xml:space="preserve"><value>Order submission</value></data>
+  <data name="Settings_Order_Desc" xml:space="preserve"><value>When configured, 'Complete' sends the order to the server.</value></data>
+  <data name="Settings_Order_Enable" xml:space="preserve"><value>Enable order submission</value></data>
+  <data name="Settings_Order_Url" xml:space="preserve"><value>Order URL</value></data>
+  <data name="Settings_Order_SendMode" xml:space="preserve"><value>Send mode</value></data>
+  <data name="Settings_Order_SslWarning" xml:space="preserve"><value>⚠ Ignore SSL certificate</value></data>
+  <data name="Settings_Order_JsonHint" xml:space="preserve"><value>JSON Body: POST with {timestamp, total, items[]}</value></data>
+  <data name="Settings_Order_UrlHint" xml:space="preserve"><value>URL template: GET with placeholders {total}, {timestamp}, {items}</value></data>
+
+  <data name="Settings_OrderHistory_Section" xml:space="preserve"><value>Local order history</value></data>
+  <data name="Settings_OrderHistory_Desc" xml:space="preserve"><value>Saves every completed order in a local database on the device.</value></data>
+  <data name="Settings_OrderHistory_Save" xml:space="preserve"><value>Save orders locally</value></data>
+  <data name="Settings_OrderHistory_Count" xml:space="preserve"><value>Saved entries: </value></data>
+  <data name="Settings_OrderHistory_Clear" xml:space="preserve"><value>🗑 Clear</value></data>
+  <data name="Settings_OrderHistory_Clear_Confirm_Title" xml:space="preserve"><value>Clear order history</value></data>
+  <data name="Settings_OrderHistory_Clear_Confirm_Yes" xml:space="preserve"><value>Yes, clear</value></data>
+
+  <!-- ── Settings / Sync Tab ───────────────────────── -->
+  <data name="Settings_Sync_Section" xml:space="preserve"><value>Synchronisation</value></data>
+  <data name="Settings_Sync_Desc" xml:space="preserve"><value>Downloads stands, categories, and articles from a URL and replaces local data. Settings are not affected.</value></data>
+  <data name="Settings_Sync_UrlLabel" xml:space="preserve"><value>Sync URL (HTTP)</value></data>
+  <data name="Settings_Sync_SslWarning" xml:space="preserve"><value>⚠ Ignore SSL certificate</value></data>
+  <data name="Settings_Sync_SslHint" xml:space="preserve"><value>Temporary for this sync only.</value></data>
+  <data name="Settings_Sync_SaveButton" xml:space="preserve"><value>💾 Save sync URL</value></data>
+
+  <data name="Settings_MasterData_Section" xml:space="preserve"><value>Import / Export (master data)</value></data>
+  <data name="Settings_MasterData_Desc" xml:space="preserve"><value>Exports or imports stands with their categories and articles as a JSON file. Settings are not included.</value></data>
+  <data name="Settings_MasterData_SelectStands" xml:space="preserve"><value>Select stands for export:</value></data>
+  <data name="Settings_MasterData_CancelExport" xml:space="preserve"><value>✕ Cancel</value></data>
+  <data name="Settings_MasterData_DoExport" xml:space="preserve"><value>📤 Export</value></data>
+  <data name="Settings_MasterData_ExportStands" xml:space="preserve"><value>📤 Export stands…</value></data>
+  <data name="Settings_MasterData_ImportFile" xml:space="preserve"><value>📥 Import from file</value></data>
+
+  <!-- ── Settings / Logging Tab ────────────────────── -->
+  <data name="Settings_LogLevel_Section" xml:space="preserve"><value>Log level</value></data>
+  <data name="Settings_LogLevel_Desc" xml:space="preserve"><value>Sets the minimum severity level for events written to the log file.</value></data>
+  <data name="Settings_LogViewer_Section" xml:space="preserve"><value>Log viewer</value></data>
+  <data name="Settings_LogViewer_Desc" xml:space="preserve"><value>Opens the log file for viewing, clearing, or exporting.</value></data>
+  <data name="Settings_LogViewer_Button" xml:space="preserve"><value>📃 View log file</value></data>
+
+  <!-- ── Article Management ───────────────────────── -->
+  <data name="Article_Title" xml:space="preserve"><value>Article Management</value></data>
+  <data name="Article_Empty" xml:space="preserve"><value>No articles available</value></data>
+  <data name="Article_EmptyHint" xml:space="preserve"><value>Tap '+' to create a new article</value></data>
+  <data name="Article_New_Title" xml:space="preserve"><value>New article</value></data>
+  <data name="Article_Edit_Title" xml:space="preserve"><value>Edit article</value></data>
+  <data name="Article_Field_Description" xml:space="preserve"><value>Description *</value></data>
+  <data name="Article_Field_Description_Placeholder" xml:space="preserve"><value>Enter article name</value></data>
+  <data name="Article_Field_Category" xml:space="preserve"><value>Category</value></data>
+  <data name="Article_Field_SortOrder" xml:space="preserve"><value>Sort order</value></data>
+  <data name="Article_Field_SortOrder_Hint" xml:space="preserve"><value>Lower number = further up / left</value></data>
+  <data name="Article_Field_Price" xml:space="preserve"><value>Price (€)</value></data>
+  <data name="Article_Field_Price_Hint" xml:space="preserve"><value>Negative prices for returns (e.g. deposit)</value></data>
+  <data name="Article_Field_Icon" xml:space="preserve"><value>Icon (Unicode / Emoji)</value></data>
+  <data name="Article_Field_Icon_Placeholder" xml:space="preserve"><value>Enter emoji here or choose below</value></data>
+  <data name="Article_Field_Icon_Quick" xml:space="preserve"><value>Quick pick:</value></data>
+  <data name="Article_Field_Color" xml:space="preserve"><value>Color</value></data>
+  <data name="Article_Field_Preview" xml:space="preserve"><value>Preview</value></data>
+  <data name="Article_Add_Button" xml:space="preserve"><value>+ Add new article</value></data>
+  <data name="Article_Save_Button" xml:space="preserve"><value>Save</value></data>
+  <data name="Article_Cancel_Button" xml:space="preserve"><value>Cancel</value></data>
+  <data name="Article_Delete_Title" xml:space="preserve"><value>Delete</value></data>
+  <data name="Article_Delete_Msg" xml:space="preserve"><value>Really delete article '{0}'?</value></data>
+
+  <!-- ── Category Management ──────────────────────── -->
+  <data name="Category_Title" xml:space="preserve"><value>Categories</value></data>
+  <data name="Category_Empty" xml:space="preserve"><value>No categories available</value></data>
+  <data name="Category_EmptyHint" xml:space="preserve"><value>Tap '+ New category' to create one</value></data>
+  <data name="Category_New_Title" xml:space="preserve"><value>New category</value></data>
+  <data name="Category_Edit_Title" xml:space="preserve"><value>Edit category</value></data>
+  <data name="Category_Field_Name" xml:space="preserve"><value>Name *</value></data>
+  <data name="Category_Field_Name_Placeholder" xml:space="preserve"><value>Enter category name</value></data>
+  <data name="Category_Field_SortOrder" xml:space="preserve"><value>Sort order</value></data>
+  <data name="Category_Field_SortOrder_Hint" xml:space="preserve"><value>Lower number = further up / left</value></data>
+  <data name="Category_SortOrder_Format" xml:space="preserve"><value>Sort order: {0}</value></data>
+  <data name="Category_SortOrder_Label" xml:space="preserve"><value>Sort order:</value></data>
+  <data name="Category_Add_Button" xml:space="preserve"><value>+ Add new category</value></data>
+  <data name="Category_Save_Button" xml:space="preserve"><value>Save</value></data>
+  <data name="Category_Cancel_Button" xml:space="preserve"><value>Cancel</value></data>
+  <data name="Category_Delete_Title" xml:space="preserve"><value>Delete</value></data>
+  <data name="Category_Delete_Msg" xml:space="preserve"><value>Really delete category "{0}"?</value></data>
+  <data name="Category_Delete_InUse_Title" xml:space="preserve"><value>Not possible</value></data>
+  <data name="Category_Delete_InUse_Msg" xml:space="preserve"><value>Category "{0}" is still used by articles and cannot be deleted.</value></data>
+
+  <!-- ── Stand Management ─────────────────────────── -->
+  <data name="Stand_Title" xml:space="preserve"><value>Stand Management</value></data>
+  <data name="Stand_New_Section" xml:space="preserve"><value>Add new stand</value></data>
+  <data name="Stand_New_Placeholder" xml:space="preserve"><value>Stand name (e.g. Snack bar)</value></data>
+  <data name="Stand_New_Button" xml:space="preserve"><value>➕ Add</value></data>
+  <data name="Stand_Existing_Section" xml:space="preserve"><value>Existing stands</value></data>
+  <data name="Stand_SetActive_Button" xml:space="preserve"><value>✔ Set active</value></data>
+  <data name="Stand_Delete_Title" xml:space="preserve"><value>Delete stand</value></data>
+  <data name="Stand_Delete_Msg" xml:space="preserve"><value>Really delete stand "{0}"? All associated articles will be lost.</value></data>
+  <data name="Stand_Delete_Yes" xml:space="preserve"><value>Yes, delete</value></data>
+  <data name="Stand_Rename_Title" xml:space="preserve"><value>Rename stand</value></data>
+  <data name="Stand_Rename_Prompt" xml:space="preserve"><value>New name:</value></data>
+  <data name="Stand_MinOne_Msg" xml:space="preserve"><value>At least one stand must exist.</value></data>
+  <data name="Stand_Select_Title" xml:space="preserve"><value>Select stand</value></data>
+
+  <!-- ── Order History ────────────────────────────── -->
+  <data name="OrderHistory_Title" xml:space="preserve"><value>Order History</value></data>
+  <data name="OrderHistory_FilterFrom" xml:space="preserve"><value>From:</value></data>
+  <data name="OrderHistory_FilterTo" xml:space="preserve"><value>To:</value></data>
+  <data name="OrderHistory_Empty" xml:space="preserve"><value>No orders in the selected period.</value></data>
+  <data name="OrderHistory_Delete_Title" xml:space="preserve"><value>Delete</value></data>
+  <data name="OrderHistory_Delete_Msg" xml:space="preserve"><value>Really delete order from {0}?</value></data>
+  <data name="OrderHistory_Export_Json" xml:space="preserve"><value>📤 Export JSON</value></data>
+  <data name="OrderHistory_Export_Db" xml:space="preserve"><value>💾 Export DB</value></data>
+  <data name="OrderHistory_Total" xml:space="preserve"><value>Total:</value></data>
+
+  <!-- ── Log Viewer ────────────────────────────────── -->
+  <data name="LogViewer_Title" xml:space="preserve"><value>Log Viewer</value></data>
+  <data name="LogViewer_Load" xml:space="preserve"><value>🔄 Load</value></data>
+  <data name="LogViewer_Clear" xml:space="preserve"><value>🗑 Clear</value></data>
+  <data name="LogViewer_Export" xml:space="preserve"><value>📤 Export</value></data>
+
+  <!-- ── About ─────────────────────────────────────── -->
+  <data name="About_Title" xml:space="preserve"><value>About FestKasse</value></data>
+  <data name="About_AppTitle" xml:space="preserve"><value>💰 FestKasse</value></data>
+  <data name="About_Description" xml:space="preserve"><value>FestKasse is a mobile POS app for festivals and events. It enables quick order entry, management of multiple stands, and data export.</value></data>
+  <data name="About_Features_Title" xml:space="preserve"><value>Features:</value></data>
+  <data name="About_Features" xml:space="preserve"><value>• Fast checkout via tile interface&#x0a;• Multiple stands with their own articles&#x0a;• Categories and coloured tiles&#x0a;• Import/Export via JSON&#x0a;• Sync via URL or QR code&#x0a;• Order submission to a server&#x0a;• Change calculation with note/coin input</value></data>
+  <data name="About_Story" xml:space="preserve"><value>This app was developed for the Pfingstweinfest in Donnersdorf, and is hopefully useful for other events too.</value></data>
+  <data name="About_Footer" xml:space="preserve"><value>Made with ❤️ in Donnersdorf</value></data>
+
+  <!-- ── Converters ─────────────────────────────────── -->
+  <data name="Converter_NewArticle" xml:space="preserve"><value>New article</value></data>
+  <data name="Converter_EditArticle" xml:space="preserve"><value>Edit article</value></data>
+  <data name="Converter_NewCategory" xml:space="preserve"><value>New category</value></data>
+  <data name="Converter_EditCategory" xml:space="preserve"><value>Edit category</value></data>
+  <data name="Converter_Syncing" xml:space="preserve"><value>⏳ Syncing...</value></data>
+  <data name="Converter_SyncNow" xml:space="preserve"><value>🔄 Sync now</value></data>
+
+  <!-- ── ViewModel alert strings ───────────────────── -->
+  <data name="Alert_Settings_Saved" xml:space="preserve"><value>Settings have been saved.</value></data>
+  <data name="Alert_Settings_Updated" xml:space="preserve"><value>Data has been reloaded.</value></data>
+  <data name="Alert_Logo_LoadError" xml:space="preserve"><value>The logo could not be loaded and has been reset.</value></data>
+  <data name="Alert_Logo_PickError" xml:space="preserve"><value>Logo could not be loaded: {0}</value></data>
+  <data name="Alert_Export_NoStand" xml:space="preserve"><value>Please select at least one stand.</value></data>
+  <data name="Alert_Export_Error" xml:space="preserve"><value>Export failed: {0}</value></data>
+  <data name="Alert_Import_Success" xml:space="preserve"><value>Stands, categories, and articles have been imported. Settings remain unchanged.</value></data>
+  <data name="Alert_Import_Error" xml:space="preserve"><value>Import failed: {0}</value></data>
+  <data name="Alert_Sync_NoUrl" xml:space="preserve"><value>Please enter a sync URL.</value></data>
+  <data name="Alert_Sync_Success" xml:space="preserve"><value>Stands, categories, and articles have been synchronised. Settings remain unchanged.</value></data>
+  <data name="Alert_Sync_Error" xml:space="preserve"><value>Sync failed: {0}</value></data>
+  <data name="Alert_ResetArticles_Done" xml:space="preserve"><value>Articles have been reset to the default data.</value></data>
+  <data name="Alert_ResetArticles_Error" xml:space="preserve"><value>Reset failed: {0}</value></data>
+  <data name="Alert_ExportSettings_Error" xml:space="preserve"><value>Settings export failed: {0}</value></data>
+  <data name="Alert_ImportSettings_Success" xml:space="preserve"><value>Settings have been imported.</value></data>
+  <data name="Alert_ImportSettings_Error" xml:space="preserve"><value>Settings import failed: {0}</value></data>
+  <data name="Alert_ResetSettings_Done" xml:space="preserve"><value>Settings have been reset to their default values.</value></data>
+  <data name="Alert_ResetSettings_Error" xml:space="preserve"><value>Reset failed: {0}</value></data>
+  <data name="Alert_ClearHistory_Done" xml:space="preserve"><value>Order history has been cleared.</value></data>
+  <data name="Alert_ClearHistory_Error" xml:space="preserve"><value>Clear failed: {0}</value></data>
+  <data name="Alert_ClearHistory_Confirm_Msg" xml:space="preserve"><value>All {0} saved orders will be permanently deleted. Continue?</value></data>
+  <data name="Alert_Article_NoDescription" xml:space="preserve"><value>Please enter a description.</value></data>
+  <data name="Alert_Category_NoName" xml:space="preserve"><value>Please enter a name.</value></data>
+  <data name="Alert_Stand_NoName" xml:space="preserve"><value>Please enter a name.</value></data>
+  <data name="Alert_Order_NoUrl" xml:space="preserve"><value>No order URL configured. Please set it in the settings.</value></data>
+  <data name="Alert_Order_SendError" xml:space="preserve"><value>Order could not be sent: {0}</value></data>
+  <data name="Alert_LogExport_NoFile" xml:space="preserve"><value>No log file found.</value></data>
+  <data name="Alert_LogExport_Error" xml:space="preserve"><value>Export failed:&#x0a;{0}</value></data>
+  <data name="Alert_OrderHistory_NoDb" xml:space="preserve"><value>No database file found.</value></data>
+  <data name="Alert_OrderHistory_DbExportError" xml:space="preserve"><value>DB export failed: {0}</value></data>
+  <data name="Alert_OrderHistory_ExportError" xml:space="preserve"><value>Export failed: {0}</value></data>
+</root>

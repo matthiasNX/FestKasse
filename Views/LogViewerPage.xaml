@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:FestKasse.ViewModels"
+             xmlns:helpers="clr-namespace:FestKasse.Helpers"
+             x:Class="FestKasse.Views.LogViewerPage"
+             x:DataType="viewmodels:LogViewerViewModel"
+             Title="{helpers:Tr Key=LogViewer_Title}"
+             BackgroundColor="{StaticResource Gray100}">
+
+    <Grid RowDefinitions="Auto,*,Auto" Padding="10" RowSpacing="8">
+
+        <!-- Toolbar -->
+        <Grid Grid.Row="0" ColumnDefinitions="*,*,*" ColumnSpacing="8">
+            <Button Grid.Column="0"
+                    Text="{helpers:Tr Key=LogViewer_Load}"
+                    Command="{Binding LoadLogCommand}"
+                    BackgroundColor="{StaticResource Primary}"
+                    TextColor="White" CornerRadius="8" FontSize="13"/>
+            <Button Grid.Column="1"
+                    Text="{helpers:Tr Key=LogViewer_Clear}"
+                    Command="{Binding ClearLogCommand}"
+                    BackgroundColor="#F44336"
+                    TextColor="White" CornerRadius="8" FontSize="13"/>
+            <Button Grid.Column="2"
+                    Text="{helpers:Tr Key=LogViewer_Export}"
+                    Command="{Binding ExportLogCommand}"
+                    BackgroundColor="#607D8B"
+                    TextColor="White" CornerRadius="8" FontSize="13"/>
+        </Grid>
+
+        <!-- Log content -->
+        <Border Grid.Row="1"
+                BackgroundColor="Black"
+                StrokeThickness="0"
+                StrokeShape="RoundRectangle 8">
+            <ScrollView x:Name="LogScrollView">
+                <Label x:Name="LogLabel"
+                       Text="{Binding LogContent}"
+                       FontSize="11"
+                       TextColor="#00FF41"
+                       Padding="10"
+                       LineBreakMode="CharacterWrap"
+                       VerticalOptions="Start">
+                    <Label.FontFamily>
+                        <OnPlatform x:TypeArguments="x:String">
+                            <On Platform="Android" Value="monospace"/>
+                            <On Platform="iOS,MacCatalyst" Value="Courier New"/>
+                            <On Platform="WinUI" Value="Courier New"/>
+                        </OnPlatform>
+                    </Label.FontFamily>
+                </Label>
+            </ScrollView>
+        </Border>
+
+        <!-- Footer: file path + loading indicator -->
+        <Grid Grid.Row="2" ColumnDefinitions="*,Auto">
+            <Label Grid.Column="0"
+                   Text="{Binding LogFilePath}"
+                   FontSize="10"
+                   TextColor="Gray"
+                   LineBreakMode="MiddleTruncation"
+                   VerticalOptions="Center"/>
+            <ActivityIndicator Grid.Column="1"
+                               IsRunning="{Binding IsLoading}"
+                               IsVisible="{Binding IsLoading}"
+                               Color="{StaticResource Primary}"
+                               WidthRequest="24" HeightRequest="24"/>
+        </Grid>
+    </Grid>
+</ContentPage>

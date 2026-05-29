@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Text;
 using System.Text.Json;
 using FestKasse.Models;
@@ -6,16 +7,27 @@ namespace FestKasse.Services;
 
 public class OrderService : IOrderService
 {
+    private readonly ILogService _log;
     private static readonly JsonSerializerOptions _jsonOptions = new()
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
         WriteIndented = false
     };
 
+    public OrderService(ILogService logService)
+    {
+        _log = logService;
+    }
+
     public async Task<bool> SendOrderAsync(OrderRecord order, AppSettings settings)
     {
         if (string.IsNullOrWhiteSpace(settings.OrderUrl))
+        {
+            _log.Warning("SendOrderAsync: Keine Bestell-URL konfiguriert – Bestellung wird nicht gesendet.");
             return false;
+        }
+
+        _log.Info($"Sende Bestellung: Stand='{order.StandName}', Gesamtbetrag={order.Total:F2}€, Modus={settings.OrderSendMode}, URL={settings.OrderUrl}");
 
         HttpClient? tempClient = null;
         HttpClient client;
@@ -43,6 +55,7 @@ public class OrderService : IOrderService
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
                 var response = await client.PostAsync(settings.OrderUrl, content);
                 response.EnsureSuccessStatusCode();
+                _log.Info($"Bestellung erfolgreich per POST gesendet. HTTP-Status: {(int)response.StatusCode}.");
             }
             else // UrlTemplate
             {
@@ -54,9 +67,25 @@ public class OrderService : IOrderService
 
                 var response = await client.GetAsync(url);
                 response.EnsureSuccessStatusCode();
+                _log.Info($"Bestellung erfolgreich per GET (URL-Vorlage) gesendet. HTTP-Status: {(int)response.StatusCode}.");
             }
 
             return true;
+        }
+        catch (HttpRequestException ex)
+        {
+            _log.Exception(ex, $"HTTP-Fehler beim Senden der Bestellung an '{settings.OrderUrl}'.");
+            return false;
+        }
+        catch (TaskCanceledException ex)
+        {
+            _log.Exception(ex, "Timeout while sending order.");
+            return false;
+        }
+        catch (Exception ex)
+        {
+            _log.Exception(ex, "Unexpected error while sending order.");
+            return false;
         }
         finally
         {

@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
+
+  <!-- ── Shell / Menu ─────────────────────────────── -->
+  <data name="Menu_POS" xml:space="preserve"><value>💰  Kasse</value></data>
+  <data name="Menu_StandManagement" xml:space="preserve"><value>🏪  Standverwaltung</value></data>
+  <data name="Menu_CategoryManagement" xml:space="preserve"><value>📋  Kategorieverwaltung</value></data>
+  <data name="Menu_ArticleManagement" xml:space="preserve"><value>📦  Artikelverwaltung</value></data>
+  <data name="Menu_Settings" xml:space="preserve"><value>⚙️  Einstellungen</value></data>
+  <data name="Menu_OrderHistory" xml:space="preserve"><value>📜  Bestellverlauf</value></data>
+  <data name="Menu_LogViewer" xml:space="preserve"><value>📃  Log-Anzeige</value></data>
+  <data name="Menu_About" xml:space="preserve"><value>ℹ️  Über</value></data>
+
+  <!-- ── Common ────────────────────────────────────── -->
+  <data name="Common_Save" xml:space="preserve"><value>💾 Einstellungen speichern</value></data>
+  <data name="Common_Cancel" xml:space="preserve"><value>Abbrechen</value></data>
+  <data name="Common_Delete" xml:space="preserve"><value>Löschen</value></data>
+  <data name="Common_Edit" xml:space="preserve"><value>Bearbeiten</value></data>
+  <data name="Common_OK" xml:space="preserve"><value>OK</value></data>
+  <data name="Common_Yes" xml:space="preserve"><value>Ja</value></data>
+  <data name="Common_No" xml:space="preserve"><value>Nein</value></data>
+  <data name="Common_Error" xml:space="preserve"><value>Fehler</value></data>
+  <data name="Common_Success" xml:space="preserve"><value>Erfolg</value></data>
+  <data name="Common_Warning" xml:space="preserve"><value>Warnung</value></data>
+  <data name="Common_Info" xml:space="preserve"><value>Hinweis</value></data>
+  <data name="Common_Done" xml:space="preserve"><value>Erledigt</value></data>
+  <data name="Common_Saved" xml:space="preserve"><value>Gespeichert</value></data>
+  <data name="Common_Updated" xml:space="preserve"><value>Aktualisiert</value></data>
+
+  <!-- ── Settings Page ─────────────────────────────── -->
+  <data name="Settings_Title" xml:space="preserve"><value>Einstellungen</value></data>
+  <data name="Settings_Tab_General" xml:space="preserve"><value>⚙️ Allgemein</value></data>
+  <data name="Settings_Tab_Order" xml:space="preserve"><value>📡 Bestellung</value></data>
+  <data name="Settings_Tab_Sync" xml:space="preserve"><value>🔄 Sync/Import</value></data>
+  <data name="Settings_Tab_Logging" xml:space="preserve"><value>📃 Logging</value></data>
+
+  <data name="Settings_Display_Section" xml:space="preserve"><value>Display-Einstellungen</value></data>
+  <data name="Settings_Display_KeepOn" xml:space="preserve"><value>Bildschirm aktiv halten (Minuten)</value></data>
+  <data name="Settings_Display_KeepOnHint" xml:space="preserve"><value>0 = Standard-Timeout verwenden</value></data>
+
+  <data name="Settings_TileSize_Section" xml:space="preserve"><value>Kachelgröße</value></data>
+  <data name="Settings_TileSize_Label" xml:space="preserve"><value>Größe der Kacheln (dp)</value></data>
+
+  <data name="Settings_Logo_Section" xml:space="preserve"><value>Logo</value></data>
+  <data name="Settings_Logo_Remove" xml:space="preserve"><value>🗑 Entfernen</value></data>
+  <data name="Settings_Logo_Select" xml:space="preserve"><value>📷 Logo auswählen</value></data>
+  <data name="Settings_Logo_Hint" xml:space="preserve"><value>Das Logo wird im Header rechts angezeigt</value></data>
+
+  <data name="Settings_Language_Section" xml:space="preserve"><value>Sprache / Language</value></data>
+  <data name="Settings_Language_Label" xml:space="preserve"><value>App-Sprache</value></data>
+  <data name="Settings_Language_System" xml:space="preserve"><value>Systemsprache</value></data>
+  <data name="Settings_Language_German" xml:space="preserve"><value>Deutsch</value></data>
+  <data name="Settings_Language_English" xml:space="preserve"><value>English</value></data>
+  <data name="Settings_Language_RestartHint" xml:space="preserve"><value>Sprachänderung wird nach dem Speichern sofort angewendet.</value></data>
+
+  <data name="Settings_ResetArticles_Section" xml:space="preserve"><value>Stammdaten zurücksetzen</value></data>
+  <data name="Settings_ResetArticles_Desc" xml:space="preserve"><value>Setzt alle Stände und Artikel auf die Standard-Daten zurück.</value></data>
+  <data name="Settings_ResetArticles_Button" xml:space="preserve"><value>🔄 Stammdaten auf Standard zurücksetzen</value></data>
+  <data name="Settings_ResetArticles_Confirm_Title" xml:space="preserve"><value>Artikel zurücksetzen</value></data>
+  <data name="Settings_ResetArticles_Confirm_Msg" xml:space="preserve"><value>Alle Artikel werden auf die Standard-Artikel zurückgesetzt. Eigene Änderungen gehen verloren. Fortfahren?</value></data>
+  <data name="Settings_ResetArticles_Confirm_Yes" xml:space="preserve"><value>Ja, zurücksetzen</value></data>
+
+  <data name="Settings_ImportExport_Section" xml:space="preserve"><value>Einstellungen Import / Export</value></data>
+  <data name="Settings_ImportExport_Desc" xml:space="preserve"><value>Exportiert oder importiert die App-Einstellungen (Anzeige, Kacheln, Logo, Bestellkonfiguration) als JSON-Datei.</value></data>
+  <data name="Settings_Export_Button" xml:space="preserve"><value>📤 Exportieren</value></data>
+  <data name="Settings_Import_Button" xml:space="preserve"><value>📥 Importieren</value></data>
+  <data name="Settings_ResetSettings_Button" xml:space="preserve"><value>🔄 Einstellungen auf Standard zurücksetzen</value></data>
+  <data name="Settings_ResetSettings_Confirm_Title" xml:space="preserve"><value>Einstellungen zurücksetzen</value></data>
+  <data name="Settings_ResetSettings_Confirm_Msg" xml:space="preserve"><value>Alle Einstellungen werden auf die Standardwerte zurückgesetzt. Fortfahren?</value></data>
+  <data name="Settings_ResetSettings_Confirm_Yes" xml:space="preserve"><value>Ja, zurücksetzen</value></data>
+
+  <!-- ── Settings / Order Tab ──────────────────────── -->
+  <data name="Settings_Order_Section" xml:space="preserve"><value>Bestellübermittlung</value></data>
+  <data name="Settings_Order_Desc" xml:space="preserve"><value>Wenn konfiguriert, sendet 'Abschließen' die Bestellung an den Server.</value></data>
+  <data name="Settings_Order_Enable" xml:space="preserve"><value>Bestellübermittlung aktivieren</value></data>
+  <data name="Settings_Order_Url" xml:space="preserve"><value>Bestell-URL</value></data>
+  <data name="Settings_Order_SendMode" xml:space="preserve"><value>Sendemodus</value></data>
+  <data name="Settings_Order_SslWarning" xml:space="preserve"><value>⚠ SSL-Zertifikat ignorieren</value></data>
+  <data name="Settings_Order_JsonHint" xml:space="preserve"><value>JSON Body: POST mit {timestamp, total, items[]}</value></data>
+  <data name="Settings_Order_UrlHint" xml:space="preserve"><value>URL-Vorlage: GET mit Platzhaltern {total}, {timestamp}, {items}</value></data>
+
+  <data name="Settings_OrderHistory_Section" xml:space="preserve"><value>Lokaler Bestellverlauf</value></data>
+  <data name="Settings_OrderHistory_Desc" xml:space="preserve"><value>Speichert jede abgeschlossene Bestellung in einer lokalen Datenbank auf dem Gerät.</value></data>
+  <data name="Settings_OrderHistory_Save" xml:space="preserve"><value>Bestellungen lokal speichern</value></data>
+  <data name="Settings_OrderHistory_Count" xml:space="preserve"><value>Gespeicherte Einträge: </value></data>
+  <data name="Settings_OrderHistory_Clear" xml:space="preserve"><value>🗑 Löschen</value></data>
+  <data name="Settings_OrderHistory_Clear_Confirm_Title" xml:space="preserve"><value>Bestellverlauf löschen</value></data>
+  <data name="Settings_OrderHistory_Clear_Confirm_Yes" xml:space="preserve"><value>Ja, löschen</value></data>
+
+  <!-- ── Settings / Sync Tab ───────────────────────── -->
+  <data name="Settings_Sync_Section" xml:space="preserve"><value>Synchronisation</value></data>
+  <data name="Settings_Sync_Desc" xml:space="preserve"><value>Lädt Stände, Kategorien und Artikel von einer URL herunter und ersetzt die lokalen Daten. Einstellungen werden nicht verändert.</value></data>
+  <data name="Settings_Sync_UrlLabel" xml:space="preserve"><value>Sync-URL (HTTP)</value></data>
+  <data name="Settings_Sync_SslWarning" xml:space="preserve"><value>⚠ SSL-Zertifikat ignorieren</value></data>
+  <data name="Settings_Sync_SslHint" xml:space="preserve"><value>Nur temporär für diesen Sync.</value></data>
+  <data name="Settings_Sync_SaveButton" xml:space="preserve"><value>💾 Sync-URL speichern</value></data>
+
+  <data name="Settings_MasterData_Section" xml:space="preserve"><value>Import / Export (Stammdaten)</value></data>
+  <data name="Settings_MasterData_Desc" xml:space="preserve"><value>Exportiert oder importiert Stände mit ihren Kategorien und Artikeln als JSON-Datei. Einstellungen sind nicht enthalten.</value></data>
+  <data name="Settings_MasterData_SelectStands" xml:space="preserve"><value>Stände für Export auswählen:</value></data>
+  <data name="Settings_MasterData_CancelExport" xml:space="preserve"><value>✕ Abbrechen</value></data>
+  <data name="Settings_MasterData_DoExport" xml:space="preserve"><value>📤 Exportieren</value></data>
+  <data name="Settings_MasterData_ExportStands" xml:space="preserve"><value>📤 Stände exportieren…</value></data>
+  <data name="Settings_MasterData_ImportFile" xml:space="preserve"><value>📥 Aus Datei importieren</value></data>
+
+  <!-- ── Settings / Logging Tab ────────────────────── -->
+  <data name="Settings_LogLevel_Section" xml:space="preserve"><value>Log-Level</value></data>
+  <data name="Settings_LogLevel_Desc" xml:space="preserve"><value>Legt fest, ab welchem Schweregrad Ereignisse in die Log-Datei geschrieben werden.</value></data>
+  <data name="Settings_LogViewer_Section" xml:space="preserve"><value>Log-Viewer</value></data>
+  <data name="Settings_LogViewer_Desc" xml:space="preserve"><value>Öffnet die Log-Datei zur Anzeige, zum Löschen oder zum Exportieren.</value></data>
+  <data name="Settings_LogViewer_Button" xml:space="preserve"><value>📃 Log-Datei anzeigen</value></data>
+
+  <!-- ── Article Management ───────────────────────── -->
+  <data name="Article_Title" xml:space="preserve"><value>Artikelverwaltung</value></data>
+  <data name="Article_Empty" xml:space="preserve"><value>Keine Artikel vorhanden</value></data>
+  <data name="Article_EmptyHint" xml:space="preserve"><value>Tippe auf '+' um einen neuen Artikel anzulegen</value></data>
+  <data name="Article_New_Title" xml:space="preserve"><value>Neuer Artikel</value></data>
+  <data name="Article_Edit_Title" xml:space="preserve"><value>Artikel bearbeiten</value></data>
+  <data name="Article_Field_Description" xml:space="preserve"><value>Beschreibung *</value></data>
+  <data name="Article_Field_Description_Placeholder" xml:space="preserve"><value>Artikelname eingeben</value></data>
+  <data name="Article_Field_Category" xml:space="preserve"><value>Kategorie</value></data>
+  <data name="Article_Field_SortOrder" xml:space="preserve"><value>Reihenfolge (SortOrder)</value></data>
+  <data name="Article_Field_SortOrder_Hint" xml:space="preserve"><value>Niedrigere Zahl = weiter oben / links</value></data>
+  <data name="Article_Field_Price" xml:space="preserve"><value>Preis (€)</value></data>
+  <data name="Article_Field_Price_Hint" xml:space="preserve"><value>Negative Preise für Rückgaben (z.B. Pfand)</value></data>
+  <data name="Article_Field_Icon" xml:space="preserve"><value>Icon (Unicode / Emoji)</value></data>
+  <data name="Article_Field_Icon_Placeholder" xml:space="preserve"><value>Emoji hier eingeben oder unten wählen</value></data>
+  <data name="Article_Field_Icon_Quick" xml:space="preserve"><value>Schnellauswahl:</value></data>
+  <data name="Article_Field_Color" xml:space="preserve"><value>Farbe</value></data>
+  <data name="Article_Field_Preview" xml:space="preserve"><value>Vorschau</value></data>
+  <data name="Article_Add_Button" xml:space="preserve"><value>+ Neuen Artikel anlegen</value></data>
+  <data name="Article_Save_Button" xml:space="preserve"><value>Speichern</value></data>
+  <data name="Article_Cancel_Button" xml:space="preserve"><value>Abbrechen</value></data>
+  <data name="Article_Delete_Title" xml:space="preserve"><value>Löschen</value></data>
+  <data name="Article_Delete_Msg" xml:space="preserve"><value>Artikel '{0}' wirklich löschen?</value></data>
+
+  <!-- ── Category Management ──────────────────────── -->
+  <data name="Category_Title" xml:space="preserve"><value>Kategorien</value></data>
+  <data name="Category_Empty" xml:space="preserve"><value>Keine Kategorien vorhanden</value></data>
+  <data name="Category_EmptyHint" xml:space="preserve"><value>Tippe auf '+ Neue Kategorie' um eine anzulegen</value></data>
+  <data name="Category_New_Title" xml:space="preserve"><value>Neue Kategorie</value></data>
+  <data name="Category_Edit_Title" xml:space="preserve"><value>Kategorie bearbeiten</value></data>
+  <data name="Category_Field_Name" xml:space="preserve"><value>Name *</value></data>
+  <data name="Category_Field_Name_Placeholder" xml:space="preserve"><value>Kategoriename eingeben</value></data>
+  <data name="Category_Field_SortOrder" xml:space="preserve"><value>Reihenfolge</value></data>
+  <data name="Category_Field_SortOrder_Hint" xml:space="preserve"><value>Niedrigere Zahl = weiter oben / links</value></data>
+  <data name="Category_SortOrder_Format" xml:space="preserve"><value>Reihenfolge: {0}</value></data>
+  <data name="Category_SortOrder_Label" xml:space="preserve"><value>Reihenfolge:</value></data>
+  <data name="Category_Add_Button" xml:space="preserve"><value>+ Neue Kategorie anlegen</value></data>
+  <data name="Category_Save_Button" xml:space="preserve"><value>Speichern</value></data>
+  <data name="Category_Cancel_Button" xml:space="preserve"><value>Abbrechen</value></data>
+  <data name="Category_Delete_Title" xml:space="preserve"><value>Löschen</value></data>
+  <data name="Category_Delete_Msg" xml:space="preserve"><value>Kategorie "{0}" wirklich löschen?</value></data>
+  <data name="Category_Delete_InUse_Title" xml:space="preserve"><value>Nicht möglich</value></data>
+  <data name="Category_Delete_InUse_Msg" xml:space="preserve"><value>Die Kategorie "{0}" wird noch von Artikeln verwendet und kann nicht gelöscht werden.</value></data>
+
+  <!-- ── Stand Management ─────────────────────────── -->
+  <data name="Stand_Title" xml:space="preserve"><value>Standverwaltung</value></data>
+  <data name="Stand_New_Section" xml:space="preserve"><value>Neuen Stand anlegen</value></data>
+  <data name="Stand_New_Placeholder" xml:space="preserve"><value>Standname (z.B. Brotzeitstand)</value></data>
+  <data name="Stand_New_Button" xml:space="preserve"><value>➕ Hinzufügen</value></data>
+  <data name="Stand_Existing_Section" xml:space="preserve"><value>Vorhandene Stände</value></data>
+  <data name="Stand_SetActive_Button" xml:space="preserve"><value>✔ Aktiv setzen</value></data>
+  <data name="Stand_Delete_Title" xml:space="preserve"><value>Stand löschen</value></data>
+  <data name="Stand_Delete_Msg" xml:space="preserve"><value>Stand "{0}" wirklich löschen? Alle zugehörigen Artikel gehen verloren.</value></data>
+  <data name="Stand_Delete_Yes" xml:space="preserve"><value>Ja, löschen</value></data>
+  <data name="Stand_Rename_Title" xml:space="preserve"><value>Stand umbenennen</value></data>
+  <data name="Stand_Rename_Prompt" xml:space="preserve"><value>Neuer Name:</value></data>
+  <data name="Stand_MinOne_Msg" xml:space="preserve"><value>Mindestens ein Stand muss vorhanden sein.</value></data>
+  <data name="Stand_Select_Title" xml:space="preserve"><value>Stand auswählen</value></data>
+
+  <!-- ── Order History ────────────────────────────── -->
+  <data name="OrderHistory_Title" xml:space="preserve"><value>Bestellverlauf</value></data>
+  <data name="OrderHistory_FilterFrom" xml:space="preserve"><value>Von:</value></data>
+  <data name="OrderHistory_FilterTo" xml:space="preserve"><value>Bis:</value></data>
+  <data name="OrderHistory_Empty" xml:space="preserve"><value>Keine Bestellungen im gewählten Zeitraum.</value></data>
+  <data name="OrderHistory_Delete_Title" xml:space="preserve"><value>Löschen</value></data>
+  <data name="OrderHistory_Delete_Msg" xml:space="preserve"><value>Bestellung vom {0} wirklich löschen?</value></data>
+  <data name="OrderHistory_Export_Json" xml:space="preserve"><value>📤 JSON exportieren</value></data>
+  <data name="OrderHistory_Export_Db" xml:space="preserve"><value>💾 DB exportieren</value></data>
+  <data name="OrderHistory_Total" xml:space="preserve"><value>Gesamt:</value></data>
+
+  <!-- ── Log Viewer ────────────────────────────────── -->
+  <data name="LogViewer_Title" xml:space="preserve"><value>Log-Anzeige</value></data>
+  <data name="LogViewer_Load" xml:space="preserve"><value>🔄 Laden</value></data>
+  <data name="LogViewer_Clear" xml:space="preserve"><value>🗑 Löschen</value></data>
+  <data name="LogViewer_Export" xml:space="preserve"><value>📤 Exportieren</value></data>
+
+  <!-- ── About ─────────────────────────────────────── -->
+  <data name="About_Title" xml:space="preserve"><value>Über FestKasse</value></data>
+  <data name="About_AppTitle" xml:space="preserve"><value>💰 FestKasse</value></data>
+  <data name="About_Description" xml:space="preserve"><value>FestKasse ist eine mobile Kassen-App für Feste und Veranstaltungen. Sie ermöglicht das schnelle Erfassen von Bestellungen, die Verwaltung mehrerer Stände und den Export von Daten.</value></data>
+  <data name="About_Features_Title" xml:space="preserve"><value>Funktionen:</value></data>
+  <data name="About_Features" xml:space="preserve"><value>• Schnelles Kassieren per Kachel-Oberfläche&#x0a;• Mehrere Stände mit eigenen Artikeln&#x0a;• Kategorien und farbige Kacheln&#x0a;• Import/Export via JSON&#x0a;• Synchronisation über URL oder QR-Code&#x0a;• Bestellübermittlung an Server&#x0a;• Rückgeldberechnung mit Schein-/Münzerfassung</value></data>
+  <data name="About_Story" xml:space="preserve"><value>Diese App wurde für das Pfingstweinfest in Donnersdorf entwickelt, und ist hoffentlich auch für andere Feste hilfreich.</value></data>
+  <data name="About_Footer" xml:space="preserve"><value>Made with ❤️ in Donnersdorf</value></data>
+
+  <!-- ── Converters ─────────────────────────────────── -->
+  <data name="Converter_NewArticle" xml:space="preserve"><value>Neuer Artikel</value></data>
+  <data name="Converter_EditArticle" xml:space="preserve"><value>Artikel bearbeiten</value></data>
+  <data name="Converter_NewCategory" xml:space="preserve"><value>Neue Kategorie</value></data>
+  <data name="Converter_EditCategory" xml:space="preserve"><value>Kategorie bearbeiten</value></data>
+  <data name="Converter_Syncing" xml:space="preserve"><value>⏳ Synchronisiere...</value></data>
+  <data name="Converter_SyncNow" xml:space="preserve"><value>🔄 Jetzt synchronisieren</value></data>
+
+  <!-- ── ViewModel alert strings ───────────────────── -->
+  <data name="Alert_Settings_Saved" xml:space="preserve"><value>Einstellungen wurden gespeichert.</value></data>
+  <data name="Alert_Settings_Updated" xml:space="preserve"><value>Daten wurden neu geladen.</value></data>
+  <data name="Alert_Logo_LoadError" xml:space="preserve"><value>Das Logo konnte nicht geladen werden und wurde zurückgesetzt.</value></data>
+  <data name="Alert_Logo_PickError" xml:space="preserve"><value>Logo konnte nicht geladen werden: {0}</value></data>
+  <data name="Alert_Export_NoStand" xml:space="preserve"><value>Bitte mindestens einen Stand auswählen.</value></data>
+  <data name="Alert_Export_Error" xml:space="preserve"><value>Export fehlgeschlagen: {0}</value></data>
+  <data name="Alert_Import_Success" xml:space="preserve"><value>Stände, Kategorien und Artikel wurden importiert. Einstellungen bleiben unverändert.</value></data>
+  <data name="Alert_Import_Error" xml:space="preserve"><value>Import fehlgeschlagen: {0}</value></data>
+  <data name="Alert_Sync_NoUrl" xml:space="preserve"><value>Bitte eine Sync-URL eingeben.</value></data>
+  <data name="Alert_Sync_Success" xml:space="preserve"><value>Stände, Kategorien und Artikel wurden synchronisiert. Einstellungen bleiben unverändert.</value></data>
+  <data name="Alert_Sync_Error" xml:space="preserve"><value>Sync fehlgeschlagen: {0}</value></data>
+  <data name="Alert_ResetArticles_Done" xml:space="preserve"><value>Artikel wurden auf die Standard-Daten zurückgesetzt.</value></data>
+  <data name="Alert_ResetArticles_Error" xml:space="preserve"><value>Zurücksetzen fehlgeschlagen: {0}</value></data>
+  <data name="Alert_ExportSettings_Error" xml:space="preserve"><value>Einstellungen-Export fehlgeschlagen: {0}</value></data>
+  <data name="Alert_ImportSettings_Success" xml:space="preserve"><value>Einstellungen wurden importiert.</value></data>
+  <data name="Alert_ImportSettings_Error" xml:space="preserve"><value>Einstellungen-Import fehlgeschlagen: {0}</value></data>
+  <data name="Alert_ResetSettings_Done" xml:space="preserve"><value>Einstellungen wurden auf die Standardwerte zurückgesetzt.</value></data>
+  <data name="Alert_ResetSettings_Error" xml:space="preserve"><value>Zurücksetzen fehlgeschlagen: {0}</value></data>
+  <data name="Alert_ClearHistory_Done" xml:space="preserve"><value>Bestellverlauf wurde gelöscht.</value></data>
+  <data name="Alert_ClearHistory_Error" xml:space="preserve"><value>Löschen fehlgeschlagen: {0}</value></data>
+  <data name="Alert_ClearHistory_Confirm_Msg" xml:space="preserve"><value>Alle {0} gespeicherten Bestellungen werden unwiderruflich gelöscht. Fortfahren?</value></data>
+  <data name="Alert_Article_NoDescription" xml:space="preserve"><value>Bitte eine Beschreibung eingeben.</value></data>
+  <data name="Alert_Category_NoName" xml:space="preserve"><value>Bitte einen Namen eingeben.</value></data>
+  <data name="Alert_Stand_NoName" xml:space="preserve"><value>Bitte einen Namen eingeben.</value></data>
+  <data name="Alert_Order_NoUrl" xml:space="preserve"><value>Keine Bestell-URL konfiguriert. Bitte in den Einstellungen hinterlegen.</value></data>
+  <data name="Alert_Order_SendError" xml:space="preserve"><value>Bestellung konnte nicht gesendet werden: {0}</value></data>
+  <data name="Alert_LogExport_NoFile" xml:space="preserve"><value>Keine Log-Datei vorhanden.</value></data>
+  <data name="Alert_LogExport_Error" xml:space="preserve"><value>Export fehlgeschlagen:&#x0a;{0}</value></data>
+  <data name="Alert_OrderHistory_NoDb" xml:space="preserve"><value>Keine Datenbankdatei gefunden.</value></data>
+  <data name="Alert_OrderHistory_DbExportError" xml:space="preserve"><value>DB-Export fehlgeschlagen: {0}</value></data>
+  <data name="Alert_OrderHistory_ExportError" xml:space="preserve"><value>Export fehlgeschlagen: {0}</value></data>
+</root>

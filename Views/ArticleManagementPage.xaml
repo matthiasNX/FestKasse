@@ -5,10 +5,11 @@
              xmlns:models="clr-namespace:FestKasse.Models"
              xmlns:controls="clr-namespace:FestKasse.Controls"
              xmlns:converters="clr-namespace:FestKasse.Converters"
+             xmlns:helpers="clr-namespace:FestKasse.Helpers"
              x:Class="FestKasse.Views.ArticleManagementPage"
              x:Name="ThisPage"
              x:DataType="viewmodels:ArticleManagementViewModel"
-             Title="Artikelverwaltung"
+             Title="{helpers:Tr Key=Article_Title}"
              BackgroundColor="{StaticResource Gray100}">
 
     <ContentPage.Resources>
@@ -51,8 +52,8 @@
                 </CollectionView.ItemTemplate>
                 <CollectionView.EmptyView>
                     <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Padding="40">
-                        <Label Text="Keine Artikel vorhanden" FontSize="18" TextColor="Gray" HorizontalTextAlignment="Center"/>
-                        <Label Text="Tippe auf &apos;+&apos; um einen neuen Artikel anzulegen" FontSize="14" TextColor="Gray" HorizontalTextAlignment="Center" Margin="0,10,0,0"/>
+                        <Label Text="{helpers:Tr Key=Article_Empty}" FontSize="18" TextColor="Gray" HorizontalTextAlignment="Center"/>
+                        <Label Text="{helpers:Tr Key=Article_EmptyHint}" FontSize="14" TextColor="Gray" HorizontalTextAlignment="Center" Margin="0,10,0,0"/>
                     </VerticalStackLayout>
                 </CollectionView.EmptyView>
             </CollectionView>
@@ -65,18 +66,18 @@
                         <Label Text="{Binding IsNewArticle, Converter={StaticResource NewEditTitleConverter}}" FontSize="20" FontAttributes="Bold"/>
 
                         <VerticalStackLayout>
-                            <Label Text="Beschreibung *" FontSize="14" FontAttributes="Bold"/>
-                            <Editor Text="{Binding EditDescription}" Placeholder="Artikelname eingeben" BackgroundColor="{StaticResource Gray100}" HeightRequest="80" AutoSize="TextChanges"/>
+                            <Label Text="{helpers:Tr Key=Article_Field_Description}" FontSize="14" FontAttributes="Bold"/>
+                            <Editor Text="{Binding EditDescription}" Placeholder="{helpers:Tr Key=Article_Field_Description_Placeholder}" BackgroundColor="{StaticResource Gray100}" HeightRequest="80" AutoSize="TextChanges"/>
                         </VerticalStackLayout>
 
                         <VerticalStackLayout>
-                            <Label Text="Kategorie" FontSize="14" FontAttributes="Bold"/>
+                            <Label Text="{helpers:Tr Key=Article_Field_Category}" FontSize="14" FontAttributes="Bold"/>
                             <Picker ItemsSource="{Binding Categories}" SelectedItem="{Binding EditCategory}"
                                     ItemDisplayBinding="{Binding Name}" BackgroundColor="{StaticResource Gray100}"/>
                         </VerticalStackLayout>
 
                         <VerticalStackLayout>
-                            <Label Text="Reihenfolge (SortOrder)" FontSize="14" FontAttributes="Bold"/>
+                            <Label Text="{helpers:Tr Key=Article_Field_SortOrder}" FontSize="14" FontAttributes="Bold"/>
                             <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="6">
                                 <Button Grid.Column="0" Text="&#x2212;" Command="{Binding DecreaseSortOrderCommand}"
                                         WidthRequest="44" HeightRequest="44" CornerRadius="8" Padding="0"
@@ -86,18 +87,18 @@
                                         WidthRequest="44" HeightRequest="44" CornerRadius="8" Padding="0"
                                         FontSize="18" FontAttributes="Bold" BackgroundColor="{StaticResource Primary}" TextColor="White"/>
                             </Grid>
-                            <Label Text="Niedrigere Zahl = weiter oben / links" FontSize="11" TextColor="Gray"/>
+                            <Label Text="{helpers:Tr Key=Article_Field_SortOrder_Hint}" FontSize="11" TextColor="Gray"/>
                         </VerticalStackLayout>
 
                         <VerticalStackLayout>
-                            <Label Text="Preis (&#x20AC;)" FontSize="14" FontAttributes="Bold"/>
+                            <Label Text="{helpers:Tr Key=Article_Field_Price}" FontSize="14" FontAttributes="Bold"/>
                             <Entry Text="{Binding EditPriceText, Mode=TwoWay}"
                                    Keyboard="Numeric" Placeholder="0,00" BackgroundColor="{StaticResource Gray100}"/>
-                            <Label Text="Negative Preise f&#xFC;r R&#xFC;ckgaben (z.B. Pfand)" FontSize="11" TextColor="Gray"/>
+                            <Label Text="{helpers:Tr Key=Article_Field_Price_Hint}" FontSize="11" TextColor="Gray"/>
                         </VerticalStackLayout>
 
                         <VerticalStackLayout>
-                            <Label Text="Icon (Unicode / Emoji)" FontSize="14" FontAttributes="Bold"/>
+                            <Label Text="{helpers:Tr Key=Article_Field_Icon}" FontSize="14" FontAttributes="Bold"/>
 
                             <!-- Current icon preview + entry + clear -->
                             <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8" Margin="0,0,0,6">
@@ -111,7 +112,7 @@
                                 </Border>
                                 <Entry Grid.Column="1"
                                        Text="{Binding EditIcon, Mode=TwoWay}"
-                                       Placeholder="Emoji hier eingeben oder unten w&#xE4;hlen"
+                                       Placeholder="{helpers:Tr Key=Article_Field_Icon_Placeholder}"
                                        BackgroundColor="{StaticResource Gray100}"
                                        FontSize="18"/>
                                 <Button Grid.Column="2"
@@ -125,7 +126,7 @@
                             </Grid>
 
                             <!-- Quick-pick emoji grid -->
-                            <Label Text="Schnellauswahl:" FontSize="12" TextColor="Gray"/>
+                            <Label Text="{helpers:Tr Key=Article_Field_Icon_Quick}" FontSize="12" TextColor="Gray"/>
                             <FlexLayout BindableLayout.ItemsSource="{Binding Source={x:Static viewmodels:ArticleManagementViewModel.AvailableIcons}}"
                                         Wrap="Wrap" JustifyContent="Start">
                                 <BindableLayout.ItemTemplate>
@@ -147,7 +148,7 @@
                         </VerticalStackLayout>
 
                         <VerticalStackLayout>
-                            <Label Text="Farbe" FontSize="14" FontAttributes="Bold"/>
+                            <Label Text="{helpers:Tr Key=Article_Field_Color}" FontSize="14" FontAttributes="Bold"/>
                             <FlexLayout BindableLayout.ItemsSource="{Binding AvailableColors}" Wrap="Wrap" JustifyContent="Start">
                                 <BindableLayout.ItemTemplate>
                                     <DataTemplate x:DataType="x:String">
@@ -164,7 +165,7 @@
                         </VerticalStackLayout>
 
                         <VerticalStackLayout>
-                            <Label Text="Vorschau" FontSize="14" FontAttributes="Bold"/>
+                            <Label Text="{helpers:Tr Key=Article_Field_Preview}" FontSize="14" FontAttributes="Bold"/>
                             <controls:TileControl
                                 Title="{Binding EditDescription, TargetNullValue='Artikelname'}"
                                 SubTitle="{Binding EditPrice, StringFormat='{0:F2} €'}"
@@ -176,8 +177,8 @@
                         </VerticalStackLayout>
 
                         <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
-                            <Button Grid.Column="0" Text="Abbrechen" Command="{Binding CancelEditCommand}" BackgroundColor="{StaticResource Gray400}" TextColor="White"/>
-                            <Button Grid.Column="1" Text="Speichern" Command="{Binding SaveArticleCommand}" BackgroundColor="{StaticResource Primary}" TextColor="White"/>
+                            <Button Grid.Column="0" Text="{helpers:Tr Key=Article_Cancel_Button}" Command="{Binding CancelEditCommand}" BackgroundColor="{StaticResource Gray400}" TextColor="White"/>
+                            <Button Grid.Column="1" Text="{helpers:Tr Key=Article_Save_Button}" Command="{Binding SaveArticleCommand}" BackgroundColor="{StaticResource Primary}" TextColor="White"/>
                         </Grid>
 
                     </VerticalStackLayout>
@@ -187,7 +188,7 @@
         </Grid>
 
         <!-- Add Button -->
-        <Button Grid.Row="1" Text="+ Neuen Artikel anlegen" Command="{Binding NewArticleCommand}"
+        <Button Grid.Row="1" Text="{helpers:Tr Key=Article_Add_Button}" Command="{Binding NewArticleCommand}"
                 BackgroundColor="{StaticResource Primary}" TextColor="White" FontSize="16" Margin="10" HeightRequest="50"/>
     </Grid>
 </ContentPage>

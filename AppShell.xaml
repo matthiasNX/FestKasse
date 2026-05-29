@@ -4,7 +4,8 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:views="clr-namespace:FestKasse.Views"
-    FlyoutBehavior="Flyout"    
+    xmlns:helpers="clr-namespace:FestKasse.Helpers"
+    FlyoutBehavior="Flyout"
     >
 
     <!-- Flyout header -->
@@ -37,12 +38,13 @@
     </FlyoutItem>
 
     <!-- Navigation menu items -->
-    <MenuItem Text="&#x1F4B0;  Kasse"              Clicked="OnKasseClicked"/>
-    <MenuItem Text="&#x1F3EA;  Standverwaltung"   Clicked="OnStandManagementClicked"/>
-    <MenuItem Text="&#x1F4CB;  Kategorieverwaltung" Clicked="OnCategoryManagementClicked"/>
-    <MenuItem Text="&#x1F4E6;  Artikelverwaltung"  Clicked="OnArticleManagementClicked"/>
-    <MenuItem Text="&#x2699;&#xFE0F;  Einstellungen"       Clicked="OnSettingsClicked"/>
-    <MenuItem Text="&#x1F4DC;  Bestellverlauf"      Clicked="OnOrderHistoryClicked"/>
-    <MenuItem Text="&#x2139;&#xFE0F;  &#xDC;ber"               Clicked="OnAboutClicked"/>
+    <MenuItem Text="{helpers:Tr Key=Menu_POS}"              Clicked="OnKasseClicked"/>
+    <MenuItem Text="{helpers:Tr Key=Menu_StandManagement}"   Clicked="OnStandManagementClicked"/>
+    <MenuItem Text="{helpers:Tr Key=Menu_CategoryManagement}" Clicked="OnCategoryManagementClicked"/>
+    <MenuItem Text="{helpers:Tr Key=Menu_ArticleManagement}"  Clicked="OnArticleManagementClicked"/>
+    <MenuItem Text="{helpers:Tr Key=Menu_Settings}"       Clicked="OnSettingsClicked"/>
+    <MenuItem Text="{helpers:Tr Key=Menu_OrderHistory}"      Clicked="OnOrderHistoryClicked"/>
+    <MenuItem Text="{helpers:Tr Key=Menu_LogViewer}"            Clicked="OnLogViewerClicked"/>
+    <MenuItem Text="{helpers:Tr Key=Menu_About}"               Clicked="OnAboutClicked"/>
 
 </Shell>

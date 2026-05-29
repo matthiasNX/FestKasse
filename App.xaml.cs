@@ -1,10 +1,17 @@
+using FestKasse.Services;
+
 namespace FestKasse;
 
 public partial class App : Application
 {
-    public App()
+    private readonly ILogService _log;
+
+    public App(ILogService logService)
     {
+        _log = logService;
         InitializeComponent();
+
+        _log.Info("App gestartet.");
 
         // Catches exceptions on the main UI thread
         AppDomain.CurrentDomain.UnhandledException += (s, e) =>
@@ -27,15 +34,7 @@ public partial class App : Application
     {
         if (ex is null) return;
 
-        var msg = $"[{source}] {ex.GetType().FullName}\n\n{ex.Message}\n\n{ex.StackTrace}";
-
-        // Write to a file so it survives even if the UI is gone
-        try
-        {
-            var path = Path.Combine(FileSystem.AppDataDirectory, "crash.log");
-            File.AppendAllText(path, $"\n---{DateTime.Now:u}---\n{msg}\n");
-        }
-        catch { /* ignore write failures */ }
+        _log.Exception(ex, $"[CRASH:{source}]");
 
         // Also try to show an alert if the UI is still alive
         MainThread.BeginInvokeOnMainThread(async () =>
@@ -43,7 +42,10 @@ public partial class App : Application
             try
             {
                 if (Windows.Count > 0 && Windows[0].Page is not null)
-                    await Windows[0].Page!.DisplayAlert($"Crash ({source})", msg, "OK");
+                    await Windows[0].Page!.DisplayAlert(
+                        $"Crash ({source})",
+                        $"{ex.GetType().Name}: {ex.Message}",
+                        "OK");
             }
             catch { /* UI may already be dead */ }
         });

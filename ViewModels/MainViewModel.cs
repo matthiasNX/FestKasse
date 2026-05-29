@@ -12,6 +12,7 @@ public partial class MainViewModel : ObservableObject
     private readonly IDisplayService _displayService;
     private readonly IOrderService _orderService;
     private readonly IOrderHistoryService _orderHistoryService;
+    private readonly ILogService _log;
 
     // Internal master list (all articles, unfiltered)
     private readonly List<Article> _allArticles = new();
@@ -81,13 +82,15 @@ public partial class MainViewModel : ObservableObject
     private bool _standSelectionDone = false;
     private string? _cachedLogoBase64;
 
-    public MainViewModel(IDataService dataService, IDisplayService displayService, IOrderService orderService, IOrderHistoryService orderHistoryService)
+    public MainViewModel(IDataService dataService, IDisplayService displayService, IOrderService orderService, IOrderHistoryService orderHistoryService, ILogService logService)
     {
         _dataService = dataService;
         _displayService = displayService;
         _orderService = orderService;
         _orderHistoryService = orderHistoryService;
+        _log = logService;
         InitDenominationTiles();
+        _log.Debug("MainViewModel initialisiert.");
     }
 
     public async Task InitializeAsync()
@@ -108,20 +111,24 @@ public partial class MainViewModel : ObservableObject
             var stands = await _dataService.GetStandsAsync();
             if (stands.Count <= 1) return;
 
+            _log.Info($"Multiple stands available ({stands.Count}) – asking user to select.");
             var names = stands.Select(s => s.Name).ToArray();
             var choice = await Shell.Current.DisplayActionSheet(
-                "Stand auswählen", null, null, names);
+                LocalizationService.Instance["Stand_Select_Title"], null, null, names);
 
             if (!string.IsNullOrEmpty(choice))
             {
                 var selected = stands.FirstOrDefault(s => s.Name == choice);
                 if (selected != null)
+                {
+                    _log.Info($"User selected stand '{choice}'.");
                     await _dataService.SetActiveStandAsync(selected.Id);
+                }
             }
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"Stand-Auswahl Fehler: {ex.Message}");
+            _log.Exception(ex, "Fehler bei der Stand-Auswahl.");
         }
     }
 
@@ -129,8 +136,13 @@ public partial class MainViewModel : ObservableObject
     {
         try
         {
+            _log.Debug("Lade Kassendaten.");
             var stand = await _dataService.GetActiveStandAsync();
-            if (stand == null) return;
+            if (stand == null)
+            {
+                _log.Warning("LoadDataAsync: Kein aktiver Stand gefunden.");
+                return;
+            }
 
             _settings = await _dataService.GetSettingsAsync();
             _standCategories = stand.Categories;
@@ -138,6 +150,8 @@ public partial class MainViewModel : ObservableObject
 
             _allArticles.Clear();
             _allArticles.AddRange(stand.Articles.OrderBy(a => a.SortOrder).ThenBy(a => a.Description));
+
+            _log.Info($"Kassendaten geladen: Stand='{stand.Name}', Artikel={_allArticles.Count}, Kategorien={_standCategories.Count}.");
 
             var cats = new ObservableCollection<string> { "Alle" };
             foreach (var category in _standCategories.OrderBy(c => c.SortOrder))
@@ -153,7 +167,7 @@ public partial class MainViewModel : ObservableObject
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"Fehler beim Laden: {ex.Message}");
+            _log.Exception(ex, "Fehler beim Laden der Kassendaten.");
         }
     }
 
@@ -164,12 +178,13 @@ public partial class MainViewModel : ObservableObject
             if (!string.IsNullOrEmpty(_settings.LogoBase64))
             {
                 if (_settings.LogoBase64 == _cachedLogoBase64)
-                    return; // logo unchanged, skip decode
+                    return;
 
                 var bytes = Convert.FromBase64String(_settings.LogoBase64);
                 LogoSource = ImageSource.FromStream(() => new MemoryStream(bytes));
                 IsLogoVisible = true;
                 _cachedLogoBase64 = _settings.LogoBase64;
+                _log.Debug("Logo aus Base64 geladen und angezeigt.");
             }
             else
             {
@@ -180,7 +195,7 @@ public partial class MainViewModel : ObservableObject
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"Fehler beim Laden des Logos: {ex.Message}");
+            _log.Exception(ex, "Fehler beim Dekodieren des Logos.");
             LogoSource = null;
             IsLogoVisible = false;
         }
@@ -286,6 +301,7 @@ public partial class MainViewModel : ObservableObject
         {
             CartItems.Add(new CartItem(article));
         }
+        _log.Debug($"Cart: '{article.Description}' added (qty={CartItems.FirstOrDefault(c=>c.Article.Id==article.Id)?.Quantity ?? 1}, total={CartItems.Count} item(s)).");
         CalculateTotal();
         UpdateTileQuantities();
         OnPropertyChanged(nameof(CartItems));
@@ -322,6 +338,7 @@ public partial class MainViewModel : ObservableObject
     [RelayCommand]
     private void ClearCart()
     {
+        _log.Debug("Warenkorb geleert.");
         CartItems.Clear();
         GivenAmount = 0;
         Change = 0;
@@ -337,7 +354,6 @@ public partial class MainViewModel : ObservableObject
     {
         if (CartItems.Count == 0) return;
 
-        // Build the order record once — shared by both send and persist paths
         var order = new OrderRecord
         {
             Timestamp = DateTime.UtcNow,
@@ -352,33 +368,39 @@ public partial class MainViewModel : ObservableObject
             }).ToList()
         };
 
+        _log.Info($"Order completed: stand='{ActiveStandName}', items={order.Items.Count}, total={Total:F2}€.");
+
         if (_settings.OrderEnabled)
         {
             if (string.IsNullOrWhiteSpace(_settings.OrderUrl))
             {
-                await Shell.Current.DisplayAlert("Hinweis",
-                    "Keine Bestell-URL konfiguriert. Bitte in den Einstellungen hinterlegen.", "OK");
+                _log.Warning("Order submission active but no URL configured.");
+                var loc = LocalizationService.Instance;
+                await Shell.Current.DisplayAlert(loc["Common_Info"], loc["Alert_Order_NoUrl"], loc["Common_OK"]);
             }
             else
             {
                 try
                 {
-                    await _orderService.SendOrderAsync(order, _settings);
+                    var sent = await _orderService.SendOrderAsync(order, _settings);
+                    if (!sent)
+                        _log.Warning("Order not confirmed (SendOrderAsync returned false).");
                 }
                 catch (Exception ex)
                 {
-                    await Shell.Current.DisplayAlert("Fehler", $"Bestellung konnte nicht gesendet werden: {ex.Message}", "OK");
+                    _log.Exception(ex, "Error sending order.");
+                    var loc2 = LocalizationService.Instance;
+                    await Shell.Current.DisplayAlert(loc2["Common_Error"], loc2.Format("Alert_Order_SendError", ex.Message), loc2["Common_OK"]);
                 }
             }
         }
 
-        // Persist locally if enabled
         if (_settings.SaveOrdersLocally)
         {
             try { await _orderHistoryService.SaveOrderAsync(order); }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Fehler beim Speichern der Bestellung: {ex.Message}");
+                _log.Exception(ex, "Error saving order locally.");
             }
         }
 

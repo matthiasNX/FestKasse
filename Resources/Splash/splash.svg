@@ -15,7 +15,7 @@
 
   <!-- Euro sign on screen -->
   <text x="228" y="178" font-size="52" text-anchor="middle" dominant-baseline="middle"
-        fill="white" font-family="Arial, sans-serif" font-weight="900">€ 0.00</text>
+        fill="black" font-family="Arial, sans-serif" font-weight="900">€ 0.00</text>
 
   <!-- Keypad rows -->
   <!-- Row 1 -->
@@ -32,10 +32,6 @@
 
   <!-- Enter / pay button -->
   <rect x="120" y="298" width="196" height="34" rx="10" fill="white" opacity="0.85"/>
-
-  <!-- Receipt strip -->
-  <rect x="198" y="368" width="60" height="24" rx="5" fill="white" opacity="0.9"/>
-  <rect x="210" y="392" width="36" height="8" rx="3" fill="white" opacity="0.5"/>
 
   <!-- App title -->
   <text x="228" y="440" font-size="38" text-anchor="middle" dominant-baseline="auto"

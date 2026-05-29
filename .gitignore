@@ -4,6 +4,14 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
+# Android signing — NEVER commit keystores or passwords
+*.keystore
+*.jks
+*.keystore.old
+.env
+.env.local
+keystore.properties
+
 # User-specific files
 *.rsuser
 *.suo

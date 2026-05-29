@@ -15,12 +15,13 @@ public partial class AppShell : Shell
         Routing.RegisterRoute(nameof(StandManagementPage), typeof(StandManagementPage));
         Routing.RegisterRoute(nameof(AboutPage), typeof(AboutPage));
         Routing.RegisterRoute(nameof(OrderHistoryPage), typeof(OrderHistoryPage));
+        Routing.RegisterRoute(nameof(LogViewerPage), typeof(LogViewerPage));
     }
 
     private async void OnKasseClicked(object sender, EventArgs e)
     {
-        await Current.GoToAsync("//MainPage/MainPage");
         Current.FlyoutIsPresented = false;
+        await Current.GoToAsync("//MainPage");
     }
 
     private async void OnStandManagementClicked(object sender, EventArgs e)
@@ -44,6 +45,12 @@ public partial class AppShell : Shell
     private async void OnSettingsClicked(object sender, EventArgs e)
     {
         await Current.GoToAsync(nameof(SettingsPage));
+        Current.FlyoutIsPresented = false;
+    }
+
+    private async void OnLogViewerClicked(object sender, EventArgs e)
+    {
+        await Current.GoToAsync(nameof(LogViewerPage));
         Current.FlyoutIsPresented = false;
     }
 

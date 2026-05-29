@@ -35,6 +35,7 @@ public partial class OrderHistoryItem : ObservableObject
 public partial class OrderHistoryViewModel : ObservableObject
 {
     private readonly IOrderHistoryService _historyService;
+    private readonly ILogService _log;
 
     public ObservableCollection<OrderHistoryItem> Orders { get; } = new();
 
@@ -53,9 +54,10 @@ public partial class OrderHistoryViewModel : ObservableObject
     [ObservableProperty]
     private string _totalSumDisplay = "0,00 €";
 
-    public OrderHistoryViewModel(IOrderHistoryService historyService)
+    public OrderHistoryViewModel(IOrderHistoryService historyService, ILogService logService)
     {
         _historyService = historyService;
+        _log = logService;
     }
 
     public async Task InitializeAsync()
@@ -74,6 +76,7 @@ public partial class OrderHistoryViewModel : ObservableObject
         {
             var fromUtc = FilterFromDate.Date.ToUniversalTime();
             var toUtc = FilterToDate.Date.AddDays(1).ToUniversalTime();
+            _log.Debug($"Loading order history: {FilterFromDate:dd.MM.yyyy} – {FilterToDate:dd.MM.yyyy}.");
 
             var records = await _historyService.GetOrdersAsync(from: fromUtc, to: toUtc);
 
@@ -84,6 +87,11 @@ public partial class OrderHistoryViewModel : ObservableObject
             HasOrders = Orders.Count > 0;
             var sum = Orders.Sum(o => o.Order.Total);
             TotalSumDisplay = $"{sum:F2} €";
+            _log.Debug($"Order history loaded: {Orders.Count} order(s), total={sum:F2}€.");
+        }
+        catch (Exception ex)
+        {
+            _log.Exception(ex, "Error loading order history.");
         }
         finally
         {
@@ -100,14 +108,25 @@ public partial class OrderHistoryViewModel : ObservableObject
     [RelayCommand]
     private async Task DeleteOrderAsync(OrderHistoryItem item)
     {
+        var loc = LocalizationService.Instance;
         bool confirmed = await Shell.Current.DisplayAlert(
-            "Löschen", $"Bestellung vom {item.TimestampDisplay} wirklich löschen?", "Ja", "Abbrechen");
+            loc["OrderHistory_Delete_Title"],
+            loc.Format("OrderHistory_Delete_Msg", item.TimestampDisplay),
+            loc["Common_Yes"], loc["Common_Cancel"]);
         if (!confirmed) return;
 
-        await _historyService.DeleteOrderAsync(item.Order.Id);
-        Orders.Remove(item);
-        HasOrders = Orders.Count > 0;
-        TotalSumDisplay = $"{Orders.Sum(o => o.Order.Total):F2} €";
+        try
+        {
+            await _historyService.DeleteOrderAsync(item.Order.Id);
+            Orders.Remove(item);
+            HasOrders = Orders.Count > 0;
+            TotalSumDisplay = $"{Orders.Sum(o => o.Order.Total):F2} €";
+            _log.Info($"Order from {item.TimestampDisplay} deleted.");
+        }
+        catch (Exception ex)
+        {
+            _log.Exception(ex, $"Error deleting order from {item.TimestampDisplay}.");
+        }
     }
 
     [RelayCommand]
@@ -118,7 +137,8 @@ public partial class OrderHistoryViewModel : ObservableObject
             var dbPath = Path.Combine(FileSystem.AppDataDirectory, "festkasse_orders.db");
             if (!File.Exists(dbPath))
             {
-                await Shell.Current.DisplayAlert("Info", "Keine Datenbankdatei gefunden.", "OK");
+                var loc2 = LocalizationService.Instance;
+                await Shell.Current.DisplayAlert(loc2["Common_Info"], loc2["Alert_OrderHistory_NoDb"], loc2["Common_OK"]);
                 return;
             }
 
@@ -134,7 +154,9 @@ public partial class OrderHistoryViewModel : ObservableObject
         }
         catch (Exception ex)
         {
-            await Shell.Current.DisplayAlert("Fehler", $"DB-Export fehlgeschlagen: {ex.Message}", "OK");
+            _log.Exception(ex, "Error exporting SQLite database.");
+            var loc3 = LocalizationService.Instance;
+            await Shell.Current.DisplayAlert(loc3["Common_Error"], loc3.Format("Alert_OrderHistory_DbExportError", ex.Message), loc3["Common_OK"]);
         }
     }
 
@@ -150,6 +172,7 @@ public partial class OrderHistoryViewModel : ObservableObject
             var filePath = Path.Combine(FileSystem.CacheDirectory, fileName);
             await File.WriteAllTextAsync(filePath, json);
 
+            _log.Info($"Order history exported as JSON: {export.Count} order(s).");
             await Share.Default.RequestAsync(new ShareFileRequest
             {
                 Title = "Bestellverlauf exportieren",
@@ -158,7 +181,9 @@ public partial class OrderHistoryViewModel : ObservableObject
         }
         catch (Exception ex)
         {
-            await Shell.Current.DisplayAlert("Fehler", $"Export fehlgeschlagen: {ex.Message}", "OK");
+            _log.Exception(ex, "Error exporting order history as JSON.");
+            var loc4 = LocalizationService.Instance;
+            await Shell.Current.DisplayAlert(loc4["Common_Error"], loc4.Format("Alert_OrderHistory_ExportError", ex.Message), loc4["Common_OK"]);
         }
     }
 }

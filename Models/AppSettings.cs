@@ -16,6 +16,12 @@ public class AppSettings
     // Local order history
     public bool SaveOrdersLocally { get; set; } = false;
 
+    // Logging
+    public string LogLevel { get; set; } = "Information";
+
+    // Language: "system" | "de" | "en"
+    public string Language { get; set; } = "system";
+
     public List<string> AvailableColors { get; set; } = new()
     {
         "#4CAF50", // Grün

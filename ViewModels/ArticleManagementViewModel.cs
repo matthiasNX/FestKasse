@@ -10,6 +10,7 @@ namespace FestKasse.ViewModels;
 public partial class ArticleManagementViewModel : ObservableObject
 {
     private readonly IDataService _dataService;
+    private readonly ILogService _log;
 
     [ObservableProperty]
     private ObservableCollection<Article> _articles = new();
@@ -101,9 +102,10 @@ public partial class ArticleManagementViewModel : ObservableObject
         "🍰","🧁","🍩","🍪","🍫","🍬","🍭","🍦","🧇","🥞"
     };
 
-    public ArticleManagementViewModel(IDataService dataService)
+    public ArticleManagementViewModel(IDataService dataService, ILogService logService)
     {
         _dataService = dataService;
+        _log = logService;
     }
 
     public async Task InitializeAsync()
@@ -114,25 +116,20 @@ public partial class ArticleManagementViewModel : ObservableObject
     private async Task LoadDataAsync()
     {
         _stand = await _dataService.GetActiveStandAsync() ?? new Stand();
+        _log.Debug($"Article management: loading data for stand '{_stand.Name}', {_stand.Articles.Count} article(s).");
 
         Articles.Clear();
         foreach (var article in _stand.Articles.OrderBy(a => a.SortOrder).ThenBy(a => a.Description))
-        {
             Articles.Add(article);
-        }
 
         Categories.Clear();
         foreach (var category in _stand.Categories.OrderBy(c => c.SortOrder))
-        {
             Categories.Add(category);
-        }
 
         AvailableColors.Clear();
         var settings = await _dataService.GetSettingsAsync();
         foreach (var color in settings.AvailableColors)
-        {
             AvailableColors.Add(color);
-        }
     }
 
     [RelayCommand]
@@ -168,7 +165,8 @@ public partial class ArticleManagementViewModel : ObservableObject
     {
         if (string.IsNullOrWhiteSpace(EditDescription))
         {
-            await Shell.Current.DisplayAlert("Fehler", "Bitte eine Beschreibung eingeben.", "OK");
+            var loc = LocalizationService.Instance;
+            await Shell.Current.DisplayAlert(loc["Common_Error"], loc["Alert_Article_NoDescription"], loc["Common_OK"]);
             return;
         }
 
@@ -185,6 +183,7 @@ public partial class ArticleManagementViewModel : ObservableObject
                 Icon = string.IsNullOrEmpty(EditIcon) ? null : EditIcon
             };
             Articles.Add(newArticle);
+            _log.Info($"Article created: '{EditDescription}', price={EditPrice:F2}€, category='{EditCategory?.Name}'.");
         }
         else if (SelectedArticle != null)
         {
@@ -195,6 +194,7 @@ public partial class ArticleManagementViewModel : ObservableObject
             SelectedArticle.Price = EditPrice;
             SelectedArticle.SortOrder = EditSortOrder;
             SelectedArticle.Icon = string.IsNullOrEmpty(EditIcon) ? null : EditIcon;
+            _log.Info($"Article updated: '{EditDescription}', price={EditPrice:F2}€.");
         }
 
         await SaveAllArticlesAsync();
@@ -217,13 +217,15 @@ public partial class ArticleManagementViewModel : ObservableObject
     [RelayCommand]
     private async Task DeleteArticleAsync(Article article)
     {
+        var loc = LocalizationService.Instance;
         var confirm = await Shell.Current.DisplayAlert(
-            "Löschen",
-            $"Artikel '{article.Description}' wirklich löschen?",
-            "Ja", "Nein");
+            loc["Article_Delete_Title"],
+            loc.Format("Article_Delete_Msg", article.Description),
+            loc["Common_Yes"], loc["Common_No"]);
 
         if (confirm)
         {
+            _log.Info($"Article deleted: '{article.Description}'.");
             Articles.Remove(article);
             await SaveAllArticlesAsync();
         }
@@ -263,7 +265,16 @@ public partial class ArticleManagementViewModel : ObservableObject
 
     private async Task SaveAllArticlesAsync()
     {
-        await _dataService.SaveArticlesAsync(Articles.ToList());
+        try
+        {
+            await _dataService.SaveArticlesAsync(Articles.ToList());
+            _log.Debug($"Article list saved: {Articles.Count} article(s).");
+        }
+        catch (Exception ex)
+        {
+            _log.Exception(ex, "Error saving article list.");
+            throw;
+        }
     }
 
     [RelayCommand]
