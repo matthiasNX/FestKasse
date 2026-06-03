@@ -6,20 +6,15 @@ using FestKasse.Services;
 
 namespace FestKasse.ViewModels;
 
-public partial class CategoryManagementViewModel : ObservableObject
+public partial class CategoryManagementViewModel : SortableListViewModelBase<Category>, FestKasse.Controls.IInitializable
 {
     private readonly IDataService _dataService;
     private readonly ILogService _log;
     private List<Article> _allArticles = new();
 
-    [ObservableProperty]
-    private ObservableCollection<Category> _categories = new();
-
-    [ObservableProperty]
-    private bool _isEditing;
-
-    [ObservableProperty]
-    private bool _isNewCategory;
+    // Alias for XAML bindings
+    public ObservableCollection<Category> Categories => Items;
+    public bool IsNewCategory { get => IsNewItem; private set => IsNewItem = value; }
 
     [ObservableProperty]
     private Category? _selectedCategory;
@@ -27,19 +22,13 @@ public partial class CategoryManagementViewModel : ObservableObject
     [ObservableProperty]
     private string _editName = string.Empty;
 
-    [ObservableProperty]
-    private int _editSortOrder;
-
     public CategoryManagementViewModel(IDataService dataService, ILogService logService)
     {
         _dataService = dataService;
         _log = logService;
     }
 
-    public async Task InitializeAsync()
-    {
-        await LoadDataAsync();
-    }
+    public async Task InitializeAsync() => await LoadDataAsync();
 
     private async Task LoadDataAsync()
     {
@@ -48,9 +37,9 @@ public partial class CategoryManagementViewModel : ObservableObject
         var categories = stand?.Categories.OrderBy(c => c.SortOrder).ToList() ?? new List<Category>();
         _log.Debug($"Kategorieverwaltung: Stand='{stand?.Name}', {categories.Count} Kategorie(n), {_allArticles.Count} Artikel.");
 
-        Categories.Clear();
+        Items.Clear();
         foreach (var cat in categories)
-            Categories.Add(cat);
+            Items.Add(cat);
     }
 
     [RelayCommand]
@@ -58,7 +47,7 @@ public partial class CategoryManagementViewModel : ObservableObject
     {
         SelectedCategory = null;
         EditName = string.Empty;
-        EditSortOrder = Categories.Count;
+        EditSortOrder = Items.Count;
         IsNewCategory = true;
         IsEditing = true;
     }
@@ -91,7 +80,7 @@ public partial class CategoryManagementViewModel : ObservableObject
                 Name = EditName,
                 SortOrder = EditSortOrder
             };
-            Categories.Add(newCat);
+            Items.Add(newCat);
             _log.Info($"Category created: '{EditName}', SortOrder={EditSortOrder}.");
         }
         else if (SelectedCategory != null)
@@ -99,33 +88,35 @@ public partial class CategoryManagementViewModel : ObservableObject
             var oldName = SelectedCategory.Name;
             SelectedCategory.Name = EditName;
             SelectedCategory.SortOrder = EditSortOrder;
-            _log.Info($"Category updated: '{oldName}' → '{EditName}'.");
-
-            if (oldName != EditName)
-            {
-                foreach (var article in _allArticles.Where(a => a.CategoryId == SelectedCategory.Id))
-                    article.Category = EditName;
-                await _dataService.SaveArticlesAsync(_allArticles);
-            }
+            _log.Info($"Category updated: '{oldName}' -> '{EditName}'.");
         }
 
-        await SaveAllCategoriesAsync();
+        try
+        {
+            await SaveAllCategoriesAsync();
+        }
+        catch (Exception ex)
+        {
+            _log.Exception(ex, "Error saving category.");
+            await Shell.Current.DisplayAlert(LocalizationService.Instance["Common_Error"], ex.Message, LocalizationService.Instance["Common_OK"]);
+            return;
+        }
         CancelEdit();
     }
 
     [RelayCommand]
     private void CancelEdit()
     {
-        IsEditing = false;
+        CancelEditBase();
         SelectedCategory = null;
     }
 
     [RelayCommand]
     private async Task DeleteCategoryAsync(Category category)
     {
+        var loc = LocalizationService.Instance;
         if (_allArticles.Any(a => a.CategoryId == category.Id))
         {
-            var loc = LocalizationService.Instance;
             await Shell.Current.DisplayAlert(
                 loc["Category_Delete_InUse_Title"],
                 loc.Format("Category_Delete_InUse_Msg", category.Name),
@@ -133,71 +124,54 @@ public partial class CategoryManagementViewModel : ObservableObject
             return;
         }
 
-        var loc2 = LocalizationService.Instance;
         var confirm = await Shell.Current.DisplayAlert(
-            loc2["Category_Delete_Title"],
-            loc2.Format("Category_Delete_Msg", category.Name),
-            loc2["Common_Yes"], loc2["Common_No"]);
+            loc["Category_Delete_Title"],
+            loc.Format("Category_Delete_Msg", category.Name),
+            loc["Common_Yes"], loc["Common_No"]);
 
-        if (confirm)
+        if (!confirm) return;
+
+        _log.Info($"Category deleted: '{category.Name}'.");
+        Items.Remove(category);
+        try { await SaveAllCategoriesAsync(); }
+        catch (Exception ex)
         {
-            _log.Info($"Category deleted: '{category.Name}'.");
-            Categories.Remove(category);
-            await SaveAllCategoriesAsync();
+            _log.Exception(ex, "Error saving after category delete.");
+            await Shell.Current.DisplayAlert(loc["Common_Error"], ex.Message, loc["Common_OK"]);
         }
     }
 
     [RelayCommand]
     private async Task MoveUpAsync(Category category)
     {
-        var index = Categories.IndexOf(category);
-        if (index > 0)
-        {
-            Categories.Move(index, index - 1);
-            UpdateSortOrder();
+        if (MoveItemUp(category))
             await SaveAllCategoriesAsync();
-        }
     }
 
     [RelayCommand]
     private async Task MoveDownAsync(Category category)
     {
-        var index = Categories.IndexOf(category);
-        if (index < Categories.Count - 1)
-        {
-            Categories.Move(index, index + 1);
-            UpdateSortOrder();
+        if (MoveItemDown(category))
             await SaveAllCategoriesAsync();
-        }
     }
 
-    private void UpdateSortOrder()
-    {
-        for (int i = 0; i < Categories.Count; i++)
-            Categories[i].SortOrder = i;
-    }
+    [RelayCommand]
+    private void IncreaseSortOrder() => IncreaseSortOrderBase();
+
+    [RelayCommand]
+    private void DecreaseSortOrder() => DecreaseSortOrderBase();
 
     private async Task SaveAllCategoriesAsync()
     {
         try
         {
-            await _dataService.SaveCategoriesAsync(Categories.ToList());
-            _log.Debug($"Kategorieliste gespeichert: {Categories.Count} Kategorie(n).");
+            await _dataService.SaveCategoriesAsync(Items.ToList());
+            _log.Debug($"Kategorieliste gespeichert: {Items.Count} Kategorie(n).");
         }
         catch (Exception ex)
         {
             _log.Exception(ex, "Fehler beim Speichern der Kategorieliste.");
             throw;
         }
-    }
-
-    [RelayCommand]
-    private void IncreaseSortOrder() => EditSortOrder++;
-
-    [RelayCommand]
-    private void DecreaseSortOrder()
-    {
-        if (EditSortOrder > 0)
-            EditSortOrder--;
     }
 }

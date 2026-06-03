@@ -11,7 +11,7 @@
 
         <Border.GestureRecognizers>
             <TapGestureRecognizer
-                Command="{Binding PlusCommand, Source={x:Reference self}}"
+                Command="{Binding HapticPlusCommand, Source={x:Reference self}}"
                 CommandParameter="{Binding PlusCommandParameter, Source={x:Reference self}}"/>
         </Border.GestureRecognizers>
 
@@ -53,7 +53,7 @@
                         WidthRequest="28" HeightRequest="28" CornerRadius="14" Padding="0"
                         BackgroundColor="#CC000000" TextColor="White"
                         HorizontalOptions="Start" VerticalOptions="Center"
-                        Command="{Binding MinusCommand, Source={x:Reference self}}"
+                        Command="{Binding HapticMinusCommand, Source={x:Reference self}}"
                         CommandParameter="{Binding MinusCommandParameter, Source={x:Reference self}}"/>
 
                 <Border Grid.Column="1"

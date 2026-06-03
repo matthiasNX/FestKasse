@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using FestKasse.Models;
 using FestKasse.Services;
+using FestKasse.Helpers;
 
 namespace FestKasse.ViewModels;
 
@@ -13,15 +14,17 @@ public partial class MainViewModel : ObservableObject
     private readonly IOrderService _orderService;
     private readonly IOrderHistoryService _orderHistoryService;
     private readonly ILogService _log;
+    private readonly IOfflineOrderQueueService _offlineOrderQueueService;
+    private readonly ICashSessionService _cashSessionService;
 
     // Internal master list (all articles, unfiltered)
     private readonly List<Article> _allArticles = new();
 
     [ObservableProperty]
-    private ObservableCollection<ArticleTileViewModel> _filteredTiles = new();
+    private RangeObservableCollection<ArticleTileViewModel> _filteredTiles = new();
 
     [ObservableProperty]
-    private ObservableCollection<ArticleCategoryGroup> _categoryGroups = new();
+    private RangeObservableCollection<ArticleCategoryGroup> _categoryGroups = new();
 
     [ObservableProperty]
     private ObservableCollection<CartItem> _cartItems = new();
@@ -46,10 +49,10 @@ public partial class MainViewModel : ObservableObject
     private bool _isLogoVisible;
 
     [ObservableProperty]
-    private string _selectedCategory = "Alle";
+    private string _selectedCategory = string.Empty;
 
     [ObservableProperty]
-    private ObservableCollection<string> _categories = new() { "Alle" };
+    private ObservableCollection<Category> _categories = new();
 
     [ObservableProperty]
     private string _activeStandName = "Kasse";
@@ -67,8 +70,12 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty]
     private double _tileFontSizeSmall = 12;
 
-    // True when SelectedCategory is "Alle" so group headers are shown
-    public bool ShowGroupHeaders => SelectedCategory == "Alle";
+    // Special sentinel category representing "show all"
+    private static Category AllCategoriesEntry =>
+        new() { Id = string.Empty, Name = LocalizationService.Instance["Main_AllCategories"] };
+
+    // True when no specific category is selected ("All") AND the setting is enabled
+    public bool ShowGroupHeaders => string.IsNullOrEmpty(SelectedCategory) && _settings.ShowCategoryGroupHeaders;
 
     // ─── Denomination / payment panel ────────────────────────────────────────
     [ObservableProperty]
@@ -82,13 +89,16 @@ public partial class MainViewModel : ObservableObject
     private bool _standSelectionDone = false;
     private string? _cachedLogoBase64;
 
-    public MainViewModel(IDataService dataService, IDisplayService displayService, IOrderService orderService, IOrderHistoryService orderHistoryService, ILogService logService)
+    public MainViewModel(IDataService dataService, IDisplayService displayService, IOrderService orderService, IOrderHistoryService orderHistoryService, ILogService logService, IOfflineOrderQueueService offlineOrderQueueService, ICashSessionService cashSessionService)
     {
         _dataService = dataService;
         _displayService = displayService;
         _orderService = orderService;
         _orderHistoryService = orderHistoryService;
         _log = logService;
+        _offlineOrderQueueService = offlineOrderQueueService;
+        _cashSessionService = cashSessionService;
+        Connectivity.ConnectivityChanged += OnConnectivityChanged;
         InitDenominationTiles();
         _log.Debug("MainViewModel initialisiert.");
     }
@@ -153,15 +163,16 @@ public partial class MainViewModel : ObservableObject
 
             _log.Info($"Kassendaten geladen: Stand='{stand.Name}', Artikel={_allArticles.Count}, Kategorien={_standCategories.Count}.");
 
-            var cats = new ObservableCollection<string> { "Alle" };
+            var cats = new ObservableCollection<Category> { AllCategoriesEntry };
             foreach (var category in _standCategories.OrderBy(c => c.SortOrder))
-                cats.Add(category.Name);
+                cats.Add(category);
             Categories = cats;
-            SelectedCategory = "Alle";
+            SelectedCategory = string.Empty;
 
             await LoadLogoAsync();
             ApplyDisplaySettings();
             ApplyTileSize();
+            InitDenominationTiles();
             RebuildFilteredTiles();
             OnPropertyChanged(nameof(ShowCompleteButton));
         }
@@ -199,7 +210,6 @@ public partial class MainViewModel : ObservableObject
             LogoSource = null;
             IsLogoVisible = false;
         }
-        await Task.CompletedTask;
     }
 
     private void ApplyDisplaySettings()
@@ -212,7 +222,7 @@ public partial class MainViewModel : ObservableObject
 
     private void ApplyTileSize()
     {
-        var size = _settings.TileSize > 0 ? _settings.TileSize : 120;
+        var size = _settings.TileSize > 0 ? _settings.TileSize : AppConstants.DefaultTileSize;
         TileWidth = size;
         TileHeight = (int)(size * 0.92);
         TileFontSizeDescription = Math.Max(9, size * 13.0 / 120.0);
@@ -224,43 +234,43 @@ public partial class MainViewModel : ObservableObject
     /// <summary>Rebuilds FilteredTiles and CategoryGroups from the current category filter + cart state.</summary>
     private void RebuildFilteredTiles()
     {
-        var cartLookup = CartItems.ToDictionary(c => c.Article.Id, c => c.Quantity);
+        var cartLookup = BuildCartLookup();
 
-        var source = SelectedCategory == "Alle"
+        var source = string.IsNullOrEmpty(SelectedCategory)
             ? _allArticles
-            : _allArticles.Where(a => a.Category == SelectedCategory).ToList();
+            : _allArticles.Where(a => a.CategoryId == SelectedCategory).ToList();
 
-        var newTiles = new ObservableCollection<ArticleTileViewModel>(
-            source.Select(a =>
-            {
-                cartLookup.TryGetValue(a.Id, out var qty);
-                return new ArticleTileViewModel(a, qty);
-            }));
-        FilteredTiles = newTiles;
+        // Build the new tile list first, then swap in one shot (single Reset notification).
+        var newTiles = source.Select(a =>
+        {
+            cartLookup.TryGetValue(a.Id, out var qty);
+            return new ArticleTileViewModel(a, qty);
+        });
+        FilteredTiles.ReplaceRange(newTiles);
 
         // Rebuild grouped view
-        var categoryOrder = _standCategories.OrderBy(c => c.SortOrder).Select(c => c.Name).ToList();
-        var articlesToGroup = SelectedCategory == "Alle"
-            ? _allArticles
-            : source;
-        var grouped = articlesToGroup
-            .GroupBy(a => a.Category)
-            .OrderBy(g => { var idx = categoryOrder.IndexOf(g.Key); return idx < 0 ? 999 : idx; });
-
-        var newGroups = new ObservableCollection<ArticleCategoryGroup>(
-            grouped.Select(g => new ArticleCategoryGroup(g.Key,
-                g.Select(a =>
-                {
-                    cartLookup.TryGetValue(a.Id, out var qty);
-                    return new ArticleTileViewModel(a, qty);
-                }))));
-        CategoryGroups = newGroups;
+        var categoryOrder = _standCategories.OrderBy(c => c.SortOrder).Select(c => c.Id).ToList();
+        var articlesToGroup = string.IsNullOrEmpty(SelectedCategory) ? _allArticles : source;
+        var newGroups = articlesToGroup
+            .GroupBy(a => a.CategoryId)
+            .OrderBy(g => { var idx = categoryOrder.IndexOf(g.Key); return idx < 0 ? 999 : idx; })
+            .Select(g =>
+            {
+                var name = _standCategories.FirstOrDefault(c => c.Id == g.Key)?.Name ?? g.Key;
+                return new ArticleCategoryGroup(name,
+                    g.Select(a =>
+                    {
+                        cartLookup.TryGetValue(a.Id, out var qty);
+                        return new ArticleTileViewModel(a, qty);
+                    }));
+            });
+        CategoryGroups.ReplaceRange(newGroups);
     }
 
     /// <summary>Updates only the Quantity on existing tiles (faster than full rebuild).</summary>
     private void UpdateTileQuantities()
     {
-        var cartLookup = CartItems.ToDictionary(c => c.Article.Id, c => c.Quantity);
+        var cartLookup = BuildCartLookup();
 
         foreach (var tile in FilteredTiles)
         {
@@ -276,11 +286,15 @@ public partial class MainViewModel : ObservableObject
             }
     }
 
+    /// <summary>Builds a dictionary from article ID to cart quantity for fast tile updates.</summary>
+    private Dictionary<string, int> BuildCartLookup()
+        => CartItems.ToDictionary(c => c.Article.Id, c => c.Quantity);
+
     public IEnumerable<Article> GetFilteredArticles()
     {
-        if (SelectedCategory == "Alle")
+        if (string.IsNullOrEmpty(SelectedCategory))
             return _allArticles;
-        return _allArticles.Where(a => a.Category == SelectedCategory);
+        return _allArticles.Where(a => a.CategoryId == SelectedCategory);
     }
 
     public int GetArticleQuantity(string articleId)
@@ -370,6 +384,8 @@ public partial class MainViewModel : ObservableObject
 
         _log.Info($"Order completed: stand='{ActiveStandName}', items={order.Items.Count}, total={Total:F2}€.");
 
+        bool orderSentOrQueued = true;
+
         if (_settings.OrderEnabled)
         {
             if (string.IsNullOrWhiteSpace(_settings.OrderUrl))
@@ -377,6 +393,7 @@ public partial class MainViewModel : ObservableObject
                 _log.Warning("Order submission active but no URL configured.");
                 var loc = LocalizationService.Instance;
                 await Shell.Current.DisplayAlert(loc["Common_Info"], loc["Alert_Order_NoUrl"], loc["Common_OK"]);
+                // Missing URL is a configuration error – still clear cart so user isn't stuck
             }
             else
             {
@@ -384,13 +401,18 @@ public partial class MainViewModel : ObservableObject
                 {
                     var sent = await _orderService.SendOrderAsync(order, _settings);
                     if (!sent)
+                    {
                         _log.Warning("Order not confirmed (SendOrderAsync returned false).");
+                        await _offlineOrderQueueService.EnqueueAsync(order);
+                        _log.Info("Order queued for offline retry.");
+                    }
                 }
                 catch (Exception ex)
                 {
                     _log.Exception(ex, "Error sending order.");
                     var loc2 = LocalizationService.Instance;
                     await Shell.Current.DisplayAlert(loc2["Common_Error"], loc2.Format("Alert_Order_SendError", ex.Message), loc2["Common_OK"]);
+                    orderSentOrQueued = false;
                 }
             }
         }
@@ -404,7 +426,39 @@ public partial class MainViewModel : ObservableObject
             }
         }
 
-        ClearCart();
+        // Record in the active cash session
+        try { await _cashSessionService.RecordOrderAsync(order.Total); }
+        catch (Exception ex) { _log.Exception(ex, "Error recording order in cash session."); }
+
+        // Share receipt if enabled
+        if (_settings.ShareReceiptAfterOrder)
+        {
+            try { await ShareReceiptAsync(order); }
+            catch (Exception ex) { _log.Exception(ex, "Error sharing receipt."); }
+        }
+
+        if (orderSentOrQueued)
+            ClearCart();
+    }
+
+    private static async Task ShareReceiptAsync(OrderRecord order)
+    {
+        var sb = new System.Text.StringBuilder();
+        sb.AppendLine("═══════════════════════════");
+        sb.AppendLine($"  {order.StandName}");
+        sb.AppendLine($"  {order.Timestamp.ToLocalTime():dd.MM.yyyy HH:mm}");
+        sb.AppendLine("═══════════════════════════");
+        foreach (var item in order.Items)
+            sb.AppendLine($"  {item.Quantity,2}x  {item.ArticleName,-18} {item.LineTotal,7:F2} €");
+        sb.AppendLine("───────────────────────────");
+        sb.AppendLine($"  Gesamt:              {order.Total,7:F2} €");
+        sb.AppendLine("═══════════════════════════");
+
+        await Share.Default.RequestAsync(new ShareTextRequest
+        {
+            Title = "Beleg",
+            Text = sb.ToString()
+        });
     }
 
     [RelayCommand]
@@ -441,15 +495,12 @@ public partial class MainViewModel : ObservableObject
     private void InitDenominationTiles()
     {
         NoteTiles.Clear();
-        foreach (var v in new[] { 5m, 10m, 20m, 50m, 100m, 200m })
-            NoteTiles.Add(new DenominationTile { Value = v, Label = $"{v:0} €", IsNote = true });
+        foreach (var v in _settings.Notes.OrderBy(x => x))
+            NoteTiles.Add(new DenominationTile { Value = v, Label = DenominationFormatter.MakeLabel(v), IsNote = true });
 
         CoinTiles.Clear();
-        foreach (var v in new[] { 2m, 1m, 0.50m, 0.20m, 0.10m, 0.05m, 0.02m, 0.01m })
-        {
-            var label = v >= 1m ? $"{v:0} €" : $"{v * 100m:0} ct";
-            CoinTiles.Add(new DenominationTile { Value = v, Label = label, IsNote = false });
-        }
+        foreach (var v in _settings.Coins.OrderByDescending(x => x))
+            CoinTiles.Add(new DenominationTile { Value = v, Label = DenominationFormatter.MakeLabel(v), IsNote = false });
     }
 
     [RelayCommand]
@@ -493,5 +544,17 @@ public partial class MainViewModel : ObservableObject
     partial void OnGivenAmountChanged(decimal value)
     {
         CalculateChange();
+    }
+
+    // ── Connectivity change → retry queued offline orders ────────────────
+
+    private async void OnConnectivityChanged(object? sender, ConnectivityChangedEventArgs e)
+    {
+        if (e.NetworkAccess == NetworkAccess.Internet)
+        {
+            _log.Info("Connectivity restored – retrying offline order queue.");
+            try { await _offlineOrderQueueService.RetryAllAsync(); }
+            catch (Exception ex) { _log.Exception(ex, "Offline queue retry failed."); }
+        }
     }
 }

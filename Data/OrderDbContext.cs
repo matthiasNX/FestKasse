@@ -8,15 +8,20 @@ public class OrderDbContext : DbContext
     public DbSet<OrderRecord> Orders { get; set; } = null!;
     public DbSet<OrderItemRecord> OrderItems { get; set; } = null!;
 
-    private readonly string _dbPath;
+    private static DbContextOptions<OrderDbContext>? _cachedOptions;
 
-    public OrderDbContext()
+    private static DbContextOptions<OrderDbContext> GetOptions()
     {
-        _dbPath = Path.Combine(FileSystem.AppDataDirectory, "festkasse_orders.db");
+        if (_cachedOptions != null) return _cachedOptions;
+        var dbPath = Path.Combine(FileSystem.AppDataDirectory, "festkasse_orders.db");
+        _cachedOptions = new DbContextOptionsBuilder<OrderDbContext>()
+            .UseSqlite($"Data Source={dbPath}")
+            .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
+            .Options;
+        return _cachedOptions;
     }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder options)
-        => options.UseSqlite($"Data Source={_dbPath}");
+    public OrderDbContext() : base(GetOptions()) { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

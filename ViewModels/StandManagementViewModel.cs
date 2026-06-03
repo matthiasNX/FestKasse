@@ -6,7 +6,7 @@ using FestKasse.Services;
 
 namespace FestKasse.ViewModels;
 
-public partial class StandManagementViewModel : ObservableObject
+public partial class StandManagementViewModel : ObservableObject, FestKasse.Controls.IInitializable
 {
     private readonly IDataService _dataService;
     private readonly ILogService _log;

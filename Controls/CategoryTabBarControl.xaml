@@ -2,6 +2,7 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:converters="clr-namespace:FestKasse.Converters"
+             xmlns:models="clr-namespace:FestKasse.Models"
              x:Class="FestKasse.Controls.CategoryTabBarControl"
              x:Name="self">
 
@@ -13,25 +14,25 @@
         <ScrollView Orientation="Horizontal" HorizontalScrollBarVisibility="Never" Padding="4,4">
             <HorizontalStackLayout BindableLayout.ItemsSource="{Binding Categories, Source={x:Reference self}}" Spacing="4">
                 <BindableLayout.ItemTemplate>
-                    <DataTemplate x:DataType="x:String">
+                    <DataTemplate x:DataType="models:Category">
                         <Border StrokeShape="RoundRectangle 18" StrokeThickness="0" Padding="14,7" BackgroundColor="Transparent">
                             <Border.GestureRecognizers>
                                 <TapGestureRecognizer
                                     Command="{Binding SelectCategoryCommand, Source={x:Reference self}}"
-                                    CommandParameter="{Binding .}"/>
+                                    CommandParameter="{Binding Id}"/>
                             </Border.GestureRecognizers>
                             <Border.Triggers>
                                 <DataTrigger TargetType="Border" Value="True">
                                     <DataTrigger.Binding>
                                         <MultiBinding Converter="{StaticResource StringEqualityConverter}">
-                                            <Binding Path="."/>
+                                            <Binding Path="Id"/>
                                             <Binding Source="{x:Reference self}" Path="SelectedCategory"/>
                                         </MultiBinding>
                                     </DataTrigger.Binding>
                                     <Setter Property="BackgroundColor" Value="White"/>
                                 </DataTrigger>
                             </Border.Triggers>
-                            <Label Text="{Binding .}" FontSize="13" FontAttributes="Bold" VerticalOptions="Center">
+                            <Label Text="{Binding Name}" FontSize="13" FontAttributes="Bold" VerticalOptions="Center">
                                 <Label.Style>
                                     <Style TargetType="Label"><Setter Property="TextColor" Value="White"/></Style>
                                 </Label.Style>
@@ -39,7 +40,7 @@
                                     <DataTrigger TargetType="Label" Value="True">
                                         <DataTrigger.Binding>
                                             <MultiBinding Converter="{StaticResource StringEqualityConverter}">
-                                                <Binding Path="."/>
+                                                <Binding Path="Id"/>
                                                 <Binding Source="{x:Reference self}" Path="SelectedCategory"/>
                                             </MultiBinding>
                                         </DataTrigger.Binding>

@@ -144,8 +144,57 @@ public partial class TileControl : ContentView
         set => SetValue(MinusCommandParameterProperty, value);
     }
 
+    // ── Haptic-wrapped internal commands ──────────────────────────────────
+
+    /// <summary>
+    /// Internal command used by the XAML tap/button bindings.
+    /// Triggers a light haptic click before forwarding to the public
+    /// <see cref="PlusCommand"/> or <see cref="MinusCommand"/>.
+    /// </summary>
+    public ICommand HapticPlusCommand { get; }
+    public ICommand HapticMinusCommand { get; }
+
     public TileControl()
     {
+        HapticPlusCommand  = new HapticRelayCommand(this, isPlusCommand: true);
+        HapticMinusCommand = new HapticRelayCommand(this, isPlusCommand: false);
         InitializeComponent();
+    }
+
+    private sealed class HapticRelayCommand : ICommand
+    {
+        private readonly TileControl _owner;
+        private readonly bool _isPlus;
+
+        public HapticRelayCommand(TileControl owner, bool isPlusCommand)
+        {
+            _owner = owner;
+            _isPlus = isPlusCommand;
+        }
+
+        public event EventHandler? CanExecuteChanged { add { } remove { } }
+
+        public bool CanExecute(object? parameter) => true;
+
+        public void Execute(object? parameter)
+        {
+            try
+            {
+                var services = IPlatformApplication.Current?.Services;
+                var settings = services?.GetService<FestKasse.Services.IDataService>()?.GetSettingsCached();
+
+                if (settings?.HapticVibrationEnabled != false)
+                    HapticFeedback.Default.Perform(HapticFeedbackType.Click);
+
+                if (settings?.HapticSoundEnabled == true)
+                    services?.GetService<FestKasse.Services.IClickSoundService>()?.PlayClick();
+            }
+            catch { /* Haptic not supported on all platforms/emulators */ }
+
+            var cmd    = _isPlus ? _owner.PlusCommand    : _owner.MinusCommand;
+            var param  = _isPlus ? _owner.PlusCommandParameter : _owner.MinusCommandParameter;
+            if (cmd?.CanExecute(param) == true)
+                cmd.Execute(param);
+        }
     }
 }

@@ -11,10 +11,13 @@ public partial class AppShell : Shell
         Routing.RegisterRoute(nameof(ArticleManagementPage), typeof(ArticleManagementPage));
         Routing.RegisterRoute(nameof(SettingsPage), typeof(SettingsPage));
         Routing.RegisterRoute(nameof(QrScanPage), typeof(QrScanPage));
+        Routing.RegisterRoute(nameof(QrDisplayPage), typeof(QrDisplayPage));
         Routing.RegisterRoute(nameof(CategoryManagementPage), typeof(CategoryManagementPage));
         Routing.RegisterRoute(nameof(StandManagementPage), typeof(StandManagementPage));
         Routing.RegisterRoute(nameof(AboutPage), typeof(AboutPage));
         Routing.RegisterRoute(nameof(OrderHistoryPage), typeof(OrderHistoryPage));
+        Routing.RegisterRoute(nameof(DashboardPage), typeof(DashboardPage));
+        Routing.RegisterRoute(nameof(CashSessionPage), typeof(CashSessionPage));
         Routing.RegisterRoute(nameof(LogViewerPage), typeof(LogViewerPage));
     }
 
@@ -63,6 +66,18 @@ public partial class AppShell : Shell
     private async void OnOrderHistoryClicked(object sender, EventArgs e)
     {
         await Current.GoToAsync(nameof(OrderHistoryPage));
+        Current.FlyoutIsPresented = false;
+    }
+
+    private async void OnDashboardClicked(object sender, EventArgs e)
+    {
+        await Current.GoToAsync(nameof(DashboardPage));
+        Current.FlyoutIsPresented = false;
+    }
+
+    private async void OnCashSessionClicked(object sender, EventArgs e)
+    {
+        await Current.GoToAsync(nameof(CashSessionPage));
         Current.FlyoutIsPresented = false;
     }
 }

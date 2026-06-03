@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:FestKasse.ViewModels"
+             xmlns:helpers="clr-namespace:FestKasse.Helpers"
+             xmlns:zxing="clr-namespace:ZXing.Net.Maui.Controls;assembly=ZXing.Net.Maui.Controls"
+             x:Class="FestKasse.Views.QrDisplayPage"
+             x:DataType="viewmodels:QrDisplayViewModel"
+             Title="{helpers:Tr Key=QrDisplay_Title}"
+             BackgroundColor="{StaticResource Gray100}">
+
+    <Grid RowDefinitions="Auto,Auto,*,Auto" RowSpacing="8" Padding="5">
+
+        <Border Grid.Row="0" BackgroundColor="White" StrokeThickness="0" StrokeShape="RoundRectangle 10" Padding="5">
+            <VerticalStackLayout Spacing="8">
+                <Label Text="{helpers:Tr Key=QrDisplay_StandsLabel}"
+                       FontSize="13" TextColor="Gray"/>
+                <Label Text="{Binding StandNames}"
+                       FontSize="15" FontAttributes="Bold"/>
+            </VerticalStackLayout>
+        </Border>
+
+        <!-- Warning if payload is too large for a reliable QR code -->
+        <Border Grid.Row="1" IsVisible="{Binding IsTooLarge}"
+                BackgroundColor="#FFF3CD" StrokeThickness="0" StrokeShape="RoundRectangle 8" Padding="5">
+            <Label Text="{helpers:Tr Key=QrDisplay_TooLargeWarning}"
+                   TextColor="#856404" FontSize="13" FontAttributes="Bold"/>
+        </Border>
+
+        <Border Grid.Row="2" BackgroundColor="White" StrokeThickness="0" StrokeShape="RoundRectangle 10" Padding="5">
+            <zxing:BarcodeGeneratorView
+                Format="QrCode"
+                Value="{Binding QrContent}"
+                ForegroundColor="Black"
+                BackgroundColor="White"
+                HorizontalOptions="Fill"
+                VerticalOptions="Fill"/>
+        </Border>
+
+        <Button Grid.Row="3"
+                Text="{helpers:Tr Key=QrDisplay_Close}"
+                Command="{Binding CloseCommand}"
+                BackgroundColor="{StaticResource Primary}"
+                TextColor="White"
+                FontSize="16"
+                HeightRequest="50"/>
+
+    </Grid>
+
+</ContentPage>

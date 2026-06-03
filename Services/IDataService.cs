@@ -28,6 +28,7 @@ public interface IDataService
 
     // AppSettings (global, separate file)
     Task<AppSettings> GetSettingsAsync();
+    AppSettings GetSettingsCached();
     Task SaveSettingsAsync(AppSettings settings);
     Task<string> ExportSettingsToJsonAsync();
     Task ImportSettingsFromJsonAsync(string json);

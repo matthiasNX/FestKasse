@@ -75,6 +75,52 @@ public sealed class LogService : ILogService, IDisposable
         _logger.Error(ex, sb.ToString());
     }
 
+    public IReadOnlyList<string> GetAllLogFiles()
+    {
+        var dir = AppConstants.LogFolderPath;
+        if (!Directory.Exists(dir))
+            return [];
+
+        var stem = Path.GetFileNameWithoutExtension(AppConstants.LogBaseName);
+        var ext  = Path.GetExtension(AppConstants.LogBaseName);
+
+        return Directory
+            .EnumerateFiles(dir, $"{stem}*{ext}")
+            .OrderByDescending(File.GetLastWriteTimeUtc)
+            .ToList();
+    }
+
+    public async Task<string> ReadLogFileAsync(string filePath)
+    {
+        if (!File.Exists(filePath))
+            return string.Empty;
+
+        using var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+        using var reader = new StreamReader(fs, System.Text.Encoding.UTF8);
+        return await reader.ReadToEndAsync();
+    }
+
+    public async Task DeleteLogFileAsync(string filePath)
+    {
+        // If it is the currently active log file, flush the logger first
+        var current = AppConstants.ResolveCurrentLogFile();
+        bool isActive = string.Equals(filePath, current, StringComparison.OrdinalIgnoreCase);
+
+        if (isActive)
+            await _logger.DisposeAsync();
+
+        try
+        {
+            if (File.Exists(filePath))
+                File.Delete(filePath);
+        }
+        finally
+        {
+            if (isActive)
+                _logger = BuildLogger();
+        }
+    }
+
     public async Task<string> ReadLogAsync()
     {
         // Flush buffered writes to disk first
@@ -101,8 +147,9 @@ public sealed class LogService : ILogService, IDisposable
         await _logger.DisposeAsync();
         try
         {
-            if (File.Exists(LogFilePath))
-                File.Delete(LogFilePath);
+            var actualFile = AppConstants.ResolveCurrentLogFile();
+            if (actualFile != null && File.Exists(actualFile))
+                File.Delete(actualFile);
         }
         finally
         {

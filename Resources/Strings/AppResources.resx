@@ -5,6 +5,9 @@
   <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
   <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
 
+  <!-- ── Main / POS ─────────────────────────────────── -->
+  <data name="Main_AllCategories" xml:space="preserve"><value>Alle</value></data>
+
   <!-- ── Shell / Menu ─────────────────────────────── -->
   <data name="Menu_POS" xml:space="preserve"><value>💰  Kasse</value></data>
   <data name="Menu_StandManagement" xml:space="preserve"><value>🏪  Standverwaltung</value></data>
@@ -13,6 +16,7 @@
   <data name="Menu_Settings" xml:space="preserve"><value>⚙️  Einstellungen</value></data>
   <data name="Menu_OrderHistory" xml:space="preserve"><value>📜  Bestellverlauf</value></data>
   <data name="Menu_LogViewer" xml:space="preserve"><value>📃  Log-Anzeige</value></data>
+  <data name="Menu_CashSession" xml:space="preserve"><value>💵  Kassenabschluss</value></data>
   <data name="Menu_About" xml:space="preserve"><value>ℹ️  Über</value></data>
 
   <!-- ── Common ────────────────────────────────────── -->
@@ -44,6 +48,13 @@
 
   <data name="Settings_TileSize_Section" xml:space="preserve"><value>Kachelgröße</value></data>
   <data name="Settings_TileSize_Label" xml:space="preserve"><value>Größe der Kacheln (dp)</value></data>
+  <data name="Settings_GroupHeaders_Label" xml:space="preserve"><value>Gruppen-/Kategorieüberschriften anzeigen</value></data>
+  <data name="Settings_Denominations_Section" xml:space="preserve"><value>Zahlungsmittel-Kacheln</value></data>
+  <data name="Settings_Denominations_Notes" xml:space="preserve"><value>Scheine</value></data>
+  <data name="Settings_Denominations_Coins" xml:space="preserve"><value>Münzen</value></data>
+  <data name="Settings_Denominations_ResetEuro" xml:space="preserve"><value>Euro-Standard</value></data>
+  <data name="Settings_Denominations_AddPlaceholder" xml:space="preserve"><value>Wert (z.B. 0.50)</value></data>
+  <data name="Settings_GroupHeaders_Hint" xml:space="preserve"><value>Zeigt den Kategorienamen oberhalb jeder Artikelgruppe an</value></data>
 
   <data name="Settings_Logo_Section" xml:space="preserve"><value>Logo</value></data>
   <data name="Settings_Logo_Remove" xml:space="preserve"><value>🗑 Entfernen</value></data>
@@ -104,10 +115,22 @@
   <data name="Settings_MasterData_SelectStands" xml:space="preserve"><value>Stände für Export auswählen:</value></data>
   <data name="Settings_MasterData_CancelExport" xml:space="preserve"><value>✕ Abbrechen</value></data>
   <data name="Settings_MasterData_DoExport" xml:space="preserve"><value>📤 Exportieren</value></data>
+  <data name="Settings_MasterData_DoExportQr" xml:space="preserve"><value>📷 Als QR exportieren</value></data>
   <data name="Settings_MasterData_ExportStands" xml:space="preserve"><value>📤 Stände exportieren…</value></data>
   <data name="Settings_MasterData_ImportFile" xml:space="preserve"><value>📥 Aus Datei importieren</value></data>
+  <data name="Settings_MasterData_ImportQr" xml:space="preserve"><value>📷 Aus QR importieren</value></data>
 
-  <!-- ── Settings / Logging Tab ────────────────────── -->
+  <!-- ── QR Display Page ─────────────────────────── -->
+  <data name="QrDisplay_Title" xml:space="preserve"><value>QR-Code Export</value></data>
+  <data name="QrDisplay_StandsLabel" xml:space="preserve"><value>Exportierte Stände:</value></data>
+  <data name="QrDisplay_Hint" xml:space="preserve"><value>QR-Code mit einem anderen Gerät scannen, um die Daten zu importieren.</value></data>
+  <data name="QrDisplay_Close" xml:space="preserve"><value>✕ Schließen</value></data>
+  <data name="QrDisplay_TooLargeWarning" xml:space="preserve"><value>⚠ Die Datenmenge ist möglicherweise zu groß für einen zuverlässigen QR-Code. Bitte weniger Stände auswählen oder den JSON-Export verwenden.</value></data>
+
+  <!-- ── QR Scan hints ─────────────────────────────── -->
+  <data name="QrScan_Hint_MasterData" xml:space="preserve"><value>FestKasse QR-Code (Stammdaten) vor die Kamera halten</value></data>
+
+  <!-- ── Settings / Logging Tab -->
   <data name="Settings_LogLevel_Section" xml:space="preserve"><value>Log-Level</value></data>
   <data name="Settings_LogLevel_Desc" xml:space="preserve"><value>Legt fest, ab welchem Schweregrad Ereignisse in die Log-Datei geschrieben werden.</value></data>
   <data name="Settings_LogViewer_Section" xml:space="preserve"><value>Log-Viewer</value></data>
@@ -189,6 +212,8 @@
   <data name="LogViewer_Load" xml:space="preserve"><value>🔄 Laden</value></data>
   <data name="LogViewer_Clear" xml:space="preserve"><value>🗑 Löschen</value></data>
   <data name="LogViewer_Export" xml:space="preserve"><value>📤 Exportieren</value></data>
+  <data name="LogViewer_ScrollToEnd" xml:space="preserve"><value>⬇ Zum Ende</value></data>
+  <data name="LogViewer_SelectFile" xml:space="preserve"><value>Log-Datei wählen…</value></data>
 
   <!-- ── About ─────────────────────────────────────── -->
   <data name="About_Title" xml:space="preserve"><value>Über FestKasse</value></data>
@@ -239,4 +264,31 @@
   <data name="Alert_OrderHistory_NoDb" xml:space="preserve"><value>Keine Datenbankdatei gefunden.</value></data>
   <data name="Alert_OrderHistory_DbExportError" xml:space="preserve"><value>DB-Export fehlgeschlagen: {0}</value></data>
   <data name="Alert_OrderHistory_ExportError" xml:space="preserve"><value>Export fehlgeschlagen: {0}</value></data>
+
+  <!-- ── Cart panel ─────────────────────────────────── -->
+  <data name="Cart_Header" xml:space="preserve"><value>Bestellung</value></data>
+  <data name="Cart_ClearButton" xml:space="preserve"><value>&#x1F5D1; Leeren</value></data>
+  <data name="Cart_EmptyHint" xml:space="preserve"><value>Noch keine Artikel gew&#xE4;hlt &#x2013; Kachel antippen</value></data>
+  <data name="Cart_Notes" xml:space="preserve"><value>Scheine</value></data>
+  <data name="Cart_Coins" xml:space="preserve"><value>M&#xFC;nzen</value></data>
+  <data name="Cart_ResetPayment" xml:space="preserve"><value>&#x21BA; Zur&#xFC;cksetzen</value></data>
+  <data name="Cart_CompleteButton" xml:space="preserve"><value>&#x2713; Abschlie&#xDF;en</value></data>
+
+  <!-- ── Cash session ───────────────────────────────── -->
+  <data name="Session_OpenTitle" xml:space="preserve"><value>Kasse &#xF6;ffnen</value></data>
+  <data name="Session_CloseTitle" xml:space="preserve"><value>Kasse schlie&#xDF;en</value></data>
+  <data name="Session_OpenCash_Label" xml:space="preserve"><value>Startbetrag (&#x20AC;)</value></data>
+  <data name="Session_CloseCash_Label" xml:space="preserve"><value>Endbetrag (&#x20AC;)</value></data>
+  <data name="Session_OpenButton" xml:space="preserve"><value>&#x1F513; Kasse &#xF6;ffnen</value></data>
+  <data name="Session_CloseButton" xml:space="preserve"><value>&#x1F512; Kasse schlie&#xDF;en</value></data>
+  <data name="Session_Revenue" xml:space="preserve"><value>Umsatz</value></data>
+  <data name="Session_Orders" xml:space="preserve"><value>Bestellungen</value></data>
+  <data name="Session_Difference" xml:space="preserve"><value>Differenz</value></data>
+
+  <!-- ── Settings receipt ───────────────────────────── -->
+  <data name="Settings_Receipt_Section" xml:space="preserve"><value>Beleg-Sharing</value></data>
+  <data name="Settings_Receipt_Label" xml:space="preserve"><value>Beleg nach Abschluss teilen</value></data>
+  <data name="Settings_Haptic_Section" xml:space="preserve"><value>Haptisches Feedback</value></data>
+  <data name="Settings_Haptic_Vibration" xml:space="preserve"><value>Vibration bei Tastendruck</value></data>
+  <data name="Settings_Haptic_Sound" xml:space="preserve"><value>Klickton bei Tastendruck</value></data>
 </root>

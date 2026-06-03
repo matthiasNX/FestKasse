@@ -7,10 +7,17 @@ namespace FestKasse.Helpers;
 /// </summary>
 public static class AppConstants
 {
+    // ── UI defaults ────────────────────────────────────────────────────────
+
+    /// <summary>Default tile width/height in density-independent pixels.</summary>
+    public const int DefaultTileSize = 120;
+
     // ── File names ─────────────────────────────────────────────────────────
 
-    public const string DataFileName     = "festkasse_data.json";
-    public const string SettingsFileName = "festkasse_settings.json";
+    public const string DataFileName          = "festkasse_data.json";
+    public const string SettingsFileName      = "festkasse_settings.json";
+    public const string OfflineQueueFileName  = "festkasse_offline_queue.json";
+    public const string CashSessionFileName   = "festkasse_session.json";
     public const string LogFolderName    = "logs";
     public const string LogBaseName      = "festkasse.log";
 
@@ -21,6 +28,12 @@ public static class AppConstants
 
     public static string SettingsFilePath =>
         Path.Combine(FileSystem.AppDataDirectory, SettingsFileName);
+
+    public static string OfflineQueueFilePath =>
+        Path.Combine(FileSystem.AppDataDirectory, OfflineQueueFileName);
+
+    public static string CashSessionFilePath =>
+        Path.Combine(FileSystem.AppDataDirectory, CashSessionFileName);
 
     public static string LogFolderPath =>
         Path.Combine(FileSystem.AppDataDirectory, LogFolderName);

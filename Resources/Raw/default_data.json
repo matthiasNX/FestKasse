@@ -12,27 +12,27 @@
         { "id": "cat-pfand",       "name": "Pfand",       "sortOrder": 4 }
       ],
       "articles": [
-        { "id": "default-01",  "description": "0,25 Shoppen",         "categoryId": "cat-wein",        "category": "Wein",        "color": "#2196F3", "icon": "\uD83C\uDF77", "price": 4.5,  "sortOrder": 0  },
-        { "id": "default-011", "description": "0,25 Shoppen + Pfand", "categoryId": "cat-wein",        "category": "Wein",        "color": "#2196F3", "icon": "\uD83C\uDF77", "price": 7.5,  "sortOrder": 1  },
-        { "id": "default-02",  "description": "0,75 Flasche",         "categoryId": "cat-wein",        "category": "Wein",        "color": "#1565C0", "icon": "\uD83C\uDF7E", "price": 13.5, "sortOrder": 2  },
-        { "id": "default-03",  "description": "1 L Flasche",          "categoryId": "cat-wein",        "category": "Wein",        "color": "#0D47A1", "icon": "\uD83C\uDF7E", "price": 18.0, "sortOrder": 3  },
-        { "id": "default-04",  "description": "0,25 Schorle",         "categoryId": "cat-schorle",     "category": "Schorle",     "color": "#4CAF50", "icon": "\uD83E\uDD42", "price": 3.5,  "sortOrder": 4  },
-        { "id": "default-041", "description": "0,25 Schorle + Pfand", "categoryId": "cat-schorle",     "category": "Schorle",     "color": "#4CAF50", "icon": "\uD83E\uDD42", "price": 6.5,  "sortOrder": 5  },
-        { "id": "default-05",  "description": "0,5 Schorle",          "categoryId": "cat-schorle",     "category": "Schorle",     "color": "#388E3C", "icon": "\uD83C\uDF7A", "price": 7.0,  "sortOrder": 6  },
-        { "id": "default-051", "description": "0,5 Schorle + Pfand",  "categoryId": "cat-schorle",     "category": "Schorle",     "color": "#388E3C", "icon": "\uD83C\uDF7A", "price": 10.0, "sortOrder": 7  },
-        { "id": "default-06",  "description": "1 Schorle",            "categoryId": "cat-schorle",     "category": "Schorle",     "color": "#1B5E20", "icon": "\uD83C\uDF7B", "price": 14.0, "sortOrder": 8  },
-        { "id": "default-061", "description": "1 Schorle + Pfand",    "categoryId": "cat-schorle",     "category": "Schorle",     "color": "#1B5E20", "icon": "\uD83C\uDF7B", "price": 17.0, "sortOrder": 9  },
-        { "id": "default-07",  "description": "0,25 Schorle Rot",     "categoryId": "cat-schorle-rot", "category": "Schorle Rot", "color": "#E53935", "icon": "\uD83C\uDF77", "price": 4.0,  "sortOrder": 10 },
-        { "id": "default-08",  "description": "0,5 Schorle Rot",      "categoryId": "cat-schorle-rot", "category": "Schorle Rot", "color": "#C62828", "icon": "\uD83C\uDF77", "price": 8.0,  "sortOrder": 11 },
-        { "id": "default-09",  "description": "1 Schorle Rot",        "categoryId": "cat-schorle-rot", "category": "Schorle Rot", "color": "#B71C1C", "icon": "\uD83C\uDF77", "price": 16.0, "sortOrder": 12 },
-        { "id": "default-10",  "description": "Wasser",               "categoryId": "cat-sonstiges",   "category": "Sonstiges",   "color": "#00BCD4", "icon": "\uD83D\uDCA7", "price": 2.5,  "sortOrder": 13 },
-        { "id": "default-101", "description": "Wasser + Pfand",       "categoryId": "cat-sonstiges",   "category": "Sonstiges",   "color": "#00BCD4", "icon": "\uD83D\uDCA7", "price": 3.5,  "sortOrder": 14 },
-        { "id": "default-11",  "description": "Limo",                 "categoryId": "cat-sonstiges",   "category": "Sonstiges",   "color": "#FDD835", "icon": "\uD83E\uDD64", "price": 3.0,  "sortOrder": 15 },
-        { "id": "default-111", "description": "Limo + Pfand",         "categoryId": "cat-sonstiges",   "category": "Sonstiges",   "color": "#FDD835", "icon": "\uD83E\uDD64", "price": 4.0,  "sortOrder": 16 },
-        { "id": "default-12",  "description": "Glas Pfand",           "categoryId": "cat-pfand",       "category": "Pfand",       "color": "#FF9800", "icon": "\uD83E\uDE99", "price": 3.0,  "sortOrder": 17 },
-        { "id": "default-13",  "description": "Flasche Pfand",        "categoryId": "cat-pfand",       "category": "Pfand",       "color": "#F57C00", "icon": "\uD83E\uDE99", "price": 1.0,  "sortOrder": 18 },
-        { "id": "default-14",  "description": "Glas zurueck",         "categoryId": "cat-pfand",       "category": "Pfand",       "color": "#607D8B", "icon": "\u21A9\uFE0F", "price": -3.0, "sortOrder": 19 },
-        { "id": "default-15",  "description": "Flasche zurueck",      "categoryId": "cat-pfand",       "category": "Pfand",       "color": "#455A64", "icon": "\u21A9\uFE0F", "price": -1.0, "sortOrder": 20 }
+        { "id": "default-01",  "description": "0,25 Shoppen",         "categoryId": "cat-wein",        "color": "#2196F3", "icon": "\uD83C\uDF77", "price": 4.5,  "sortOrder": 0  },
+        { "id": "default-011", "description": "0,25 Shoppen + Pfand", "categoryId": "cat-wein",        "color": "#2196F3", "icon": "\uD83C\uDF77", "price": 7.5,  "sortOrder": 1  },
+        { "id": "default-02",  "description": "0,75 Flasche",         "categoryId": "cat-wein",        "color": "#1565C0", "icon": "\uD83C\uDF7E", "price": 13.5, "sortOrder": 2  },
+        { "id": "default-03",  "description": "1 L Flasche",          "categoryId": "cat-wein",        "color": "#0D47A1", "icon": "\uD83C\uDF7E", "price": 18.0, "sortOrder": 3  },
+        { "id": "default-04",  "description": "0,25 Schorle",         "categoryId": "cat-schorle",     "color": "#4CAF50", "icon": "\uD83E\uDD42", "price": 3.5,  "sortOrder": 4  },
+        { "id": "default-041", "description": "0,25 Schorle + Pfand", "categoryId": "cat-schorle",     "color": "#4CAF50", "icon": "\uD83E\uDD42", "price": 6.5,  "sortOrder": 5  },
+        { "id": "default-05",  "description": "0,5 Schorle",          "categoryId": "cat-schorle",     "color": "#388E3C", "icon": "\uD83C\uDF7A", "price": 7.0,  "sortOrder": 6  },
+        { "id": "default-051", "description": "0,5 Schorle + Pfand",  "categoryId": "cat-schorle",     "color": "#388E3C", "icon": "\uD83C\uDF7A", "price": 10.0, "sortOrder": 7  },
+        { "id": "default-06",  "description": "1 Schorle",            "categoryId": "cat-schorle",     "color": "#1B5E20", "icon": "\uD83C\uDF7B", "price": 14.0, "sortOrder": 8  },
+        { "id": "default-061", "description": "1 Schorle + Pfand",    "categoryId": "cat-schorle",     "color": "#1B5E20", "icon": "\uD83C\uDF7B", "price": 17.0, "sortOrder": 9  },
+        { "id": "default-07",  "description": "0,25 Schorle Rot",     "categoryId": "cat-schorle-rot", "color": "#E53935", "icon": "\uD83C\uDF77", "price": 4.0,  "sortOrder": 10 },
+        { "id": "default-08",  "description": "0,5 Schorle Rot",      "categoryId": "cat-schorle-rot", "color": "#C62828", "icon": "\uD83C\uDF77", "price": 8.0,  "sortOrder": 11 },
+        { "id": "default-09",  "description": "1 Schorle Rot",        "categoryId": "cat-schorle-rot", "color": "#B71C1C", "icon": "\uD83C\uDF77", "price": 16.0, "sortOrder": 12 },
+        { "id": "default-10",  "description": "Wasser",               "categoryId": "cat-sonstiges",   "color": "#00BCD4", "icon": "\uD83D\uDCA7", "price": 2.5,  "sortOrder": 13 },
+        { "id": "default-101", "description": "Wasser + Pfand",       "categoryId": "cat-sonstiges",   "color": "#00BCD4", "icon": "\uD83D\uDCA7", "price": 3.5,  "sortOrder": 14 },
+        { "id": "default-11",  "description": "Limo",                 "categoryId": "cat-sonstiges",   "color": "#FDD835", "icon": "\uD83E\uDD64", "price": 3.0,  "sortOrder": 15 },
+        { "id": "default-111", "description": "Limo + Pfand",         "categoryId": "cat-sonstiges",   "color": "#FDD835", "icon": "\uD83E\uDD64", "price": 4.0,  "sortOrder": 16 },
+        { "id": "default-12",  "description": "Glas Pfand",           "categoryId": "cat-pfand",       "color": "#FF9800", "icon": "\uD83E\uDE99", "price": 3.0,  "sortOrder": 17 },
+        { "id": "default-13",  "description": "Flasche Pfand",        "categoryId": "cat-pfand",       "color": "#F57C00", "icon": "\uD83E\uDE99", "price": 1.0,  "sortOrder": 18 },
+        { "id": "default-14",  "description": "Glas zurueck",         "categoryId": "cat-pfand",       "color": "#607D8B", "icon": "\u21A9\uFE0F", "price": -3.0, "sortOrder": 19 },
+        { "id": "default-15",  "description": "Flasche zurueck",      "categoryId": "cat-pfand",       "color": "#455A64", "icon": "\u21A9\uFE0F", "price": -1.0, "sortOrder": 20 }
       ]
     },
     {
@@ -44,14 +44,14 @@
         { "id": "bcat-pfand",      "name": "Pfand",      "sortOrder": 2 }
       ],
       "articles": [
-        { "id": "bier-01", "description": "0,3 Bier",         "categoryId": "bcat-bier",       "category": "Bier",       "color": "#F9A825", "icon": "\uD83C\uDF7A", "price": 3.5,  "sortOrder": 0 },
-        { "id": "bier-02", "description": "0,5 Bier",         "categoryId": "bcat-bier",       "category": "Bier",       "color": "#F57F17", "icon": "\uD83C\uDF7A", "price": 4.5,  "sortOrder": 1 },
-        { "id": "bier-03", "description": "0,5 Bier + Pfand", "categoryId": "bcat-bier",       "category": "Bier",       "color": "#E65100", "icon": "\uD83C\uDF7A", "price": 6.0,  "sortOrder": 2 },
-        { "id": "bier-04", "description": "Radler 0,5",       "categoryId": "bcat-bier",       "category": "Bier",       "color": "#9CCC65", "icon": "\uD83C\uDF4B", "price": 4.0,  "sortOrder": 3 },
-        { "id": "bier-05", "description": "Cola",             "categoryId": "bcat-softdrinks", "category": "Softdrinks", "color": "#BF360C", "icon": "\uD83E\uDD64", "price": 2.5,  "sortOrder": 4 },
-        { "id": "bier-06", "description": "Wasser",           "categoryId": "bcat-softdrinks", "category": "Softdrinks", "color": "#00BCD4", "icon": "\uD83D\uDCA7", "price": 2.0,  "sortOrder": 5 },
-        { "id": "bier-07", "description": "Becher Pfand",     "categoryId": "bcat-pfand",      "category": "Pfand",      "color": "#FF9800", "icon": "\uD83E\uDE99", "price": 1.0,  "sortOrder": 6 },
-        { "id": "bier-08", "description": "Becher zurueck",   "categoryId": "bcat-pfand",      "category": "Pfand",      "color": "#607D8B", "icon": "\u21A9\uFE0F", "price": -1.0, "sortOrder": 7 }
+        { "id": "bier-01", "description": "0,3 Bier",         "categoryId": "bcat-bier",       "color": "#F9A825", "icon": "\uD83C\uDF7A", "price": 3.5,  "sortOrder": 0 },
+        { "id": "bier-02", "description": "0,5 Bier",         "categoryId": "bcat-bier",       "color": "#F57F17", "icon": "\uD83C\uDF7A", "price": 4.5,  "sortOrder": 1 },
+        { "id": "bier-03", "description": "0,5 Bier + Pfand", "categoryId": "bcat-bier",       "color": "#E65100", "icon": "\uD83C\uDF7A", "price": 6.0,  "sortOrder": 2 },
+        { "id": "bier-04", "description": "Radler 0,5",       "categoryId": "bcat-bier",       "color": "#9CCC65", "icon": "\uD83C\uDF4B", "price": 4.0,  "sortOrder": 3 },
+        { "id": "bier-05", "description": "Cola",             "categoryId": "bcat-softdrinks", "color": "#BF360C", "icon": "\uD83E\uDD64", "price": 2.5,  "sortOrder": 4 },
+        { "id": "bier-06", "description": "Wasser",           "categoryId": "bcat-softdrinks", "color": "#00BCD4", "icon": "\uD83D\uDCA7", "price": 2.0,  "sortOrder": 5 },
+        { "id": "bier-07", "description": "Becher Pfand",     "categoryId": "bcat-pfand",      "color": "#FF9800", "icon": "\uD83E\uDE99", "price": 1.0,  "sortOrder": 6 },
+        { "id": "bier-08", "description": "Becher zurueck",   "categoryId": "bcat-pfand",      "color": "#607D8B", "icon": "\u21A9\uFE0F", "price": -1.0, "sortOrder": 7 }
       ]
     }
   ]

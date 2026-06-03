@@ -8,29 +8,49 @@
              Title="{helpers:Tr Key=LogViewer_Title}"
              BackgroundColor="{StaticResource Gray100}">
 
-    <Grid RowDefinitions="Auto,*,Auto" Padding="10" RowSpacing="8">
+    <Grid RowDefinitions="Auto,Auto,*,Auto" Padding="10" RowSpacing="8">
 
-        <!-- Toolbar -->
-        <Grid Grid.Row="0" ColumnDefinitions="*,*,*" ColumnSpacing="8">
-            <Button Grid.Column="0"
-                    Text="{helpers:Tr Key=LogViewer_Load}"
-                    Command="{Binding LoadLogCommand}"
-                    BackgroundColor="{StaticResource Primary}"
-                    TextColor="White" CornerRadius="8" FontSize="13"/>
-            <Button Grid.Column="1"
-                    Text="{helpers:Tr Key=LogViewer_Clear}"
-                    Command="{Binding ClearLogCommand}"
-                    BackgroundColor="#F44336"
-                    TextColor="White" CornerRadius="8" FontSize="13"/>
-            <Button Grid.Column="2"
-                    Text="{helpers:Tr Key=LogViewer_Export}"
-                    Command="{Binding ExportLogCommand}"
-                    BackgroundColor="#607D8B"
-                    TextColor="White" CornerRadius="8" FontSize="13"/>
-        </Grid>
+            <!-- File picker row -->
+            <Grid Grid.Row="0" ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                <Picker Grid.Column="0"
+                        ItemsSource="{Binding LogFiles}"
+                        SelectedItem="{Binding SelectedLogFile}"
+                        Title="{helpers:Tr Key=LogViewer_SelectFile}"
+                        BackgroundColor="White"
+                        TextColor="Black"
+                        TitleColor="Gray"
+                        VerticalOptions="Center"/>
+                <Button Grid.Column="1"
+                        Text="{helpers:Tr Key=LogViewer_Load}"
+                        Command="{Binding RefreshLogFilesCommand}"
+                        BackgroundColor="{StaticResource Primary}"
+                        TextColor="White" CornerRadius="8" FontSize="13"
+                        Padding="12,0"/>
+            </Grid>
 
-        <!-- Log content -->
-        <Border Grid.Row="1"
+            <!-- Toolbar -->
+            <Grid Grid.Row="1" ColumnDefinitions="*,*,Auto" ColumnSpacing="8">
+                <Button Grid.Column="0"
+                        Text="{helpers:Tr Key=LogViewer_Clear}"
+                        Command="{Binding ClearLogCommand}"
+                        BackgroundColor="#F44336"
+                        TextColor="White" CornerRadius="8" FontSize="13"/>
+                <Button Grid.Column="1"
+                        Text="{helpers:Tr Key=LogViewer_Export}"
+                        Command="{Binding ExportLogCommand}"
+                        BackgroundColor="#607D8B"
+                        TextColor="White" CornerRadius="8" FontSize="13"/>
+                <Button Grid.Column="2"
+                        x:Name="ScrollToEndButton"
+                        Text="{helpers:Tr Key=LogViewer_ScrollToEnd}"
+                        Clicked="OnScrollToEndClicked"
+                        BackgroundColor="#455A64"
+                        TextColor="White" CornerRadius="8" FontSize="13"
+                        Padding="12,0"/>
+            </Grid>
+
+            <!-- Log content -->
+            <Border Grid.Row="2"
                 BackgroundColor="Black"
                 StrokeThickness="0"
                 StrokeShape="RoundRectangle 8">
@@ -54,7 +74,7 @@
         </Border>
 
         <!-- Footer: file path + loading indicator -->
-        <Grid Grid.Row="2" ColumnDefinitions="*,Auto">
+        <Grid Grid.Row="3" ColumnDefinitions="*,Auto">
             <Label Grid.Column="0"
                    Text="{Binding LogFilePath}"
                    FontSize="10"

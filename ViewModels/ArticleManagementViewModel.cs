@@ -7,13 +7,14 @@ using FestKasse.Services;
 
 namespace FestKasse.ViewModels;
 
-public partial class ArticleManagementViewModel : ObservableObject
+public partial class ArticleManagementViewModel : SortableListViewModelBase<Article>, FestKasse.Controls.IInitializable
 {
     private readonly IDataService _dataService;
     private readonly ILogService _log;
 
-    [ObservableProperty]
-    private ObservableCollection<Article> _articles = new();
+    // Items/IsEditing/IsNewItem/EditSortOrder come from the base class.
+    public ObservableCollection<Article> Articles => Items;
+    public bool IsNewArticle { get => IsNewItem; private set => IsNewItem = value; }
 
     [ObservableProperty]
     private Article? _selectedArticle;
@@ -69,15 +70,6 @@ public partial class ArticleManagementViewModel : ObservableObject
     }
 
     [ObservableProperty]
-    private int _editSortOrder;
-
-    [ObservableProperty]
-    private bool _isEditing;
-
-    [ObservableProperty]
-    private bool _isNewArticle;
-
-    [ObservableProperty]
     private ObservableCollection<Category> _categories = new();
 
     [ObservableProperty]
@@ -108,19 +100,16 @@ public partial class ArticleManagementViewModel : ObservableObject
         _log = logService;
     }
 
-    public async Task InitializeAsync()
-    {
-        await LoadDataAsync();
-    }
+    public async Task InitializeAsync() => await LoadDataAsync();
 
     private async Task LoadDataAsync()
     {
         _stand = await _dataService.GetActiveStandAsync() ?? new Stand();
         _log.Debug($"Article management: loading data for stand '{_stand.Name}', {_stand.Articles.Count} article(s).");
 
-        Articles.Clear();
+        Items.Clear();
         foreach (var article in _stand.Articles.OrderBy(a => a.SortOrder).ThenBy(a => a.Description))
-            Articles.Add(article);
+            Items.Add(article);
 
         Categories.Clear();
         foreach (var category in _stand.Categories.OrderBy(c => c.SortOrder))
@@ -140,7 +129,7 @@ public partial class ArticleManagementViewModel : ObservableObject
         EditCategory = Categories.FirstOrDefault();
         EditColor = AvailableColors.FirstOrDefault() ?? "#4CAF50";
         EditPrice = 0;
-        EditSortOrder = Articles.Count;
+        EditSortOrder = Items.Count;
         EditIcon = null;
         IsNewArticle = true;
         IsEditing = true;
@@ -176,20 +165,18 @@ public partial class ArticleManagementViewModel : ObservableObject
             {
                 Description = EditDescription,
                 CategoryId = EditCategory?.Id ?? string.Empty,
-                Category = EditCategory?.Name ?? string.Empty,
                 Color = !string.IsNullOrWhiteSpace(EditColor) ? EditColor : "#4CAF50",
                 Price = EditPrice,
                 SortOrder = EditSortOrder,
                 Icon = string.IsNullOrEmpty(EditIcon) ? null : EditIcon
             };
-            Articles.Add(newArticle);
+            Items.Add(newArticle);
             _log.Info($"Article created: '{EditDescription}', price={EditPrice:F2}€, category='{EditCategory?.Name}'.");
         }
         else if (SelectedArticle != null)
         {
             SelectedArticle.Description = EditDescription;
             SelectedArticle.CategoryId = EditCategory?.Id ?? string.Empty;
-            SelectedArticle.Category = EditCategory?.Name ?? string.Empty;
             SelectedArticle.Color = !string.IsNullOrWhiteSpace(EditColor) ? EditColor : "#4CAF50";
             SelectedArticle.Price = EditPrice;
             SelectedArticle.SortOrder = EditSortOrder;
@@ -197,14 +184,23 @@ public partial class ArticleManagementViewModel : ObservableObject
             _log.Info($"Article updated: '{EditDescription}', price={EditPrice:F2}€.");
         }
 
-        await SaveAllArticlesAsync();
+        try
+        {
+            await SaveAllArticlesAsync();
+        }
+        catch (Exception ex)
+        {
+            _log.Exception(ex, "Error saving article.");
+            await Shell.Current.DisplayAlert(LocalizationService.Instance["Common_Error"], ex.Message, LocalizationService.Instance["Common_OK"]);
+            return;
+        }
         CancelEdit();
     }
 
     [RelayCommand]
     private void CancelEdit()
     {
-        IsEditing = false;
+        CancelEditBase();
         SelectedArticle = null;
     }
 
@@ -223,76 +219,52 @@ public partial class ArticleManagementViewModel : ObservableObject
             loc.Format("Article_Delete_Msg", article.Description),
             loc["Common_Yes"], loc["Common_No"]);
 
-        if (confirm)
+        if (!confirm) return;
+
+        _log.Info($"Article deleted: '{article.Description}'.");
+        Items.Remove(article);
+        try { await SaveAllArticlesAsync(); }
+        catch (Exception ex)
         {
-            _log.Info($"Article deleted: '{article.Description}'.");
-            Articles.Remove(article);
-            await SaveAllArticlesAsync();
+            _log.Exception(ex, "Error saving after article delete.");
+            await Shell.Current.DisplayAlert(loc["Common_Error"], ex.Message, loc["Common_OK"]);
         }
     }
 
     [RelayCommand]
     private async Task MoveUpAsync(Article article)
     {
-        var index = Articles.IndexOf(article);
-        if (index > 0)
-        {
-            Articles.Move(index, index - 1);
-            UpdateSortOrder();
+        if (MoveItemUp(article))
             await SaveAllArticlesAsync();
-        }
     }
 
     [RelayCommand]
     private async Task MoveDownAsync(Article article)
     {
-        var index = Articles.IndexOf(article);
-        if (index < Articles.Count - 1)
-        {
-            Articles.Move(index, index + 1);
-            UpdateSortOrder();
+        if (MoveItemDown(article))
             await SaveAllArticlesAsync();
-        }
     }
 
-    private void UpdateSortOrder()
-    {
-        for (int i = 0; i < Articles.Count; i++)
-        {
-            Articles[i].SortOrder = i;
-        }
-    }
+    [RelayCommand]
+    private void IncreaseSortOrder() => IncreaseSortOrderBase();
+
+    [RelayCommand]
+    private void DecreaseSortOrder() => DecreaseSortOrderBase();
+
+    [RelayCommand]
+    private void SelectColor(string color) => EditColor = color;
 
     private async Task SaveAllArticlesAsync()
     {
         try
         {
-            await _dataService.SaveArticlesAsync(Articles.ToList());
-            _log.Debug($"Article list saved: {Articles.Count} article(s).");
+            await _dataService.SaveArticlesAsync(Items.ToList());
+            _log.Debug($"Article list saved: {Items.Count} article(s).");
         }
         catch (Exception ex)
         {
             _log.Exception(ex, "Error saving article list.");
             throw;
         }
-    }
-
-    [RelayCommand]
-    private void IncreaseSortOrder()
-    {
-        EditSortOrder++;
-    }
-
-    [RelayCommand]
-    private void DecreaseSortOrder()
-    {
-        if (EditSortOrder > 0)
-            EditSortOrder--;
-    }
-
-    [RelayCommand]
-    private void SelectColor(string color)
-    {
-        EditColor = color;
     }
 }

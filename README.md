@@ -35,6 +35,7 @@ FestKasse is a fully offline point-of-sale (POS) app for Android smartphones and
 - 📤 **Export/Import** — JSON data export, database export, HTTP sync
 - 🔒 **Fully offline** — no internet needed for daily use
 - 📱 **Phone & tablet** — responsive layout
+- 📷 **QR code support** — scan a QR code to import a sync URL or article data; display a QR code to share your current configuration
 
 ### Quick Start
 
@@ -83,6 +84,7 @@ FestKasse ist eine vollständig offline-fähige Kassen-App für Android-Smartpho
 - 📤 **Export/Import** — JSON-Datenexport, Datenbankexport, HTTP-Sync
 - 🔒 **Vollständig offline** — kein Internet im Alltag nötig
 - 📱 **Handy & Tablet** — responsives Layout
+- 📷 **QR-Code-Unterstützung** — QR-Code scannen um Sync-URL oder Artikeldaten zu importieren; QR-Code anzeigen um die aktuelle Konfiguration zu teilen
 
 ---
 
@@ -178,45 +180,127 @@ Im Flyout-Menü → **Kasse** (oder nach „Aktiv setzen" automatisch):
 
 **HTTP-Sync:** Eine Konfigurationsdatei kann auf einem Webserver bereitgestellt werden. URL in den Einstellungen eintragen → **Jetzt synchronisieren**. Nützlich um alle Kassen-Geräte einer Veranstaltung zentral zu konfigurieren.
 
+#### 8. QR-Code-Funktionen
+
+FestKasse unterstützt QR-Codes in beide Richtungen — zum **Anzeigen** (Teilen der eigenen Konfiguration) und zum **Scannen** (Daten von einem anderen Gerät oder Server übernehmen).
+
+##### QR-Code anzeigen (Konfiguration teilen)
+
+Über das Flyout-Menü → **⚙️ Einstellungen** → Reiter **🔄 Sync/Import**:
+
+1. **QR-Code anzeigen** antippen.
+2. Ein QR-Code wird generiert, der die aktuellen Artikeldaten und Einstellungen als komprimiertes JSON enthält.
+3. Ein anderes Gerät kann diesen Code scannen und die Daten direkt importieren.
+
+> ⚠️ Bei sehr großen Datenmengen (viele Artikel/Stände) kann der QR-Code zu groß für eine zuverlässige Erkennung werden. In diesem Fall erscheint ein Warnhinweis — verwende in diesem Fall den HTTP-Sync oder den Dateiexport.
+
+##### QR-Code scannen
+
+An mehreren Stellen in den Einstellungen steht eine **QR-scannen**-Schaltfläche zur Verfügung:
+
+| Kontext | Ergebnis des Scans |
+|---|---|
+| **Sync-URL** | Die gescannte URL wird direkt als Sync-URL übernommen |
+| **Bestell-URL** | Die gescannte URL wird als HTTP-Bestell-Endpunkt eingetragen |
+| **Daten importieren** | Der QR-Inhalt wird als JSON-Konfiguration importiert (entspricht einem Dateiimport) |
+
+**So funktioniert das Scannen:**
+1. Auf die **QR-scannen**-Schaltfläche (📷) neben dem jeweiligen Feld tippen.
+2. Die Kamera-Ansicht öffnet sich — den QR-Code ins Bild halten.
+3. Der Code wird automatisch erkannt und der Wert übernommen.
+4. Auf **💾 Einstellungen speichern** tippen, um die Änderung zu übernehmen.
+
+> Die App benötigt die **Kamera-Berechtigung** für den QR-Scan. Beim ersten Aufruf erscheint eine Berechtigungsanfrage.
+
 ---
 
 ### JSON-Format (Referenz)
 
+Artikeldaten und Einstellungen werden **immer getrennt** exportiert und importiert — es gibt keine kombinierte Datei.
+
+| Funktion | Dateiformat | Inhalt |
+|---|---|---|
+| Daten exportieren / importieren | `FestKasse_data_*.json` | Stände, Kategorien, Artikel (`AppData`) |
+| Einstellungen exportieren / importieren | `FestKasse_settings_*.json` | Konfiguration (`AppSettings`) |
+| HTTP-Sync (Sync-URL) | beliebige JSON-URL | Artikeldaten (`AppData`) |
+
+#### Artikeldaten (`AppData`)
+
 ```json
 {
-  "ActiveStandId": "uuid-des-aktiven-stands",
+  "ActiveStandId": "550e8400-e29b-41d4-a716-446655440000",
   "Stands": [
     {
-      "Id": "uuid-des-stands",
+      "Id": "550e8400-e29b-41d4-a716-446655440000",
       "Name": "Brotzeitstand",
+      "Categories": [
+        { "Id": "cat-uuid-1", "Name": "Getränke", "SortOrder": 0 },
+        { "Id": "cat-uuid-2", "Name": "Speisen",  "SortOrder": 1 }
+      ],
       "Articles": [
         {
-          "Id": "uuid",
+          "Id": "art-uuid-1",
           "Description": "Cola 0,5l",
-          "CategoryId": "uuid-der-kategorie",
-          "Category": "Getränke",
+          "CategoryId": "cat-uuid-1",
           "Color": "#4CAF50",
           "Icon": "🥤",
           "Price": 2.50,
           "SortOrder": 0
+        },
+        {
+          "Id": "art-uuid-2",
+          "Description": "Brezn",
+          "CategoryId": "cat-uuid-2",
+          "Color": "#FF9800",
+          "Icon": "🥨",
+          "Price": 1.50,
+          "SortOrder": 0
         }
-      ],
-      "Settings": {
-        "DisplayTimeoutMinutes": 10,
-        "TileSize": 120,
-        "TileColumns": 0,
-        "LogoBase64": null,
-        "SyncUrl": "https://example.com/config.json",
-        "Categories": [
-          { "Id": "uuid", "Name": "Getränke", "SortOrder": 0 },
-          { "Id": "uuid", "Name": "Speisen", "SortOrder": 1 }
-        ],
-        "AvailableColors": ["#4CAF50", "#2196F3", "#F44336"]
-      }
+      ]
     }
   ]
 }
 ```
+
+#### Einstellungen (`AppSettings`)
+
+```json
+{
+  "DisplayTimeoutMinutes": 10,
+  "TileSize": 120,
+  "ShowCategoryGroupHeaders": true,
+  "LogoBase64": null,
+  "SyncUrl": "https://example.com/config.json",
+  "OrderEnabled": false,
+  "OrderUrl": null,
+  "OrderSendMode": 0,
+  "OrderIgnoreSslErrors": false,
+  "SaveOrdersLocally": false,
+  "LogLevel": "Information",
+  "Language": "system",
+  "AvailableColors": [
+    "#4CAF50", "#2196F3", "#F44336", "#FF9800",
+    "#9C27B0", "#00BCD4", "#795548", "#607D8B",
+    "#E91E63", "#FFEB3B", "#3F51B5", "#009688"
+  ]
+}
+```
+
+| Feld | Typ | Beschreibung |
+|---|---|---|
+| `DisplayTimeoutMinutes` | int | Bildschirm-Timeout in Minuten; `0` = nie ausschalten |
+| `TileSize` | int | Kachelgröße in dp (80–200) |
+| `ShowCategoryGroupHeaders` | bool | Gruppenüberschriften in der Kassenansicht anzeigen |
+| `LogoBase64` | string? | Logo als Base64-kodierter PNG/JPEG-String |
+| `SyncUrl` | string? | URL für HTTP-Synchronisation |
+| `OrderEnabled` | bool | HTTP-Bestellübermittlung aktivieren |
+| `OrderUrl` | string? | Endpunkt für Bestellübermittlung |
+| `OrderSendMode` | int | `0` = JSON-Body, `1` = URL-Template |
+| `OrderIgnoreSslErrors` | bool | SSL-Zertifikatsfehler beim Bestellen ignorieren |
+| `SaveOrdersLocally` | bool | Bestellungen lokal in der SQLite-Datenbank speichern |
+| `LogLevel` | string | `Verbose` / `Debug` / `Information` / `Warning` / `Error` / `Fatal` |
+| `Language` | string | `"system"` (Gerätesprache), `"de"`, `"en"` |
+| `AvailableColors` | string[] | Farbpalette für die Artikel-Kacheln (Hex-Werte) |
 
 ---
 

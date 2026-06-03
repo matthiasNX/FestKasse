@@ -6,12 +6,16 @@ using FestKasse.Services;
 
 namespace FestKasse.ViewModels;
 
+[QueryProperty(nameof(HintText), "hint")]
 public partial class QrScanViewModel : ObservableObject
 {
     private readonly ILogService _log;
 
     [ObservableProperty]
     private bool _isScanning = true;
+
+    [ObservableProperty]
+    private string _hintText = string.Empty;
 
     public QrScanViewModel(ILogService logService)
     {

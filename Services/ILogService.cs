@@ -16,8 +16,11 @@ public interface ILogService
 
     // ── Log-file management ─────────────────────────────────────────────────
     string LogFilePath { get; }
+    IReadOnlyList<string> GetAllLogFiles();
     Task<string> ReadLogAsync();
+    Task<string> ReadLogFileAsync(string filePath);
     Task ClearLogAsync();
+    Task DeleteLogFileAsync(string filePath);
 
     // ── Runtime reconfiguration ─────────────────────────────────────────────
     void SetLogLevel(string level);

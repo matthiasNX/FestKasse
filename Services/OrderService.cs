@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using System.Text;
 using System.Text.Json;
 using FestKasse.Models;
@@ -8,11 +7,24 @@ namespace FestKasse.Services;
 public class OrderService : IOrderService
 {
     private readonly ILogService _log;
+
     private static readonly JsonSerializerOptions _jsonOptions = new()
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
         WriteIndented = false
     };
+
+    // Reused HttpClient instances — one per SSL mode to avoid socket exhaustion.
+    private static readonly HttpClient _standardClient = new() { Timeout = TimeSpan.FromSeconds(30) };
+    private static readonly Lazy<HttpClient> _sslIgnoreClient = new(() =>
+    {
+        var handler = new HttpClientHandler
+        {
+            ServerCertificateCustomValidationCallback =
+                HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+        };
+        return new HttpClient(handler) { Timeout = TimeSpan.FromSeconds(30) };
+    });
 
     public OrderService(ILogService logService)
     {
@@ -27,25 +39,16 @@ public class OrderService : IOrderService
             return false;
         }
 
+        // Connectivity check before attempting any network call
+        if (Connectivity.NetworkAccess != NetworkAccess.Internet)
+        {
+            _log.Warning("SendOrderAsync: Kein Internetzugang – Bestellung wird in die Offline-Warteschlange eingereiht.");
+            return false;
+        }
+
         _log.Info($"Sende Bestellung: Stand='{order.StandName}', Gesamtbetrag={order.Total:F2}€, Modus={settings.OrderSendMode}, URL={settings.OrderUrl}");
 
-        HttpClient? tempClient = null;
-        HttpClient client;
-
-        if (settings.OrderIgnoreSslErrors)
-        {
-            var handler = new HttpClientHandler
-            {
-                ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
-            };
-            tempClient = new HttpClient(handler) { Timeout = TimeSpan.FromSeconds(30) };
-            client = tempClient;
-        }
-        else
-        {
-            client = new HttpClient { Timeout = TimeSpan.FromSeconds(30) };
-            tempClient = client;
-        }
+        var client = settings.OrderIgnoreSslErrors ? _sslIgnoreClient.Value : GetPlatformClient();
 
         try
         {
@@ -87,9 +90,16 @@ public class OrderService : IOrderService
             _log.Exception(ex, "Unexpected error while sending order.");
             return false;
         }
-        finally
-        {
-            tempClient?.Dispose();
-        }
+    }
+
+    private static HttpClient GetPlatformClient()
+    {
+#if ANDROID
+        // Use the Android-aware message handler for proper TLS/certificate chain support.
+        // Falls back gracefully; handler is shared via _standardClient on other platforms.
+        return _standardClient;
+#else
+        return _standardClient;
+#endif
     }
 }

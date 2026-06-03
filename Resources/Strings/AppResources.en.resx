@@ -5,6 +5,9 @@
   <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
   <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
 
+  <!-- ── Main / POS ─────────────────────────────────── -->
+  <data name="Main_AllCategories" xml:space="preserve"><value>All</value></data>
+
   <!-- ── Shell / Menu ─────────────────────────────── -->
   <data name="Menu_POS" xml:space="preserve"><value>💰  POS</value></data>
   <data name="Menu_StandManagement" xml:space="preserve"><value>🏪  Stand Management</value></data>
@@ -13,7 +16,23 @@
   <data name="Menu_Settings" xml:space="preserve"><value>⚙️  Settings</value></data>
   <data name="Menu_OrderHistory" xml:space="preserve"><value>📜  Order History</value></data>
   <data name="Menu_LogViewer" xml:space="preserve"><value>📃  Log Viewer</value></data>
+  <data name="Menu_CashSession" xml:space="preserve"><value>💵  Cash Drawer</value></data>
   <data name="Menu_About" xml:space="preserve"><value>ℹ️  About</value></data>
+  <data name="Menu_Dashboard" xml:space="preserve"><value>📊  Dashboard</value></data>
+
+  <!-- ── Dashboard ─────────────────────────────────── -->
+  <data name="Dashboard_Title" xml:space="preserve"><value>Dashboard</value></data>
+  <data name="Dashboard_SampleDataHint" xml:space="preserve"><value>⚠️  Sample data — no orders in the selected period.</value></data>
+  <data name="Dashboard_Section_KPI" xml:space="preserve"><value>Key Figures</value></data>
+  <data name="Dashboard_KPI_OrderCount" xml:space="preserve"><value>Orders</value></data>
+  <data name="Dashboard_KPI_TotalRevenue" xml:space="preserve"><value>Total Revenue</value></data>
+  <data name="Dashboard_KPI_AvgOrder" xml:space="preserve"><value>Avg. Order Value</value></data>
+  <data name="Dashboard_KPI_AvgItems" xml:space="preserve"><value>Avg. Items / Order</value></data>
+  <data name="Dashboard_KPI_TopProduct" xml:space="preserve"><value>🏆 Top Product</value></data>
+  <data name="Dashboard_KPI_PeakHour" xml:space="preserve"><value>⏰ Peak Hour</value></data>
+  <data name="Dashboard_Chart_OrdersPerHourCount" xml:space="preserve"><value>Orders per Hour (Count)</value></data>
+  <data name="Dashboard_Chart_OrdersPerHourRevenue" xml:space="preserve"><value>Revenue per Hour (€)</value></data>
+  <data name="Dashboard_Chart_ProductCount" xml:space="preserve"><value>Quantity per Product (Top 15)</value></data>
 
   <!-- ── Common ────────────────────────────────────── -->
   <data name="Common_Save" xml:space="preserve"><value>💾 Save Settings</value></data>
@@ -31,7 +50,32 @@
   <data name="Common_Saved" xml:space="preserve"><value>Saved</value></data>
   <data name="Common_Updated" xml:space="preserve"><value>Updated</value></data>
 
-  <!-- ── Settings Page ─────────────────────────────── -->
+  <!-- ── Cart panel ─────────────────────────────────── -->
+  <data name="Cart_Header" xml:space="preserve"><value>Order</value></data>
+  <data name="Cart_ClearButton" xml:space="preserve"><value>&#x1F5D1; Clear</value></data>
+  <data name="Cart_EmptyHint" xml:space="preserve"><value>No articles selected &#x2013; tap a tile</value></data>
+  <data name="Cart_Notes" xml:space="preserve"><value>Notes</value></data>
+  <data name="Cart_Coins" xml:space="preserve"><value>Coins</value></data>
+  <data name="Cart_ResetPayment" xml:space="preserve"><value>&#x21BA; Reset</value></data>
+  <data name="Cart_CompleteButton" xml:space="preserve"><value>&#x2713; Complete</value></data>
+
+  <!-- ── Cash session ───────────────────────────────── -->
+  <data name="Session_OpenTitle" xml:space="preserve"><value>Open Cash Drawer</value></data>
+  <data name="Session_CloseTitle" xml:space="preserve"><value>Close Cash Drawer</value></data>
+  <data name="Session_OpenCash_Label" xml:space="preserve"><value>Opening Cash (&#x20AC;)</value></data>
+  <data name="Session_CloseCash_Label" xml:space="preserve"><value>Closing Cash (&#x20AC;)</value></data>
+  <data name="Session_OpenButton" xml:space="preserve"><value>&#x1F513; Open Cash Drawer</value></data>
+  <data name="Session_CloseButton" xml:space="preserve"><value>&#x1F512; Close Cash Drawer</value></data>
+  <data name="Session_Revenue" xml:space="preserve"><value>Revenue</value></data>
+  <data name="Session_Orders" xml:space="preserve"><value>Orders</value></data>
+  <data name="Session_Difference" xml:space="preserve"><value>Difference</value></data>
+
+  <!-- ── Settings receipt ───────────────────────────── -->
+  <data name="Settings_Receipt_Section" xml:space="preserve"><value>Receipt Sharing</value></data>
+  <data name="Settings_Receipt_Label" xml:space="preserve"><value>Share receipt after completion</value></data>
+  <data name="Settings_Haptic_Section" xml:space="preserve"><value>Haptic Feedback</value></data>
+  <data name="Settings_Haptic_Vibration" xml:space="preserve"><value>Vibration on tile tap</value></data>
+  <data name="Settings_Haptic_Sound" xml:space="preserve"><value>Click sound on tile tap</value></data>
   <data name="Settings_Title" xml:space="preserve"><value>Settings</value></data>
   <data name="Settings_Tab_General" xml:space="preserve"><value>⚙️ General</value></data>
   <data name="Settings_Tab_Order" xml:space="preserve"><value>📡 Order</value></data>
@@ -44,6 +88,13 @@
 
   <data name="Settings_TileSize_Section" xml:space="preserve"><value>Tile Size</value></data>
   <data name="Settings_TileSize_Label" xml:space="preserve"><value>Tile size (dp)</value></data>
+  <data name="Settings_GroupHeaders_Label" xml:space="preserve"><value>Show category group headers</value></data>
+  <data name="Settings_Denominations_Section" xml:space="preserve"><value>Payment Denomination Tiles</value></data>
+  <data name="Settings_Denominations_Notes" xml:space="preserve"><value>Notes</value></data>
+  <data name="Settings_Denominations_Coins" xml:space="preserve"><value>Coins</value></data>
+  <data name="Settings_Denominations_ResetEuro" xml:space="preserve"><value>Euro defaults</value></data>
+  <data name="Settings_Denominations_AddPlaceholder" xml:space="preserve"><value>Value (e.g. 0.50)</value></data>
+  <data name="Settings_GroupHeaders_Hint" xml:space="preserve"><value>Show the category name above each group of articles</value></data>
 
   <data name="Settings_Logo_Section" xml:space="preserve"><value>Logo</value></data>
   <data name="Settings_Logo_Remove" xml:space="preserve"><value>🗑 Remove</value></data>
@@ -104,10 +155,22 @@
   <data name="Settings_MasterData_SelectStands" xml:space="preserve"><value>Select stands for export:</value></data>
   <data name="Settings_MasterData_CancelExport" xml:space="preserve"><value>✕ Cancel</value></data>
   <data name="Settings_MasterData_DoExport" xml:space="preserve"><value>📤 Export</value></data>
+  <data name="Settings_MasterData_DoExportQr" xml:space="preserve"><value>📷 Export as QR</value></data>
   <data name="Settings_MasterData_ExportStands" xml:space="preserve"><value>📤 Export stands…</value></data>
   <data name="Settings_MasterData_ImportFile" xml:space="preserve"><value>📥 Import from file</value></data>
+  <data name="Settings_MasterData_ImportQr" xml:space="preserve"><value>📷 Import from QR</value></data>
 
-  <!-- ── Settings / Logging Tab ────────────────────── -->
+  <!-- ── QR Display Page ─────────────────────────── -->
+  <data name="QrDisplay_Title" xml:space="preserve"><value>QR Code Export</value></data>
+  <data name="QrDisplay_StandsLabel" xml:space="preserve"><value>Exported stands:</value></data>
+  <data name="QrDisplay_Hint" xml:space="preserve"><value>Scan this QR code with another device to import the data.</value></data>
+  <data name="QrDisplay_Close" xml:space="preserve"><value>✕ Close</value></data>
+  <data name="QrDisplay_TooLargeWarning" xml:space="preserve"><value>⚠ The data may be too large for a reliable QR code. Please select fewer stands or use JSON export instead.</value></data>
+
+  <!-- ── QR Scan hints ─────────────────────────────── -->
+  <data name="QrScan_Hint_MasterData" xml:space="preserve"><value>Hold the FestKasse QR code (master data) in front of the camera</value></data>
+
+  <!-- ── Settings / Logging Tab -->
   <data name="Settings_LogLevel_Section" xml:space="preserve"><value>Log level</value></data>
   <data name="Settings_LogLevel_Desc" xml:space="preserve"><value>Sets the minimum severity level for events written to the log file.</value></data>
   <data name="Settings_LogViewer_Section" xml:space="preserve"><value>Log viewer</value></data>
@@ -189,6 +252,8 @@
   <data name="LogViewer_Load" xml:space="preserve"><value>🔄 Load</value></data>
   <data name="LogViewer_Clear" xml:space="preserve"><value>🗑 Clear</value></data>
   <data name="LogViewer_Export" xml:space="preserve"><value>📤 Export</value></data>
+  <data name="LogViewer_ScrollToEnd" xml:space="preserve"><value>⬇ Scroll to End</value></data>
+  <data name="LogViewer_SelectFile" xml:space="preserve"><value>Select log file…</value></data>
 
   <!-- ── About ─────────────────────────────────────── -->
   <data name="About_Title" xml:space="preserve"><value>About FestKasse</value></data>

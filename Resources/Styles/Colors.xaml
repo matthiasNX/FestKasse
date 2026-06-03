@@ -4,13 +4,13 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
+    <!-- ═══ Brand colours (same in both themes) ════════════════════════════ -->
     <Color x:Key="Primary">#2E7D32</Color>
     <Color x:Key="Secondary">#1B5E20</Color>
     <Color x:Key="Tertiary">#81C784</Color>
 
-    <Color x:Key="White">White</Color>
-    <Color x:Key="Black">Black</Color>
-
+    <!-- ═══ Neutral palette ════════════════════════════════════════════════ -->
+    <!-- Light variants -->
     <Color x:Key="Gray100">#F5F5F5</Color>
     <Color x:Key="Gray200">#EEEEEE</Color>
     <Color x:Key="Gray300">#E0E0E0</Color>
@@ -20,6 +20,19 @@
     <Color x:Key="Gray700">#616161</Color>
     <Color x:Key="Gray900">#212121</Color>
 
+    <!-- Dark variants -->
+    <Color x:Key="DarkGray100">#1E1E1E</Color>
+    <Color x:Key="DarkGray200">#2C2C2C</Color>
+    <Color x:Key="DarkGray300">#3A3A3A</Color>
+    <Color x:Key="DarkGray400">#555555</Color>
+    <Color x:Key="DarkGray600">#9E9E9E</Color>
+    <Color x:Key="DarkGray700">#BDBDBD</Color>
+    <Color x:Key="DarkGray900">#F5F5F5</Color>
+
+    <Color x:Key="White">White</Color>
+    <Color x:Key="Black">Black</Color>
+
+    <!-- ═══ Status colours ═════════════════════════════════════════════════ -->
     <Color x:Key="Success">#4CAF50</Color>
     <Color x:Key="Warning">#FF9800</Color>
     <Color x:Key="Error">#F44336</Color>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:helpers="clr-namespace:FestKasse.Helpers"
+             x:Class="FestKasse.Views.CashSessionPage"
+             x:Name="ThisPage"
+             Title="{helpers:Tr Key=Session_OpenTitle}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
+
+            <!-- Status banner -->
+            <Border Padding="16" StrokeShape="RoundRectangle 10" StrokeThickness="0"
+                    BackgroundColor="{AppThemeBinding Light=#E8F5E9, Dark=#1B5E20}">
+                <Label Text="{Binding StatusMessage}"
+                       FontSize="16" FontAttributes="Bold"
+                       HorizontalTextAlignment="Center"/>
+            </Border>
+
+            <!-- ── Open Session ── -->
+            <Border Padding="16" StrokeShape="RoundRectangle 10" StrokeThickness="0"
+                    BackgroundColor="{AppThemeBinding Light=White, Dark={StaticResource DarkGray200}}"
+                    IsVisible="{Binding IsSessionClosed}">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="{helpers:Tr Key=Session_OpenTitle}"
+                           FontSize="18" FontAttributes="Bold"/>
+                    <Label Text="{helpers:Tr Key=Session_OpenCash_Label}" FontSize="14"/>
+                    <Entry Text="{Binding OpeningCash}"
+                           Keyboard="Numeric"
+                           Placeholder="0,00"/>
+                    <Button Text="{helpers:Tr Key=Session_OpenButton}"
+                            Command="{Binding OpenSessionCommand}"
+                            BackgroundColor="{StaticResource Primary}"
+                            TextColor="White"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- ── Close Session ── -->
+            <Border Padding="16" StrokeShape="RoundRectangle 10" StrokeThickness="0"
+                    BackgroundColor="{AppThemeBinding Light=White, Dark={StaticResource DarkGray200}}"
+                    IsVisible="{Binding IsSessionOpen}">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="{helpers:Tr Key=Session_CloseTitle}"
+                           FontSize="18" FontAttributes="Bold"/>
+
+                    <!-- Session summary -->
+                    <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto" RowSpacing="6">
+                        <Label Grid.Row="0" Grid.Column="0" Text="{helpers:Tr Key=Session_Revenue}"/>
+                        <Label Grid.Row="0" Grid.Column="1"
+                               Text="{Binding ActiveSession.Revenue, StringFormat='{0:F2} €'}"
+                               FontAttributes="Bold"/>
+
+                        <Label Grid.Row="1" Grid.Column="0" Text="{helpers:Tr Key=Session_Orders}"/>
+                        <Label Grid.Row="1" Grid.Column="1"
+                               Text="{Binding ActiveSession.OrderCount}"
+                               FontAttributes="Bold"/>
+                    </Grid>
+
+                    <Label Text="{helpers:Tr Key=Session_CloseCash_Label}" FontSize="14"/>
+                    <Entry Text="{Binding ClosingCash}"
+                           Keyboard="Numeric"
+                           Placeholder="0,00"/>
+                    <Button Text="{helpers:Tr Key=Session_CloseButton}"
+                            Command="{Binding CloseSessionCommand}"
+                            BackgroundColor="{StaticResource Error}"
+                            TextColor="White"/>
+                </VerticalStackLayout>
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

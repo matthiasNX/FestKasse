@@ -4,6 +4,7 @@ using FestKasse.Services;
 using FestKasse.ViewModels;
 using FestKasse.Views;
 using ZXing.Net.Maui.Controls;
+using SkiaSharp.Views.Maui.Controls.Hosting;
 
 namespace FestKasse;
 
@@ -14,6 +15,7 @@ public static class MauiProgram
         var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()
+            .UseSkiaSharp()
             .UseBarcodeReader()
             .ConfigureFonts(fonts =>
             {
@@ -32,12 +34,23 @@ public static class MauiProgram
         builder.Services.AddSingleton<IDisplayService, DisplayService>();
         builder.Services.AddSingleton<IOrderService, OrderService>();
         builder.Services.AddSingleton<IOrderHistoryService, OrderHistoryService>();
+        builder.Services.AddSingleton<ICashSessionService, CashSessionService>();
+        builder.Services.AddSingleton<IOfflineOrderQueueService, OfflineOrderQueueService>();
+        // Platform click-sound
+#if ANDROID
+        builder.Services.AddSingleton<IClickSoundService, FestKasse.Platforms.Android.ClickSoundService>();
+#elif WINDOWS
+        builder.Services.AddSingleton<IClickSoundService, FestKasse.Platforms.Windows.ClickSoundService>();
+#else
+        builder.Services.AddSingleton<IClickSoundService, FestKasse.Services.NullClickSoundService>();
+#endif
 
         // ViewModels
         builder.Services.AddSingleton<MainViewModel>();
         builder.Services.AddTransient<ArticleManagementViewModel>();
         builder.Services.AddTransient<SettingsViewModel>();
         builder.Services.AddTransient<QrScanViewModel>();
+        builder.Services.AddTransient<QrDisplayViewModel>();
         builder.Services.AddTransient<CategoryManagementViewModel>();
         builder.Services.AddTransient<StandManagementViewModel>();
 
@@ -46,13 +59,18 @@ public static class MauiProgram
         builder.Services.AddTransient<ArticleManagementPage>();
         builder.Services.AddTransient<SettingsPage>();
         builder.Services.AddTransient<QrScanPage>();
+        builder.Services.AddTransient<QrDisplayPage>();
         builder.Services.AddTransient<CategoryManagementPage>();
         builder.Services.AddTransient<StandManagementPage>();
         builder.Services.AddTransient<AboutPage>();
         builder.Services.AddTransient<OrderHistoryPage>();
+        builder.Services.AddTransient<DashboardPage>();
         builder.Services.AddTransient<LogViewerViewModel>();
         builder.Services.AddTransient<LogViewerPage>();
         builder.Services.AddTransient<OrderHistoryViewModel>();
+        builder.Services.AddTransient<DashboardViewModel>();
+        builder.Services.AddTransient<CashSessionViewModel>();
+        builder.Services.AddTransient<CashSessionPage>();
 
 #if DEBUG
         builder.Logging.AddDebug();

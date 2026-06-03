@@ -64,6 +64,11 @@
                             </Grid>
                             <Slider Minimum="80" Maximum="200" Value="{Binding TileSize}"
                                     MinimumTrackColor="{StaticResource Primary}" MaximumTrackColor="{StaticResource Gray300}"/>
+                            <Grid ColumnDefinitions="*,Auto">
+                                <Label Text="{helpers:Tr Key=Settings_GroupHeaders_Label}" VerticalOptions="Center"/>
+                                <Switch Grid.Column="1" IsToggled="{Binding ShowCategoryGroupHeaders}" OnColor="{StaticResource Primary}"/>
+                            </Grid>
+                            <Label Text="{helpers:Tr Key=Settings_GroupHeaders_Hint}" FontSize="11" TextColor="Gray"/>
                         </VerticalStackLayout>
                     </Border>
 
@@ -115,6 +120,68 @@
                         </VerticalStackLayout>
                     </Border>
 
+                    <Border BackgroundColor="White" StrokeThickness="0" StrokeShape="RoundRectangle 10" Padding="15">
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="{helpers:Tr Key=Settings_Denominations_Section}" FontSize="18" FontAttributes="Bold"/>
+
+                            <!-- Notes -->
+                            <Grid ColumnDefinitions="*,Auto" Margin="0,4,0,0">
+                                <Label Text="{helpers:Tr Key=Settings_Denominations_Notes}" FontSize="14" FontAttributes="Bold" VerticalOptions="Center"/>
+                                <Button Grid.Column="1" Text="{helpers:Tr Key=Settings_Denominations_ResetEuro}"
+                                        Command="{Binding ResetNotesToEuroCommand}"
+                                        BackgroundColor="{StaticResource Gray300}" TextColor="Black" FontSize="12" Padding="8,4"/>
+                            </Grid>
+                            <VerticalStackLayout BindableLayout.ItemsSource="{Binding NoteItems}" Spacing="4">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate x:DataType="viewmodels:DenominationItem">
+                                        <Grid ColumnDefinitions="*,Auto">
+                                            <Label Text="{Binding Label}" VerticalOptions="Center"/>
+                                            <Button Grid.Column="1" Text="✕"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:SettingsViewModel}}, Path=RemoveNoteCommand}"
+                                                    CommandParameter="{Binding .}"
+                                                    BackgroundColor="Transparent" TextColor="{StaticResource Error}"
+                                                    FontSize="16" Padding="8,0" VerticalOptions="Center"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </VerticalStackLayout>
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                                <Entry Grid.Column="0" Text="{Binding NewNoteEntry}"
+                                       Keyboard="Numeric" BackgroundColor="{StaticResource Gray100}" ReturnCommand="{Binding AddNoteCommand}"/>
+                                <Button Grid.Column="1" Text="+" Command="{Binding AddNoteCommand}"
+                                        BackgroundColor="{StaticResource Primary}" TextColor="White" WidthRequest="50"/>
+                            </Grid>
+
+                            <!-- Coins -->
+                            <Grid ColumnDefinitions="*,Auto" Margin="0,8,0,0">
+                                <Label Text="{helpers:Tr Key=Settings_Denominations_Coins}" FontSize="14" FontAttributes="Bold" VerticalOptions="Center"/>
+                                <Button Grid.Column="1" Text="{helpers:Tr Key=Settings_Denominations_ResetEuro}"
+                                        Command="{Binding ResetCoinsToEuroCommand}"
+                                        BackgroundColor="{StaticResource Gray300}" TextColor="Black" FontSize="12" Padding="8,4"/>
+                            </Grid>
+                            <VerticalStackLayout BindableLayout.ItemsSource="{Binding CoinItems}" Spacing="4">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate x:DataType="viewmodels:DenominationItem">
+                                        <Grid ColumnDefinitions="*,Auto">
+                                            <Label Text="{Binding Label}" VerticalOptions="Center"/>
+                                            <Button Grid.Column="1" Text="✕"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:SettingsViewModel}}, Path=RemoveCoinCommand}"
+                                                    CommandParameter="{Binding .}"
+                                                    BackgroundColor="Transparent" TextColor="{StaticResource Error}"
+                                                    FontSize="16" Padding="8,0" VerticalOptions="Center"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </VerticalStackLayout>
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                                <Entry Grid.Column="0" Text="{Binding NewCoinEntry}"
+                                       Keyboard="Numeric" BackgroundColor="{StaticResource Gray100}" ReturnCommand="{Binding AddCoinCommand}"/>
+                                <Button Grid.Column="1" Text="+" Command="{Binding AddCoinCommand}"
+                                        BackgroundColor="{StaticResource Primary}" TextColor="White" WidthRequest="50"/>
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+
                     <Button Text="{helpers:Tr Key=Common_Save}" Command="{Binding SaveSettingsCommand}"
                             BackgroundColor="{StaticResource Primary}" TextColor="White" FontSize="18" HeightRequest="55" Margin="0,10"/>
                 </VerticalStackLayout>
@@ -159,6 +226,10 @@
                                 <Switch Grid.Column="1" IsToggled="{Binding SaveOrdersLocally}" OnColor="{StaticResource Primary}" VerticalOptions="Center"/>
                             </Grid>
                             <Grid ColumnDefinitions="*,Auto" Margin="0,4,0,0">
+                                <Label Text="{helpers:Tr Key=Settings_Receipt_Label}" FontSize="15" VerticalOptions="Center"/>
+                                <Switch Grid.Column="1" IsToggled="{Binding ShareReceiptAfterOrder}" OnColor="{StaticResource Primary}" VerticalOptions="Center"/>
+                            </Grid>
+                            <Grid ColumnDefinitions="*,Auto" Margin="0,4,0,0">
                                 <Label FontSize="13" TextColor="{StaticResource Gray500}" VerticalOptions="Center">
                                     <Label.FormattedText>
                                         <FormattedString>
@@ -171,6 +242,20 @@
                                         Command="{Binding ClearOrderHistoryCommand}"
                                         IsEnabled="{Binding OrderCount, Converter={StaticResource GreaterThanZeroConverter}}"
                                         BackgroundColor="#F44336" TextColor="White" FontSize="12" Padding="8,4"/>
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border BackgroundColor="White" StrokeThickness="0" StrokeShape="RoundRectangle 10" Padding="15">
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="{helpers:Tr Key=Settings_Haptic_Section}" FontSize="18" FontAttributes="Bold"/>
+                            <Grid ColumnDefinitions="*,Auto" Margin="0,4,0,0">
+                                <Label Text="{helpers:Tr Key=Settings_Haptic_Vibration}" FontSize="15" VerticalOptions="Center"/>
+                                <Switch Grid.Column="1" IsToggled="{Binding HapticVibrationEnabled}" OnColor="{StaticResource Primary}" VerticalOptions="Center"/>
+                            </Grid>
+                            <Grid ColumnDefinitions="*,Auto" Margin="0,4,0,0">
+                                <Label Text="{helpers:Tr Key=Settings_Haptic_Sound}" FontSize="15" VerticalOptions="Center"/>
+                                <Switch Grid.Column="1" IsToggled="{Binding HapticSoundEnabled}" OnColor="{StaticResource Primary}" VerticalOptions="Center"/>
                             </Grid>
                         </VerticalStackLayout>
                     </Border>
@@ -227,19 +312,23 @@
                                             </DataTemplate>
                                         </BindableLayout.ItemTemplate>
                                     </VerticalStackLayout>
-                                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10" Margin="0,4,0,0">
+                                    <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8" Margin="0,4,0,0">
                                         <Button Grid.Column="0" Text="{helpers:Tr Key=Settings_MasterData_CancelExport}" Command="{Binding CancelExportCommand}"
                                                 BackgroundColor="{StaticResource Gray400}" TextColor="White"/>
                                         <Button Grid.Column="1" Text="{helpers:Tr Key=Settings_MasterData_DoExport}" Command="{Binding ExportSelectedStandsCommand}"
                                                 BackgroundColor="{StaticResource Primary}" TextColor="White"/>
+                                        <Button Grid.Column="2" Text="{helpers:Tr Key=Settings_MasterData_DoExportQr}" Command="{Binding ExportSelectedStandsAsQrCommand}"
+                                                BackgroundColor="{StaticResource Secondary}" TextColor="White"/>
                                     </Grid>
                                 </VerticalStackLayout>
                             </Border>
-                            <Grid ColumnDefinitions="*,*" ColumnSpacing="10"
+                            <Grid ColumnDefinitions="*,*" ColumnSpacing="10" RowDefinitions="Auto,Auto" RowSpacing="10"
                                   IsVisible="{Binding IsExportSelectionVisible, Converter={StaticResource InverseBoolConverter}}">
-                                <Button Grid.Column="0" Text="{helpers:Tr Key=Settings_MasterData_ExportStands}" Command="{Binding ShowExportSelectionCommand}"
+                                <Button Grid.Row="0" Grid.Column="0" Text="{helpers:Tr Key=Settings_MasterData_ExportStands}" Command="{Binding ShowExportSelectionCommand}"
                                         BackgroundColor="{StaticResource Primary}" TextColor="White"/>
-                                <Button Grid.Column="1" Text="{helpers:Tr Key=Settings_MasterData_ImportFile}" Command="{Binding ImportFromFileCommand}"
+                                <Button Grid.Row="0" Grid.Column="1" Text="{helpers:Tr Key=Settings_MasterData_ImportFile}" Command="{Binding ImportFromFileCommand}"
+                                        BackgroundColor="{StaticResource Secondary}" TextColor="White"/>
+                                <Button Grid.Row="1" Grid.Column="1" Text="{helpers:Tr Key=Settings_MasterData_ImportQr}" Command="{Binding ImportFromQrCommand}"
                                         BackgroundColor="{StaticResource Secondary}" TextColor="White"/>
                             </Grid>
                         </VerticalStackLayout>

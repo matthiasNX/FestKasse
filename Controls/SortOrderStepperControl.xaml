@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FestKasse.Controls.SortOrderStepperControl"
+             x:Name="self">
+
+    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="6">
+
+        <Button Grid.Column="0"
+                Text="&#x2212;"
+                Command="{Binding DecreaseCommand, Source={x:Reference self}}"
+                WidthRequest="44" HeightRequest="44" CornerRadius="8" Padding="0"
+                FontSize="18" FontAttributes="Bold"
+                BackgroundColor="{AppThemeBinding Light={StaticResource Gray400}, Dark={StaticResource Gray600}}"
+                TextColor="White"/>
+
+        <Entry Grid.Column="1"
+               Text="{Binding Value, Source={x:Reference self}, Mode=TwoWay}"
+               Keyboard="Numeric"
+               HorizontalTextAlignment="Center"
+               BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray700}}"/>
+
+        <Button Grid.Column="2"
+                Text="+"
+                Command="{Binding IncreaseCommand, Source={x:Reference self}}"
+                WidthRequest="44" HeightRequest="44" CornerRadius="8" Padding="0"
+                FontSize="18" FontAttributes="Bold"
+                BackgroundColor="{StaticResource Primary}"
+                TextColor="White"/>
+
+    </Grid>
+</ContentView>

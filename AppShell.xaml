@@ -44,6 +44,8 @@
     <MenuItem Text="{helpers:Tr Key=Menu_ArticleManagement}"  Clicked="OnArticleManagementClicked"/>
     <MenuItem Text="{helpers:Tr Key=Menu_Settings}"       Clicked="OnSettingsClicked"/>
     <MenuItem Text="{helpers:Tr Key=Menu_OrderHistory}"      Clicked="OnOrderHistoryClicked"/>
+    <MenuItem Text="{helpers:Tr Key=Menu_Dashboard}"          Clicked="OnDashboardClicked"/>
+    <MenuItem Text="{helpers:Tr Key=Menu_CashSession}"         Clicked="OnCashSessionClicked"/>
     <MenuItem Text="{helpers:Tr Key=Menu_LogViewer}"            Clicked="OnLogViewerClicked"/>
     <MenuItem Text="{helpers:Tr Key=Menu_About}"               Clicked="OnAboutClicked"/>
 

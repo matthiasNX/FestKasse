@@ -9,10 +9,10 @@ public class DataService : IDataService
     private readonly string _dataFilePath;
     private readonly string _settingsFilePath;
     private readonly JsonSerializerOptions _jsonOptions;
-    private readonly HttpClient _httpClient;
     private readonly ILogService _log;
     private AppData? _cachedData;
     private AppSettings? _cachedSettings;
+    private static readonly HttpClient _sharedClient = new() { Timeout = TimeSpan.FromSeconds(30) };
 
     public DataService(ILogService logService)
     {
@@ -23,10 +23,6 @@ public class DataService : IDataService
         {
             WriteIndented = true,
             PropertyNameCaseInsensitive = true
-        };
-        _httpClient = new HttpClient
-        {
-            Timeout = TimeSpan.FromSeconds(30)
         };
         _log.Debug($"DataService initialized. Data path: {_dataFilePath}");
     }
@@ -59,7 +55,8 @@ public class DataService : IDataService
 
             if (_cachedData == null)
             {
-                try { File.Delete(_dataFilePath); } catch { }
+                try { File.Delete(_dataFilePath); }
+                catch (Exception delEx) { _log.Warning($"Could not delete corrupt data file: {delEx.Message}"); }
             }
         }
 
@@ -148,7 +145,8 @@ public class DataService : IDataService
         {
             data.ActiveStandId = standId;
             _log.Info($"Active stand changed to ID '{standId}'.");
-            _ = SaveDataAsync(data);
+            try { await SaveDataAsync(data); }
+            catch (Exception ex) { _log.Exception(ex, "Error persisting active stand change."); }
         }
         else
         {
@@ -196,6 +194,8 @@ public class DataService : IDataService
         _cachedSettings ??= new AppSettings();
         return _cachedSettings;
     }
+
+    public AppSettings GetSettingsCached() => _cachedSettings ?? new AppSettings();
 
     public async Task SaveSettingsAsync(AppSettings settings)
     {
@@ -328,7 +328,7 @@ public class DataService : IDataService
 
             _log.Info($"Starting sync from URL: {url} (ignore SSL: {ignoreSslErrors})");
 
-            HttpClient client = _httpClient;
+            HttpClient client = _sharedClient;
             HttpClient? tempClient = null;
             if (ignoreSslErrors)
             {
@@ -336,7 +336,7 @@ public class DataService : IDataService
                 {
                     ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
                 };
-                tempClient = new HttpClient(handler) { Timeout = _httpClient.Timeout };
+                tempClient = new HttpClient(handler) { Timeout = _sharedClient.Timeout };
                 client = tempClient;
             }
 

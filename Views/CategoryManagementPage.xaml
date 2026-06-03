@@ -4,9 +4,9 @@
              xmlns:viewmodels="clr-namespace:FestKasse.ViewModels"
              xmlns:models="clr-namespace:FestKasse.Models"
              xmlns:helpers="clr-namespace:FestKasse.Helpers"
+             xmlns:controls="clr-namespace:FestKasse.Controls"
              x:Class="FestKasse.Views.CategoryManagementPage"
              x:Name="ThisPage"
-             x:DataType="viewmodels:CategoryManagementViewModel"
              Title="{helpers:Tr Key=Category_Title}"
              BackgroundColor="{StaticResource Gray100}">
 
@@ -18,7 +18,7 @@
             <CollectionView ItemsSource="{Binding Categories}" SelectionMode="None" Margin="10">
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="models:Category">
-                        <Border Margin="0,5" Padding="10" BackgroundColor="White" StrokeShape="RoundRectangle 8" StrokeThickness="0">
+                        <Border Margin="0,5" Padding="10" BackgroundColor="{AppThemeBinding Light=White, Dark={StaticResource DarkGray200}}" StrokeShape="RoundRectangle 8" StrokeThickness="0">
                             <Grid ColumnDefinitions="*,Auto,Auto,Auto,Auto">
                                 <VerticalStackLayout Grid.Column="0" VerticalOptions="Center">
                                     <Label Text="{Binding Name}" FontSize="16" FontAttributes="Bold"/>
@@ -52,7 +52,7 @@
             </CollectionView>
 
             <!-- Edit Overlay -->
-            <Border BackgroundColor="White" StrokeThickness="0" IsVisible="{Binding IsEditing}">
+            <Border BackgroundColor="{AppThemeBinding Light=White, Dark={StaticResource DarkGray200}}" StrokeThickness="0" IsVisible="{Binding IsEditing}">
                 <ScrollView>
                     <VerticalStackLayout Spacing="15" Padding="16">
 
@@ -66,22 +66,18 @@
 
                         <VerticalStackLayout>
                             <Label Text="{helpers:Tr Key=Category_Field_SortOrder}" FontSize="14" FontAttributes="Bold"/>
-                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="6">
-                                <Button Grid.Column="0" Text="&#x2212;" Command="{Binding DecreaseSortOrderCommand}"
-                                        WidthRequest="44" HeightRequest="44" CornerRadius="8" Padding="0"
-                                        FontSize="18" FontAttributes="Bold" BackgroundColor="{StaticResource Gray400}" TextColor="White"/>
-                                <Entry Grid.Column="1" Text="{Binding EditSortOrder}" Keyboard="Numeric" HorizontalTextAlignment="Center" BackgroundColor="{StaticResource Gray100}"/>
-                                <Button Grid.Column="2" Text="+" Command="{Binding IncreaseSortOrderCommand}"
-                                        WidthRequest="44" HeightRequest="44" CornerRadius="8" Padding="0"
-                                        FontSize="18" FontAttributes="Bold" BackgroundColor="{StaticResource Primary}" TextColor="White"/>
-                            </Grid>
+                            <controls:SortOrderStepperControl
+                                Value="{Binding EditSortOrder, Mode=TwoWay}"
+                                IncreaseCommand="{Binding IncreaseSortOrderCommand}"
+                                DecreaseCommand="{Binding DecreaseSortOrderCommand}"/>
                             <Label Text="{helpers:Tr Key=Category_Field_SortOrder_Hint}" FontSize="11" TextColor="Gray"/>
                         </VerticalStackLayout>
 
-                        <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
-                            <Button Grid.Column="0" Text="{helpers:Tr Key=Category_Cancel_Button}" Command="{Binding CancelEditCommand}" BackgroundColor="{StaticResource Gray400}" TextColor="White"/>
-                            <Button Grid.Column="1" Text="{helpers:Tr Key=Category_Save_Button}" Command="{Binding SaveCategoryCommand}" BackgroundColor="{StaticResource Primary}" TextColor="White"/>
-                        </Grid>
+                        <controls:SaveCancelButtonRow
+                            SaveText="{helpers:Tr Key=Category_Save_Button}"
+                            CancelText="{helpers:Tr Key=Category_Cancel_Button}"
+                            SaveCommand="{Binding SaveCategoryCommand}"
+                            CancelCommand="{Binding CancelEditCommand}"/>
 
                     </VerticalStackLayout>
                 </ScrollView>

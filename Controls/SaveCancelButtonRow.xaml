@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FestKasse.Controls.SaveCancelButtonRow"
+             x:Name="self">
+
+    <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+
+        <Button Grid.Column="0"
+                Text="{Binding CancelText, Source={x:Reference self}}"
+                Command="{Binding CancelCommand, Source={x:Reference self}}"
+                BackgroundColor="{AppThemeBinding Light={StaticResource Gray400}, Dark={StaticResource Gray600}}"
+                TextColor="White"/>
+
+        <Button Grid.Column="1"
+                Text="{Binding SaveText, Source={x:Reference self}}"
+                Command="{Binding SaveCommand, Source={x:Reference self}}"
+                BackgroundColor="{StaticResource Primary}"
+                TextColor="White"/>
+
+    </Grid>
+</ContentView>

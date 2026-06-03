@@ -21,7 +21,7 @@
                 VerticalOptions="End"
                 Padding="20">
             <VerticalStackLayout Spacing="10">
-                <Label Text="QR-Code der Sync-URL vor die Kamera halten"
+                <Label Text="{Binding HintText}"
                        TextColor="White"
                        HorizontalTextAlignment="Center"
                        FontSize="15"/>

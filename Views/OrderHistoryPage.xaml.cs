@@ -26,6 +26,7 @@ public partial class OrderHistoryPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
+        await Task.Yield();
         try
         {
             await _viewModel.InitializeAsync();

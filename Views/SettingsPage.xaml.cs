@@ -21,6 +21,7 @@ public partial class SettingsPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
+        await Task.Yield();
         await _viewModel.InitializeAsync();
     }
 
