@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:FestKasse.ViewModels"
+             xmlns:helpers="clr-namespace:FestKasse.Helpers"
+             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
+             x:Class="FestKasse.Views.DashboardPage"
+             x:DataType="viewmodels:DashboardViewModel"
+             Title="{helpers:Tr Key=Dashboard_Title}"
+             BackgroundColor="{StaticResource Gray100}">
+
+    <Grid RowDefinitions="Auto,Auto,Auto,*">
+
+        <!-- ── Filter bar ──────────────────────────────────────────── -->
+        <Border Grid.Row="0" BackgroundColor="White" StrokeThickness="0"
+                StrokeShape="RoundRectangle 0" Padding="12,8">
+            <Grid ColumnDefinitions="Auto,Auto,Auto,Auto,Auto" ColumnSpacing="8" RowDefinitions="Auto,Auto" RowSpacing="4">
+
+                <!-- Row 0: labels -->
+                <Label Grid.Row="0" Grid.Column="0" Text="{helpers:Tr Key=OrderHistory_FilterFrom}"
+                       VerticalOptions="Center" FontSize="14"/>
+                <Label Grid.Row="0" Grid.Column="2" Text="{helpers:Tr Key=OrderHistory_FilterTo}"
+                       VerticalOptions="Center" FontSize="14" Margin="4,0,0,0"/>
+
+                <!-- Row 1: date + time pickers -->
+                <DatePicker Grid.Row="1" Grid.Column="0" Date="{Binding FilterFromDate}"
+                            Format="dd.MM.yyyy" VerticalOptions="Center"/>
+                <TimePicker Grid.Row="1" Grid.Column="1" Time="{Binding FilterFromTime}"
+                            Format="HH:mm" VerticalOptions="Center"/>
+                <DatePicker Grid.Row="1" Grid.Column="2" Date="{Binding FilterToDate}"
+                            Format="dd.MM.yyyy" VerticalOptions="Center"/>
+                <TimePicker Grid.Row="1" Grid.Column="3" Time="{Binding FilterToTime}"
+                            Format="HH:mm" VerticalOptions="Center"/>
+                <Button Grid.Row="0" Grid.RowSpan="2" Grid.Column="4"
+                        Text="&#x1F504;" WidthRequest="44" HeightRequest="44"
+                        Padding="0" Command="{Binding LoadDataCommand}"
+                        BackgroundColor="{StaticResource Primary}" TextColor="White"
+                        VerticalOptions="Center"/>
+            </Grid>
+        </Border>
+
+        <!-- ── Sample-data banner ──────────────────────────────────── -->
+        <Border Grid.Row="1" BackgroundColor="#FFF3CD" StrokeThickness="0"
+                StrokeShape="RoundRectangle 0" Padding="14,6"
+                IsVisible="{Binding IsSampleData}">
+            <Label Text="{helpers:Tr Key=Dashboard_SampleDataHint}"
+                   TextColor="#856404" FontSize="13" HorizontalTextAlignment="Center"/>
+        </Border>
+
+        <!-- ── Activity indicator ─────────────────────────────────── -->
+        <ActivityIndicator Grid.Row="2" IsRunning="{Binding IsLoading}"
+                           IsVisible="{Binding IsLoading}"
+                           Color="{StaticResource Primary}"
+                           HorizontalOptions="Center" Margin="0,6"/>
+
+        <!-- ── Scrollable content ─────────────────────────────────── -->
+        <ScrollView Grid.Row="3">
+            <VerticalStackLayout Padding="12" Spacing="12">
+
+                <!-- ── KPI cards ──────────────────────────────────── -->
+                <Label Text="{helpers:Tr Key=Dashboard_Section_KPI}"
+                       FontSize="15" FontAttributes="Bold"
+                       TextColor="{StaticResource Gray700}"/>
+
+                <!-- ── Active session banner ──────────────────────── -->
+                <Border IsVisible="{Binding HasOpenSession}"
+                        BackgroundColor="{AppThemeBinding Light=#E8F5E9, Dark=#1B5E20}"
+                        StrokeThickness="0" StrokeShape="RoundRectangle 10" Padding="14,10">
+                    <Grid ColumnDefinitions="*,Auto,Auto,Auto" ColumnSpacing="12">
+                        <Label Grid.Column="0"
+                               Text="{Binding SessionOpenedAtDisplay, StringFormat='🟢 Kasse offen seit {0}'}"
+                               FontSize="14" FontAttributes="Bold" VerticalOptions="Center"/>
+                        <Label Grid.Column="1"
+                               Text="{Binding SessionRevenueDisplay, StringFormat='Umsatz: {0}'}"
+                               FontSize="13" VerticalOptions="Center"/>
+                        <Label Grid.Column="2"
+                               Text="{Binding SessionOrderCount, StringFormat='Bestellungen: {0}'}"
+                               FontSize="13" VerticalOptions="Center"/>
+                    </Grid>
+                </Border>
+
+                <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="10" RowSpacing="10">
+
+                    <!-- Order count -->
+                    <Border Grid.Row="0" Grid.Column="0" BackgroundColor="White"
+                            StrokeThickness="0" StrokeShape="RoundRectangle 10" Padding="14,10">
+                        <VerticalStackLayout Spacing="2">
+                            <Label Text="{helpers:Tr Key=Dashboard_KPI_OrderCount}"
+                                   FontSize="12" TextColor="{StaticResource Gray500}"/>
+                            <Label Text="{Binding OrderCount}" FontSize="26"
+                                   FontAttributes="Bold" TextColor="{StaticResource Primary}"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Total revenue -->
+                    <Border Grid.Row="0" Grid.Column="1" BackgroundColor="White"
+                            StrokeThickness="0" StrokeShape="RoundRectangle 10" Padding="14,10">
+                        <VerticalStackLayout Spacing="2">
+                            <Label Text="{helpers:Tr Key=Dashboard_KPI_TotalRevenue}"
+                                   FontSize="12" TextColor="{StaticResource Gray500}"/>
+                            <Label Text="{Binding TotalRevenueDisplay}" FontSize="22"
+                                   FontAttributes="Bold" TextColor="{StaticResource Primary}"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Avg order value -->
+                    <Border Grid.Row="1" Grid.Column="0" BackgroundColor="White"
+                            StrokeThickness="0" StrokeShape="RoundRectangle 10" Padding="14,10">
+                        <VerticalStackLayout Spacing="2">
+                            <Label Text="{helpers:Tr Key=Dashboard_KPI_AvgOrder}"
+                                   FontSize="12" TextColor="{StaticResource Gray500}"/>
+                            <Label Text="{Binding AvgOrderValueDisplay}" FontSize="22"
+                                   FontAttributes="Bold" TextColor="{StaticResource Secondary}"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Avg items per order -->
+                    <Border Grid.Row="1" Grid.Column="1" BackgroundColor="White"
+                            StrokeThickness="0" StrokeShape="RoundRectangle 10" Padding="14,10">
+                        <VerticalStackLayout Spacing="2">
+                            <Label Text="{helpers:Tr Key=Dashboard_KPI_AvgItems}"
+                                   FontSize="12" TextColor="{StaticResource Gray500}"/>
+                            <Label Text="{Binding AvgItemsPerOrderDisplay}" FontSize="22"
+                                   FontAttributes="Bold" TextColor="{StaticResource Secondary}"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Top product -->
+                    <Border Grid.Row="2" Grid.Column="0" BackgroundColor="White"
+                            StrokeThickness="0" StrokeShape="RoundRectangle 10" Padding="14,10">
+                        <VerticalStackLayout Spacing="2">
+                            <Label Text="{helpers:Tr Key=Dashboard_KPI_TopProduct}"
+                                   FontSize="12" TextColor="{StaticResource Gray500}"/>
+                            <Label Text="{Binding TopProductDisplay}" FontSize="16"
+                                   FontAttributes="Bold" TextColor="{StaticResource Warning}"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Peak hour -->
+                    <Border Grid.Row="2" Grid.Column="1" BackgroundColor="White"
+                            StrokeThickness="0" StrokeShape="RoundRectangle 10" Padding="14,10">
+                        <VerticalStackLayout Spacing="2">
+                            <Label Text="{helpers:Tr Key=Dashboard_KPI_PeakHour}"
+                                   FontSize="12" TextColor="{StaticResource Gray500}"/>
+                            <Label Text="{Binding PeakHourDisplay}" FontSize="16"
+                                   FontAttributes="Bold" TextColor="{StaticResource Warning}"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                </Grid>
+
+                <!-- ── Orders per hour – Count ────────────────────── -->
+                <Label Text="{helpers:Tr Key=Dashboard_Chart_OrdersPerHourCount}"
+                       FontSize="14" FontAttributes="Bold"
+                       TextColor="{StaticResource Gray700}" Margin="0,8,0,0"/>
+
+                <Border BackgroundColor="White" StrokeThickness="0"
+                        StrokeShape="RoundRectangle 10" Padding="8">
+                    <lvc:CartesianChart
+                        Series="{Binding OrdersPerHourCountSeries}"
+                        XAxes="{Binding HourAxes}"
+                        YAxes="{Binding CountYAxes}"
+                        HeightRequest="200"
+                        ZoomMode="None"
+                        AnimationsSpeed="00:00:00.4"/>
+                </Border>
+
+                <!-- ── Orders per hour – Revenue ──────────────────── -->
+                <Label Text="{helpers:Tr Key=Dashboard_Chart_OrdersPerHourRevenue}"
+                       FontSize="14" FontAttributes="Bold"
+                       TextColor="{StaticResource Gray700}"/>
+
+                <Border BackgroundColor="White" StrokeThickness="0"
+                        StrokeShape="RoundRectangle 10" Padding="8">
+                    <lvc:CartesianChart
+                        Series="{Binding OrdersPerHourRevenueSeries}"
+                        XAxes="{Binding HourAxes}"
+                        YAxes="{Binding RevenueYAxes}"
+                        HeightRequest="200"
+                        ZoomMode="None"
+                        AnimationsSpeed="00:00:00.4"/>
+                </Border>
+
+                <!-- ── Count per product ──────────────────────────── -->
+                <Label Text="{helpers:Tr Key=Dashboard_Chart_ProductCount}"
+                       FontSize="14" FontAttributes="Bold"
+                       TextColor="{StaticResource Gray700}"/>
+
+                <Border BackgroundColor="White" StrokeThickness="0"
+                        StrokeShape="RoundRectangle 10" Padding="8">
+                    <lvc:CartesianChart
+                        Series="{Binding ProductCountSeries}"
+                        XAxes="{Binding ProductAxes}"
+                        YAxes="{Binding CountYAxes}"
+                        HeightRequest="220"
+                        ZoomMode="None"
+                        AnimationsSpeed="00:00:00.4"/>
+                </Border>
+
+                <!-- bottom padding -->
+                <BoxView HeightRequest="20" Color="Transparent"/>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+    </Grid>
+</ContentPage>

@@ -97,7 +97,7 @@
     <MauiXaml Update="Controls\TileControl.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
-    <MauiXaml Update="FestKasse\Views\DashboardPage.xaml">
+    <MauiXaml Update="Views\DashboardPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
     <MauiXaml Update="Platforms\Windows\App.xaml">

@@ -43,7 +43,13 @@ public partial class OrderHistoryViewModel : ObservableObject
     private DateTime _filterFromDate = DateTime.Today.AddDays(-6);
 
     [ObservableProperty]
+    private TimeSpan _filterFromTime = TimeSpan.Zero;
+
+    [ObservableProperty]
     private DateTime _filterToDate = DateTime.Today;
+
+    [ObservableProperty]
+    private TimeSpan _filterToTime = new TimeSpan(23, 59, 59);
 
     [ObservableProperty]
     private bool _isLoading;
@@ -66,7 +72,9 @@ public partial class OrderHistoryViewModel : ObservableObject
     }
 
     partial void OnFilterFromDateChanged(DateTime value) => _ = LoadOrdersAsync();
+    partial void OnFilterFromTimeChanged(TimeSpan value) => _ = LoadOrdersAsync();
     partial void OnFilterToDateChanged(DateTime value) => _ = LoadOrdersAsync();
+    partial void OnFilterToTimeChanged(TimeSpan value) => _ = LoadOrdersAsync();
 
     [RelayCommand]
     private async Task LoadOrdersAsync()
@@ -74,9 +82,9 @@ public partial class OrderHistoryViewModel : ObservableObject
         IsLoading = true;
         try
         {
-            var fromUtc = FilterFromDate.Date.ToUniversalTime();
-            var toUtc = FilterToDate.Date.AddDays(1).ToUniversalTime();
-            _log.Debug($"Loading order history: {FilterFromDate:dd.MM.yyyy} – {FilterToDate:dd.MM.yyyy}.");
+            var fromUtc = (FilterFromDate.Date + FilterFromTime).ToUniversalTime();
+            var toUtc = (FilterToDate.Date + FilterToTime).ToUniversalTime();
+            _log.Debug($"Loading order history: {FilterFromDate:dd.MM.yyyy} {FilterFromTime:hh\\:mm} – {FilterToDate:dd.MM.yyyy} {FilterToTime:hh\\:mm}.");
 
             var records = await _historyService.GetOrdersAsync(from: fromUtc, to: toUtc);
 
